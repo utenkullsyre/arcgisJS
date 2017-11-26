@@ -55,11 +55,12 @@
       "esri/views/MapView",
       "esri/Basemap",
       "esri/layers/TileLayer",
+      "esri/layers/FeatureLayer",
       "esri/geometry/Extent",
       "esri/geometry/SpatialReference",
       "dojo/domReady!"
     ], function(
-      Map,MapView,Basemap,TileLayer, Extent, SpatialReference
+      Map,MapView,Basemap,TileLayer,FeatureLayer, Extent, SpatialReference
     ) {
 
       /************************************************************
@@ -79,6 +80,11 @@
           id: "Bilder",
           visible: false
         });
+        var fl = new FeatureLayer({
+          url: "https://kart.tromso.kommune.no/arcgis/rest/services/Temadata/FlyplassTema/MapServer/5",
+          id: "testlag"
+        });
+
        var nvdbBasemap = new Basemap({
          baseLayers: [nvdbBasemap],
          title: "NVDB",
@@ -88,7 +94,7 @@
        // Create a Map instance
        var map = new Map({
          basemap: nvdbBasemap,
-         layers: [bilder]
+         layers: [bilder, fl]
        });
 
       kart = map
@@ -115,13 +121,6 @@
       view.ui.add("baseToggle","top-right");
       test = view;
 
-      /*var geocache = kart.allLayers.find(function(layer) {
-       return layer.id === "GeocacheBilder_32633_9885";
-      });
-      var svvKart = webmap.allLayers.find(function(layer) {
-       return layer.title == "GeocacheTrafikkJPG";
-     });*/
-
      view.then(function(){
      var baseToggle = document.querySelector("#baseToggle");
      var img = document.querySelectorAll("#baseToggle img");
@@ -147,7 +146,9 @@
 
 
       view.on("click", function(event) {
-          kart = event;
+          view.hitTest(event).then(function(response){
+            kart = response
+          })
            // you must overwrite default click-for-popup
            // behavior to display your own popup
            event.stopPropagation();
