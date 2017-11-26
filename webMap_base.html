@@ -49,7 +49,7 @@
   <script src="https://js.arcgis.com/4.5/"></script>
 
   <script>
-    var kart,test = {};
+    var kart,test,bakkeLag,hitResultat = {};
     require([
       "esri/Map",
       "esri/views/MapView",
@@ -61,11 +61,13 @@
       "esri/widgets/LayerList",
       "esri/widgets/Locate",
       "esri/Graphic",
+      "esri/layers/ElevationLayer",
+      "esri/Ground",
       "dojo/domReady!"
     ], function(
       Map,MapView,Basemap,TileLayer,
       FeatureLayer, Extent, SpatialReference,
-      LayerList, Locate, Graphic
+      LayerList, Locate, Graphic,ElevationLayer,Ground
     ) {
 
       /************************************************************
@@ -90,6 +92,10 @@
           id: "testlag"
         });
 
+        var bakke = ElevationLayer({
+          url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer"
+        });
+        bakkeLag = bakke
        var nvdbBasemap = new Basemap({
          baseLayers: [nvdbBasemap],
          title: "NVDB",
@@ -99,11 +105,13 @@
        // Create a Map instance
        var map = new Map({
          basemap: nvdbBasemap,
+         ground: new Ground({
+           layers: [bakke]
+         }),
          layers: [bilder, fl]
        });
 
       kart = map
-      test = nvdbBasemap
 
       var extent = new Extent({
         xmin: 373601,
@@ -133,12 +141,14 @@
         view: view
       });
 
+      test = map
+
       view.extent = extent
       view.ui.add("info","bottom-left");
       view.ui.add("baseToggle","top-right");
       view.ui.add(layerList, "top-left");
       view.ui.add(locateWidget, "bottom-right");
-      test = view;
+      //test = view;
 
      view.then(function(){
      var baseToggle = document.querySelector("#baseToggle");
@@ -157,7 +167,7 @@
        lag["GeocacheTrafikkJPG"].visible = !lag["GeocacheTrafikkJPG"].visible;
 
 
-        test = lag;
+        //test = lag;
 
          })
      })
@@ -166,8 +176,13 @@
 
       view.on("click", function(event) {
           view.hitTest(event).then(function(response){
-            kart = response
+            hitResultat = response
+            bakkeLag.queryElevation(kart.screenPoint.mapPoint).then(function(results){
+            	test = results
+            })
           })
+
+
            // you must overwrite default click-for-popup
            // behavior to display your own popup
            event.stopPropagation();
