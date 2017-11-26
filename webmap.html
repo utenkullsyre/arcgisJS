@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Load a basic WebMap - 4.5</title>
+
+  <style>
+    html,
+    body{
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    #wrapper{
+      height: 100%;
+      width: 100%;
+      display:flex;
+      flex-flow: column;
+    }
+    #informasjon{
+      flex: 0 1 20%;
+      background-color: #f5da9f
+    }
+
+    #viewDiv {
+      flex: 1 0 80%;
+      height: 80%;
+    }
+    #baseToggle{
+      border: 1px lightgrey solid;
+      position: absolute;
+      bottom:150px;
+      right: 150px;
+      margin-right: 10px;
+    }
+    #baseToggle img{
+      position: absolute;
+      transition: all 0.5s;
+    }
+
+    .hide{
+      opacity: 0;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+
+  <script src="https://js.arcgis.com/4.5/"></script>
+
+  <script>
+    var kart,test = {};
+    require([
+      "esri/views/MapView",
+      "esri/WebMap",
+      "esri/Basemap",
+      "esri/layers/MapImageLayer",
+      "dojo/domReady!"
+    ], function(
+      MapView, WebMap, Basemap, MapImageLayer
+    ) {
+
+      /************************************************************
+       * Creates a new WebMap instance. A WebMap must reference
+       * a PortalItem ID that represents a WebMap saved to
+       * arcgis.com or an on-premise portal.
+       *
+       * To load a WebMap from an on-premise portal, set the portal
+       * url with esriConfig.portalUrl.
+       ************************************************************/
+      var layer1 = new MapImageLayer({
+         url: "https://nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer"
+       });
+      var layer2 = new MapImageLayer({
+          url: "https://services.geodataonline.no/arcgis/rest/services/temp/GeocacheBilder_32633/MapServer"
+        });
+       var nvdbBasemap = new Basemap({
+         baseLayers: [layer1,layer2],
+         title: "NVDB",
+         id: "nvdb"
+       });
+
+      var webmap = new WebMap({
+        portalItem: { // autocasts as new PortalItem()
+          id: "d0c2af7bb0124fdbbbe643546678e231"
+          //id: "974c6641665a42bf8a57da08e607bb6f"
+        },
+        basemap:nvdbBasemap
+      })
+
+      kart = webmap
+      test = nvdbBasemap
+
+
+
+      /************************************************************
+       * Set the WebMap instance to the map property in a MapView.
+       ************************************************************/
+      var view = new MapView({
+              map: webmap,
+              container: "viewDiv"
+            });
+      view.ui.add("info","bottom-left")
+      test = view;
+
+      /*var geocache = kart.allLayers.find(function(layer) {
+       return layer.id === "GeocacheBilder_32633_9885";
+      });
+      var svvKart = webmap.allLayers.find(function(layer) {
+       return layer.title == "GeocacheTrafikkJPG";
+     });*/
+     var baseToggle = document.querySelector("#baseToggle");
+     var img = document.querySelectorAll("#baseToggle img");
+     var lag = {}
+
+     webmap.load().then(function(){
+      webmap.allLayers.items.forEach(function(element){
+        lag[element.title] = element;
+      })
+      //lag["GeocacheBilder_32633"].visible = false;
+
+       baseToggle.addEventListener("click", function(){
+         img[0].classList.toggle("hide");
+         img[1].classList.toggle("hide");
+
+         //lag["GeocacheBilder_32633"].visible = !lag["GeocacheBilder_32633"].visible;
+         //lag["GeocacheTrafikkJPG"].visible = !lag["GeocacheTrafikkJPG"].visible;
+
+
+
+
+         })
+     })
+
+      view.on("click", function(event) {
+          kart = event;
+           // you must overwrite default click-for-popup
+           // behavior to display your own popup
+           event.stopPropagation();
+
+           var screenPoint = {
+             x: event.x,
+             y: event.y
+           }
+
+           view.popup.open({
+             // Set the popup's title to the coordinates of the location
+             title: "Geokoding",
+             location: event.mapPoint, // Set the location of the popup to the clicked location,
+             content: "<a href='https://www.vegvesen.no/vegkart/vegkart/#kartlag:geodata/@"+view.toMap(screenPoint).x.toString().split(".")[0]+","+view.toMap(screenPoint).y.toString().split(".")[0]+","+view.zoom+"' target='#'>Link til vegkart</a>"  // content displayed in the popup
+           });
+          });
+        view.on("pointer-move", function(event){
+        var info = document.querySelector("#info");
+        var screenPoint = {
+          x:event.x,
+          y:event.y
+        }
+        var mapPoint = view.toMap(screenPoint)
+        info.innerHTML = mapPoint.x.toString().split(".")[0] + "<br\>" + mapPoint.y.toString().split(".")[0];
+        })
+
+    });
+  </script>
+</head>
+
+<body>
+  <div id="wrapper">
+    <div id="informasjon">
+    </div>
+    <a href="#">
+    <div id="viewDiv">
+      <div id="baseToggle">
+        <img id="baseSVV" src="baseSVV.jpg" >
+        <img id="baseBilde" class="hide" src="baseBilde.jpg" >
+      </div>
+      <div id="info">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
