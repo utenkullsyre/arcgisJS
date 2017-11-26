@@ -17,10 +17,8 @@
 
     #baseToggle{
       border: 1px lightgrey solid;
-      position: absolute;
-      bottom:150px;
-      right: 150px;
-      margin-right: 10px;
+      position: relative;
+      /*margin-right: 10px;*/
     }
     #baseToggle img{
       position: absolute;
@@ -43,9 +41,11 @@
       "esri/views/MapView",
       "esri/Basemap",
       "esri/layers/TileLayer",
+      "esri/geometry/Extent",
+      "esri/geometry/SpatialReference",
       "dojo/domReady!"
     ], function(
-      Map,MapView,Basemap,TileLayer
+      Map,MapView,Basemap,TileLayer, Extent, SpatialReference
     ) {
 
       /************************************************************
@@ -80,7 +80,13 @@
       kart = map
       test = nvdbBasemap
 
-
+      var extent = new Extent({
+        xmin: 373601,
+        ymin: 7507874,
+        xmax: 721751,
+        ymax: 7743925,
+        spatialReference: new SpatialReference({wkid:25833})
+      })
 
       /************************************************************
        * Set the WebMap instance to the map property in a MapView.
@@ -89,7 +95,10 @@
               map: map,
               container: "viewDiv"
             });
+
+      view.extent = extent
       view.ui.add("info","bottom-left")
+      view.ui.add("baseToggle","top-left")
       test = view;
 
       /*var geocache = kart.allLayers.find(function(layer) {
@@ -98,6 +107,8 @@
       var svvKart = webmap.allLayers.find(function(layer) {
        return layer.title == "GeocacheTrafikkJPG";
      });*/
+
+     view.then(function(){
      var baseToggle = document.querySelector("#baseToggle");
      var img = document.querySelectorAll("#baseToggle img");
      var lag = {}
@@ -114,9 +125,10 @@
        lag["GeocacheTrafikkJPG"].visible = !lag["GeocacheTrafikkJPG"].visible;
 
 
-
+        test = lag;
 
          })
+     })
      })
 
      test = lag;
