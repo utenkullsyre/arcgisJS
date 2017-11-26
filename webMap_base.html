@@ -58,9 +58,14 @@
       "esri/layers/FeatureLayer",
       "esri/geometry/Extent",
       "esri/geometry/SpatialReference",
+      "esri/widgets/LayerList",
+      "esri/widgets/Locate",
+      "esri/Graphic",
       "dojo/domReady!"
     ], function(
-      Map,MapView,Basemap,TileLayer,FeatureLayer, Extent, SpatialReference
+      Map,MapView,Basemap,TileLayer,
+      FeatureLayer, Extent, SpatialReference,
+      LayerList, Locate, Graphic
     ) {
 
       /************************************************************
@@ -116,9 +121,23 @@
               container: "viewDiv"
             });
 
+      var locateWidget = new Locate({
+        view: view,   // Attaches the Locate button to the view
+        graphic: new Graphic({
+          symbol: { type: "simple-marker" }  // overwrites the default symbol used for the
+          // graphic placed at the location of the user when found
+        })
+      });
+
+      var layerList = new LayerList({
+        view: view
+      });
+
       view.extent = extent
       view.ui.add("info","bottom-left");
       view.ui.add("baseToggle","top-right");
+      view.ui.add(layerList, "top-left");
+      view.ui.add(locateWidget, "bottom-right");
       test = view;
 
      view.then(function(){
