@@ -49,7 +49,7 @@
   <script src="https://js.arcgis.com/4.5/"></script>
 
   <script>
-    var kart,test,bakkeLag,hitResultat = {};
+    var kartView,kart,diverseResultat, bakkeLag,hitResultat = {};
     require([
       "esri/Map",
       "esri/views/MapView",
@@ -141,7 +141,7 @@
         view: view
       });
 
-      test = map
+      kartView = view
 
       view.extent = extent
       view.ui.add("info","bottom-left");
@@ -177,8 +177,9 @@
       view.on("click", function(event) {
           view.hitTest(event).then(function(response){
             hitResultat = response
-            bakkeLag.queryElevation(kart.screenPoint.mapPoint).then(function(results){
-            	test = results
+            bakke.queryElevation(hitResultat.screenPoint.mapPoint).then(function(results){
+            	diverseResultat = results
+              console.log(results)
             })
           })
 
