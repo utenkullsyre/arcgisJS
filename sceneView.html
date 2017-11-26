@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Enkel 3D-applikasjon</title>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #paneDiv {
+      position: absolute;
+      top: 12px;
+      left: 62px;
+      width: 80%;
+      padding: 0 12px 0 12px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border: 1px solid white;
+      color: black;
+    }
+
+    #resultsDiv {
+      font-size: 1.2em;
+      text-align: center;
+      border-bottom: 1px solid gray;
+      padding: 10px 0px;
+    }
+
+    #activeElevationLayerDiv {
+      margin: 10px 0;
+    }
+
+    ul #red {
+      color: rgb(150, 26, 15);
+    }
+
+    ul #green {
+      color: rgb(21, 150, 15);
+    }
+
+    ul span {
+      color: black;
+    }
+
+    ul {
+      margin: 0 0 10px 0;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.5/"></script>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/layers/TileLayer",
+      "esri/Basemap",
+      "esri/layers/ElevationLayer",
+      "esri/views/SceneView",
+      "dojo/domReady!"
+    ], function(
+      Map, TileLayer, Basemap, ElevationLayer, SceneView
+    ) {
+
+      // Create elevation layers
+      var bakke = new ElevationLayer({
+        url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer"
+      });
+
+      var nvdbBasemap = new TileLayer({
+         url: "https://nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer",
+         id:"NVDB-trafikk",
+         visible: false
+       });
+      var bilder = new TileLayer({
+          url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheBilder/MapServer",
+          id: "Bilder",
+          visible: true
+        });
+
+
+       var bilder = new Basemap({
+         baseLayers: [bilder],
+         title: "Bilder",
+         id: "bilder"
+       });
+
+      // Create Map and View
+      var map = new Map({
+        basemap: bilder,
+        ground: {
+          layers: [bakke]
+        }
+      });
+
+      var view = new SceneView({
+        container: "viewDiv",
+        map: map,
+        camera: {
+          // initial view:
+          heading: 332.8,
+          tilt: 65.5,
+          position: {
+            x: 562074,
+            y: 7633006,
+            z: 577,
+            spatialReference: {
+              wkid: 25833
+            }
+          }
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div id="viewDiv"></div>
+
+</body>
+</html>
