@@ -16,13 +16,27 @@
     }
 
     #baseToggle{
-      border: 1px lightgrey solid;
-      position: relative;
-      /*margin-right: 10px;*/
+    /*position: relative;*/
+    /*margin-right: 10px;*/
     }
     #baseToggle img{
+      right: 5px;
+      border: 2px #ecc347 solid;
       position: absolute;
       transition: all 0.5s;
+      border-radius: 10px;
+    }
+
+    .esri-widget-button{
+      color: #705402 !important;
+      background-color: #ecc347 !important
+    }
+
+    #info{
+      background-color: #ecc347;
+      padding: 5px;
+      border-radius: 10px;
+      color:#705402;
     }
 
     .hide{
@@ -97,8 +111,8 @@
             });
 
       view.extent = extent
-      view.ui.add("info","bottom-left")
-      view.ui.add("baseToggle","top-left")
+      view.ui.add("info","bottom-left");
+      view.ui.add("baseToggle","top-right");
       test = view;
 
       /*var geocache = kart.allLayers.find(function(layer) {
@@ -131,7 +145,6 @@
      })
      })
 
-     test = lag;
 
       view.on("click", function(event) {
           kart = event;
@@ -168,10 +181,10 @@
 <body>
     <div id="viewDiv">
       <div id="baseToggle">
-        <img id="baseSVV" src="img/baseSVV.jpg" >
-        <img id="baseBilde" class="hide" src="img/baseBilde.jpg" >
+        <img id="baseSVV" class="hide" src="img/baseSVV.jpg" >
+        <img id="baseBilde" src="img/baseBilde.jpg" >
       </div>
-      <div id="info">
+      <div id="info">Koordinater
       </div>
     </div>
 </body>
