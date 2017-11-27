@@ -7,7 +7,46 @@
 
   <style>
     html,
-    body,
+    body,{
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+
+    .wrapper{
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      display:flex;
+      flex-flow: column;
+
+    }
+
+    .skjemaContainer{
+      display: flex;
+    }
+
+    .sidefyll{
+      flex: 1 5 15vw;
+    }
+
+    .hoveddel{
+      border-top: 1px #d2c049 solid;
+      flex:0 0 70vw;
+      background-color: #ddcd95;
+      min-width: 0
+    }
+
+
+
+    #prosjektinfo,#kontaktinfo,#sluttInfo{
+      flex:1 4 20vh;
+    }
+
+    #kart{
+      flex: 3 0 50vh;
+    }
+
     #viewDiv{
       padding: 0;
       margin: 0;
@@ -42,12 +81,11 @@
     .hide{
       opacity: 0;
     }
-  </style>
 
+  </style>
   <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
 
   <script src="https://js.arcgis.com/4.5/"></script>
-
   <script>
     var kartView,kart,diverseResultat, bakkeLag,hitResultat = {};
     require([
@@ -215,14 +253,38 @@
 </head>
 
 <body>
-    <div id="viewDiv">
-      <div id="baseToggle">
-        <img id="baseSVV" class="hide" src="img/baseSVV.jpg" >
-        <img id="baseBilde" src="img/baseBilde.jpg" >
+    <div class="wrapper">
+      <div id="prosjektinfo" class="skjemaContainer">
+        <div class="sidefyll"></div>
+        <div class="hoveddel"></div>
+        <div class="sidefyll"></div>
       </div>
-      <div id="info">Koordinater
+      <div id="kontaktinfo" class="skjemaContainer">
+        <div class="sidefyll"></div>
+        <div class="hoveddel"></div>
+        <div class="sidefyll"></div>
       </div>
+      <div id="kart" class="skjemaContainer">
+        <div class="sidefyll"></div>
+        <div class="hoveddel">
+          <div id="viewDiv">
+            <div id="baseToggle">
+              <img id="baseSVV" class="hide" src="img/baseSVV.jpg" >
+              <img id="baseBilde" src="img/baseBilde.jpg" >
+            </div>
+            <div id="info">Koordinater
+            </div>
+          </div>
+        </div>
+        <div class="sidefyll"></div>
+
+      </div>
+      <div id="sluttInfo" class="skjemaContainer"></div>
     </div>
+
+
+
+
 </body>
 
 </html>
