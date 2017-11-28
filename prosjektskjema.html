@@ -5,22 +5,42 @@
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>Prosjektregistrering</title>
   <style>
+  @import url('https://fonts.googleapis.com/css?family=Roboto');
   body{
     margin:0;
     padding:0;
+    font-family: "Roboto",sans-serif;
+    color: #2E3539
+  }
+  #header{
+    display: flex;
+    background-color: #ED9300;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px #c37900 solid;
   }
   .wrapper{
+    display:flex;
+
+    }
+  .sidepanel{
+    flex: 1 1 auto;
   }
+  .hovedpanel{
+    flex: 0 1 850px;
+    border: 3px #c37900 solid;
+  }
+
   button.accordion {
       background-color: #e8af51;
-      color: #444;
+      color: #2E3539;
       cursor: pointer;
       padding: 18px;
       width: 100%;
       border: none;
       text-align: left;
       outline: none;
-      font-size: 15px;
+      font-size: 1.3em;
       transition: 0.4s;
   }
 
@@ -51,6 +71,14 @@
   .aapen{
     max-height: 600px !important;
   }
+
+  @media only screen and (max-width: 768px) {
+      /* For mobile phones: */
+  .sidepanel{
+    display: none;
+  }
+  }
+
   </style>
 
   <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
@@ -61,26 +89,41 @@
 </head>
 <body>
   <div class="wrapper">
-    <button class="accordion">Prosjektinfo</button>
-    <div class="panel">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
+    <div class="sidepanel"></div>
+    <div class="hovedpanel">
+      <div id="header">
+        <h2>Prosjektregistrering</h2>
+      </div>
+      <button class="accordion">Prosjektinfo</button>
+      <div id="prosjektinfo" class="panel">
+        <p>I denne seksjonen skal det fylles ut informasjon om prosjektets navn, estimert ferdigtidspunkt og referanser</p>
+        <label for="prosjektnavn">Prosjektnavn</label>
+        <input type="text" name="prosjektnavn" placeholder="Skriv inn prosjektets navn" required>
 
-    <button class="accordion">Kontaktinfo</button>
-    <div class="panel">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
+        <label for="vegreferanse">Vegreferanse</label>
+        <input type="text" name="vegreferanse" placeholder="Skriv inn vegreferanse" required>
 
-    <button class="accordion">Stedfesting</button>
-    <div class="panel">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <label for="ferdigdato"></label>
+        <input type="date" name="ferdigdato" required>
+        <small>Om sluttdato er ukjent velg første dag i måneden</small>
+      </div>
+
+      <button class="accordion">Kontaktinfo</button>
+      <div id="kontaktinfo" class="panel">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </div>
+
+      <button class="accordion">Stedfesting</button>
+      <div id="kart" class="panel">
+        <div id="viewDiv"></div>
+      </div>
+      <button class="accordion">Sluttinfo</button>
+      <div class="panel">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </div>
     </div>
-    <button class="accordion">Sluttinfo</button>
-    <div class="panel">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
+    <div id="sluttinfo" class="sidepanel"></div>
   </div>
-  <div id="viewDiv"></div>
   <script>
   var acc = document.getElementsByClassName("accordion");
   var i;
@@ -93,10 +136,6 @@
             obj.classList.remove("aapen");
             console.log("Her er etter",obj.classList);
           })
-      /*acc.forEach(function(element){
-        console.log("fjernet active")
-        element.classList.remove("active")
-      });*/
       this.classList.toggle("active");
       var panel = this.nextElementSibling;
       this.nextElementSibling.classList.toggle("aapen")
