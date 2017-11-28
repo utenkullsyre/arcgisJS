@@ -148,6 +148,11 @@
     display: none;
   }
 
+  .hovedpanel{
+    flex: 0 1 850px;
+    min-width: 0;
+  }
+
   .formitem{
     display: flex;
     flex-flow: column;
@@ -171,6 +176,7 @@
     "esri/geometry/SpatialReference",
     "esri/widgets/LayerList",
     "esri/widgets/Locate",
+    "esri/widgets/Search",
     "esri/Graphic",
     "esri/layers/ElevationLayer",
     "esri/Ground",
@@ -178,7 +184,7 @@
   ], function(
     Map,MapView,Basemap,TileLayer,
     FeatureLayer, Extent, SpatialReference,
-    LayerList, Locate, Graphic,ElevationLayer,Ground
+    LayerList, Locate, Search, Graphic,ElevationLayer,Ground
   ) {
 
     /************************************************************
@@ -248,6 +254,10 @@
       })
     });
 
+    var searchWidget = new Search({
+        view: view
+      });
+
     var layerList = new LayerList({
       view: view
     });
@@ -260,6 +270,10 @@
     view.ui.add("baseToggle","bottom-left");
     //view.ui.add(layerList, "top-left");
     view.ui.add(locateWidget, "top-left");
+    view.ui.add(searchWidget, {
+        position: "top-right",
+        index: 0
+      });
     //test = view;
 
    view.then(function(){
