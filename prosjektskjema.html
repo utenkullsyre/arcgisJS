@@ -125,7 +125,8 @@
   /*margin-right: 10px;*/
   }
   #baseToggle img{
-    right: 5px;
+    left: 0px;
+    bottom: 0px;
     border: 2px #ecc347 solid;
     position: absolute;
     transition: all 0.5s;
@@ -137,14 +138,7 @@
     background-color: #ecc347 !important
   }
 
-  #info{
-    background-color: #ecc347;
-    padding: 5px;
-    border-radius: 10px;
-    color:#705402;
-  }
-
-  .skjult{
+  .hide{
     opacity: 0;
   }
 
@@ -245,7 +239,7 @@
             map: map,
             container: "viewDiv"
           });
-
+    view.constraints.rotationEnabled = false;
     var locateWidget = new Locate({
       view: view,   // Attaches the Locate button to the view
       graphic: new Graphic({
@@ -258,13 +252,14 @@
       view: view
     });
 
+
+
     kartView = view
 
     view.extent = extent
-    view.ui.add("info","bottom-left");
-    view.ui.add("baseToggle","top-right");
+    view.ui.add("baseToggle","bottom-left");
     //view.ui.add(layerList, "top-left");
-    view.ui.add(locateWidget, "bottom-right");
+    view.ui.add(locateWidget, "top-left");
     //test = view;
 
    view.then(function(){
@@ -272,7 +267,7 @@
    var img = document.querySelectorAll("#baseToggle img");
    var lag = {}
 
-   baseToggle.classList.remove("skjult");
+   baseToggle.classList.remove("hide");
    bilder.load().then(function(){
     map.allLayers.items.forEach(function(element){
       lag[element.title] = element;
@@ -318,15 +313,6 @@
            content: "<a href='https://www.vegvesen.no/vegkart/vegkart/#kartlag:geodata/@"+view.toMap(screenPoint).x.toString().split(".")[0]+","+view.toMap(screenPoint).y.toString().split(".")[0]+","+view.zoom+"' target='#'>Link til vegkart</a>"  // content displayed in the popup
          });
         });
-      view.on("pointer-move", function(event){
-      var info = document.querySelector("#info");
-      var screenPoint = {
-        x:event.x,
-        y:event.y
-      }
-      var mapPoint = view.toMap(screenPoint)
-      info.innerHTML = mapPoint.x.toString().split(".")[0] + "<br\>" + mapPoint.y.toString().split(".")[0];
-      })
 
   });
   </script>
@@ -405,11 +391,9 @@
           <p>Registrer prosjektets plassering som linje eller areal</p>
         </div>
         <div id="viewDiv">
-          <div id="baseToggle" class="skjult">
+          <div id="baseToggle" class="hide">
             <img id="baseSVV" class="hide" src="img/baseSVV.jpg" >
             <img id="baseBilde" src="img/baseBilde.jpg" >
-          </div>
-          <div id="info">Koordinater
           </div>
         </div>
       </div>
