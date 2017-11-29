@@ -113,6 +113,10 @@ input[type=text],input[type=email],select {
     flex: 0 1 70%;
 }
 
+.invalid{
+  border: 2px solid red!important;
+}
+
 input[type=month]{
   width: 200px;
   padding: 12px 20px;

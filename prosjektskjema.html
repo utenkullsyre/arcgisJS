@@ -18,7 +18,9 @@
       </div>
       <button id="prosjektdetaljer" class="accordion active">Prosjektinfo</button>
       <div id="prosjektinfo" class="panel aapen">
-        <p>I denne seksjonen skal det fylles ut informasjon om prosjektets navn, estimert ferdigtidspunkt og referanser</p>
+        <p>I denne seksjonen skal det fylles ut informasjon om prosjektets navn, estimert ferdigtidspunkt og referanser.
+           <br/>Felter merket med * er obligatoriske
+        </p>
         <form name="prosjektregistrering" action="index.html" method="post">
 
           <h3>Prosjektinformasjon</h3>
@@ -43,9 +45,9 @@
 
 
           <div class="formitem">
-            <label for="vegavdeling">Vegavdeling</label>
+            <label for="">Vegavdeling</label>
             <select name="vegavdeling" required>
-              <option value="placeholder" disabled selected>Velg avdeling</option>
+              <option value="" disabled selected>Velg avdeling</option>
               <option value="Finnmark">Finnmark</option>
               <option value="Troms">Troms</option>
               <option value="Midtre-Hålogaland">Midtre-Hålogaland</option>
@@ -56,7 +58,7 @@
           <div class="formitem">
             <label for="seksjon">Seksjon</label>
             <select name="seksjon" required>
-              <option value="placeholder" disabled selected>Velg seksjon</option>
+              <option value="" disabled selected>Velg seksjon</option>
               <option value="TS">TS</option>
               <option value="Prosjekter">Prosjekter</option>
               <option value="Investering">Investering</option>
@@ -107,87 +109,6 @@
     </div>
     <div class="sidepanel"></div>
   </div>
-  <script>
-  var avdeling = document.querySelector("[name=vegavdeling]"),
-  seksjon = document.querySelector("[name=seksjon]"),
-  form = document.querySelector("[name=prosjektregistrering]"),
-  prosjekt = document.querySelector("#prosjektdetaljer"),
-  kart = document.querySelector("#stedfesting"),
-  submit = document.querySelector("#sendinn"),
-  formMessage = document.querySelector("#valideringForm");
-
-
-
-  /*if(form.checkValidity() && seksjon.value!="placeholder" && avdeling.value !="placeholder"){
-  	console.log("Skjemaet er godkjent")
-  } else {
-      console.log("Skjemaet er ikke godkjent")
-  }*/
-
-
-  var acc = document.getElementsByClassName("accordion");
-  var i;
-
-  function fjernCss(){
-    var acc = document.getElementsByClassName("accordion");
-    var panel = document.getElementsByClassName("panel");
-
-    Array.prototype.map.call(acc, function(obj) {
-          obj.classList.remove("active");
-        })
-
-    Array.prototype.map.call(panel, function(obj) {
-          obj.classList.remove("aapen");
-        })
-  }
-
-  function skjemaValidering(){
-    if(form.checkValidity() && seksjon.value!="placeholder" && avdeling.value !="placeholder"){
-      return true
-    } else {
-      return false
-    }
-  }
-
-  prosjekt.addEventListener("click",function(){
-    fjernCss();
-    this.classList.add("active");
-    this.nextElementSibling.classList.add("aapen");
-  });
-
-  kart.addEventListener("click",function(){
-    if(skjemaValidering()){
-    	formMessage.innerHTML = "<p>Skjemaet er godkjent</p>";
-      fjernCss();
-      this.classList.add("active");
-      this.nextElementSibling.classList.add("aapen");
-
-    } else {
-        formMessage.innerHTML = "<p>Skjemaet er ikke godkjent, fyll det ut riktig før du kan stedfeste prosjektet.</p>";
-    }
-  });
-
-  submit.addEventListener("click",function(){
-    if(skjemaValidering() && document.querySelector("#viewDiv")){
-    //Hvis grafikk er registrert og skjema er fyllt ut, lagre prosjekt i AGOL
-    fjernCss();
-    this.classList.add("active");
-    this.nextElementSibling.classList.add("aapen");
-  } else {
-    document.querySelector("#kart .errorMessage").innerHTML = "<p>Prosjektinfo er ikke fyllt ut eller stedfestet</p>";
-  }
-
-  });
-
-  /*for (i = 0; i < acc.length; i++) {
-    acc[i].onclick = function() {
-
-      fjernCss();
-
-      this.classList.add("active");
-      this.nextElementSibling.classList.add("aapen")
-    }
-  }*/
-  </script>
+  <script type="text/javascript" src="js\prosjektregistrering.js"></script>
 </body>
 </html>
