@@ -15,11 +15,29 @@ body{
 }
 #header{
   display: flex;
-  background-color: #ED9300;
+  color: white;
+  background-color: #45515A;
   justify-content: center;
   align-items: center;
   border-bottom: 1px #c37900 solid;
+  position: relative;
+  overflow: hidden;
 }
+
+#logo{
+  position: absolute;
+  left: 5px;
+  height: 40px
+}
+
+#strek{
+  position: absolute;
+  right: -10px;
+  height: 70px
+}
+
+#EEEEEE
+
 .wrapper{
   display:flex;
   flex: 0 1 auto;
@@ -186,6 +204,7 @@ input[type=month]{
   display: flex;
   flex-flow: column;
   align-items: flex-start;
+  flex: 1 1 auto;
 }
 
 small{
