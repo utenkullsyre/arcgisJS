@@ -25,12 +25,12 @@
 
           <h3>Prosjektinformasjon</h3>
           <div class="formitem">
-            <label for="prosjektnavn">Prosjektnavn</label>
+            <label for="prosjektnavn">Prosjektnavn *</label>
             <input type="text" name="prosjektnavn" placeholder="Skriv inn prosjektets navn" required>
           </div>
 
           <div class="formitem">
-            <label for="ferdigdato">Ferdigdato</label>
+            <label for="ferdigdato">Ferdigdato *</label>
             <div id="dato">
               <input type="month" name="ferdigdato" required>
             </div>
@@ -45,7 +45,7 @@
 
 
           <div class="formitem">
-            <label for="">Vegavdeling</label>
+            <label for="">Vegavdeling *</label>
             <select name="vegavdeling" required>
               <option value="" disabled selected>Velg avdeling</option>
               <option value="Finnmark">Finnmark</option>
@@ -56,7 +56,7 @@
           </div>
 
           <div class="formitem">
-            <label for="seksjon">Seksjon</label>
+            <label for="seksjon">Seksjon *</label>
             <select name="seksjon" required>
               <option value="" disabled selected>Velg seksjon</option>
               <option value="TS">TS</option>
@@ -70,12 +70,12 @@
           <h3>Kontaktinformasjon</h3>
 
           <div class="formitem">
-            <label for="kontaktperson">Kontaktperson i SVV</label>
+            <label for="kontaktperson">Kontaktperson i SVV *</label>
             <input type="text" name="kontaktperson" placeholder="Kontaktperson for prosjektet" required>
           </div>
 
           <div class="formitem">
-            <label for="epost">Epost</label>
+            <label for="epost">Epost *</label>
             <input type="email" name="epost" placeholder="Skriv inn epost" required>
           </div>
         </form>
@@ -104,7 +104,7 @@
         <div id="sluttmelding" class="errorMessage">
               Her vil det komme en melding avhengig av om skjemaet er riktig eller ikke
         </div>
-        <p>Vil du registrere et nytt prosjekt? </p>
+        <button type="button" name="nyttprosjekt">Registrer nytt prosjekt</button>
       </div>
     </div>
     <div class="sidepanel"></div>
