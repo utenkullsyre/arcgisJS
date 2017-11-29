@@ -16,7 +16,7 @@
       <div id="header">
         <h2>Prosjektregistrering</h2>
       </div>
-      <button class="accordion">Prosjektinfo</button>
+      <button id="prosjektdetaljer" class="accordion active">Prosjektinfo</button>
       <div id="prosjektinfo" class="panel aapen">
         <p>I denne seksjonen skal det fylles ut informasjon om prosjektets navn, estimert ferdigtidspunkt og referanser</p>
         <form name="prosjektregistrering" action="index.html" method="post">
@@ -37,15 +37,15 @@
 
           <div class="formitem">
             <label for="vegreferanse">Vegreferanse</label>
-            <input type="text" name="vegreferanse" placeholder="Skriv inn vegreferanse" required>
+            <input type="text" name="vegreferanse" placeholder="Skriv inn vegreferanse">
           </div>
 
 
 
           <div class="formitem">
             <label for="vegavdeling">Vegavdeling</label>
-            <select name="vegavdeling">
-              <option value="placeholder">Velg avdeling</option>
+            <select name="vegavdeling" required>
+              <option value="placeholder" disabled selected>Velg avdeling</option>
               <option value="Finnmark">Finnmark</option>
               <option value="Troms">Troms</option>
               <option value="Midtre-Hålogaland">Midtre-Hålogaland</option>
@@ -55,8 +55,8 @@
 
           <div class="formitem">
             <label for="seksjon">Seksjon</label>
-            <select name="seksjon">
-              <option value="placeholder">Velg seksjon</option>
+            <select name="seksjon" required>
+              <option value="placeholder" disabled selected>Velg seksjon</option>
               <option value="TS">TS</option>
               <option value="Prosjekter">Prosjekter</option>
               <option value="Investering">Investering</option>
@@ -78,12 +78,11 @@
           </div>
         </form>
 
-        <div id="validering" class="message">
+        <div id="valideringForm" class="message">
         </div>
-        <p>Om skjemaet er utfyllt kan du gå videre til registrering av prosjektets plassering.</p>
       </div>
 
-      <button class="accordion">Stedfesting</button>
+      <button id="stedfesting" class="accordion">Stedfesting</button>
       <div id="kart" class="panel">
         <div class="">
           <p>Registrer prosjektets plassering som linje eller areal</p>
@@ -94,34 +93,101 @@
             <img id="baseBilde" src="img/baseBilde.jpg" >
           </div>
         </div>
+        <div class="errorMessage"></div>
       </div>
 
-      <button class="accordion">Send inn</button>
+      <button id="sendinn" class="accordion">Send inn</button>
       <div id="submit" class="panel">
         <div class="message"></div>
-        <input type="submit" name="submit" value="Send inn">
+        <div id="sluttmelding" class="errorMessage">
+              Her vil det komme en melding avhengig av om skjemaet er riktig eller ikke
+        </div>
         <p>Vil du registrere et nytt prosjekt? </p>
       </div>
     </div>
     <div class="sidepanel"></div>
   </div>
   <script>
+  var avdeling = document.querySelector("[name=vegavdeling]"),
+  seksjon = document.querySelector("[name=seksjon]"),
+  form = document.querySelector("[name=prosjektregistrering]"),
+  prosjekt = document.querySelector("#prosjektdetaljer"),
+  kart = document.querySelector("#stedfesting"),
+  submit = document.querySelector("#sendinn"),
+  formMessage = document.querySelector("#valideringForm");
+
+
+
+  /*if(form.checkValidity() && seksjon.value!="placeholder" && avdeling.value !="placeholder"){
+  	console.log("Skjemaet er godkjent")
+  } else {
+      console.log("Skjemaet er ikke godkjent")
+  }*/
+
+
   var acc = document.getElementsByClassName("accordion");
   var i;
 
-  for (i = 0; i < acc.length; i++) {
-    acc[i].onclick = function() {
-      Array.prototype.map.call(acc, function(obj) {
-            console.log("Her er før",obj.classList);
-            obj.classList.remove("active");
-            obj.classList.remove("aapen");
-            console.log("Her er etter",obj.classList);
-          })
-      this.classList.toggle("active");
-      var panel = this.nextElementSibling;
-      this.nextElementSibling.classList.toggle("aapen")
+  function fjernCss(){
+    var acc = document.getElementsByClassName("accordion");
+    var panel = document.getElementsByClassName("panel");
+
+    Array.prototype.map.call(acc, function(obj) {
+          obj.classList.remove("active");
+        })
+
+    Array.prototype.map.call(panel, function(obj) {
+          obj.classList.remove("aapen");
+        })
+  }
+
+  function skjemaValidering(){
+    if(form.checkValidity() && seksjon.value!="placeholder" && avdeling.value !="placeholder"){
+      return true
+    } else {
+      return false
     }
   }
+
+  prosjekt.addEventListener("click",function(){
+    fjernCss();
+    this.classList.add("active");
+    this.nextElementSibling.classList.add("aapen");
+  });
+
+  kart.addEventListener("click",function(){
+    if(skjemaValidering()){
+    	formMessage.innerHTML = "<p>Skjemaet er godkjent</p>";
+      fjernCss();
+      this.classList.add("active");
+      this.nextElementSibling.classList.add("aapen");
+
+    } else {
+        formMessage.innerHTML = "<p>Skjemaet er ikke godkjent, fyll det ut riktig før du kan stedfeste prosjektet.</p>";
+    }
+  });
+
+  submit.addEventListener("click",function(){
+    if(skjemaValidering() && document.querySelector("#viewDiv")){
+    //Hvis grafikk er registrert og skjema er fyllt ut, lagre prosjekt i AGOL
+    fjernCss();
+    this.classList.add("active");
+    this.nextElementSibling.classList.add("aapen");
+  } else {
+    document.querySelector("#kart .errorMessage").innerHTML = "<p>Prosjektinfo er ikke fyllt ut eller stedfestet</p>";
+  }
+
+  });
+
+  /*for (i = 0; i < acc.length; i++) {
+    acc[i].onclick = function() {
+
+      fjernCss();
+
+      this.classList.add("active");
+      this.nextElementSibling.classList.add("aapen")
+    }
+  }*/
   </script>
 </body>
 </html>
