@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+body{
+  margin:0;
+  padding:0;
+  font-family: "Roboto",sans-serif;
+  color: #2E3539
+}
+#header{
+  display: flex;
+  background-color: #ED9300;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px #c37900 solid;
+}
+.wrapper{
+  display:flex;
+  }
+
+.sidepanel{
+  flex: 1 1 auto;
+}
+.hovedpanel{
+  flex: 0 1 850px;
+  border: 3px #c37900 solid;
+  min-width: 0;
+}
+
+
+
+button.accordion {
+    background-color: #e8af51;
+    color: #2E3539;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    font-weight: bold;
+    outline: none;
+    font-size: 1.3em;
+    transition: 0.4s;
+}
+
+button.accordion.active, button.accordion:hover {
+    background-color: #ED9300;
+}
+
+button.accordion:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+button.accordion.active:after {
+    content: "\2212";
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+.aapen{
+  max-height: 1500px !important;
+}
+
+.formitem{
+  margin-bottom: 25px;
+  font-size: 1.2em;
+}
+
+input[type=text],input[type=email],select {
+    padding: 12px 20px;
+    margin: 8px 0;
+    background-color: #ede0ca;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1.1rem;
+}
+
+input[type=month]{
+  width: 200px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  background-color: #ede0ca;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1.1rem;
+}
+
+
+#prosjektinfo{
+  display: flex;
+  flex-flow: column;
+}
+
+#kart{
+  padding:0;
+}
+
+#viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 80vh;
+  max-height: 700px;
+  width: 100%;
+}
+
+#baseToggle{
+/*position: relative;*/
+/*margin-right: 10px;*/
+}
+#baseToggle img{
+  left: 0px;
+  bottom: 0px;
+  border: 2px #ecc347 solid;
+  position: absolute;
+  transition: all 0.5s;
+  border-radius: 10px;
+}
+
+.esri-widget-button{
+  color: #705402 !important;
+  background-color: #ecc347 !important
+}
+
+.hide{
+  opacity: 0;
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+.sidepanel{
+  display: none;
+}
+
+.hovedpanel{
+  flex: 0 1 850px;
+  min-width: 0;
+}
+
+.formitem{
+  display: flex;
+  flex-flow: column;
+}
+
+}
