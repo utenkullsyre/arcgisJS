@@ -78,6 +78,7 @@ submit.addEventListener("click",function(){
   //og gi beskjed om at prosjektet er suksessfullt lagt inn.
   //kanskje til og med legg til link til kart på agol for å vise det
   fjernCss();
+  form.reset();
   this.classList.add("active");
   this.nextElementSibling.classList.add("aapen");
 } else {
@@ -88,7 +89,7 @@ nyttProsjekt.addEventListener("click",function(){
   fjernCss();
   prosjekt.classList.add("active");
   document.getElementById("prosjektinfo").classList.add("aapen");
-  form.reset();
+
 
 
 
