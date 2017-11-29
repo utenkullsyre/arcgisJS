@@ -37,10 +37,11 @@ require([
       id: "Bilder",
       visible: false
     });
-    /*var fl = new FeatureLayer({
-      url: "https://kart.tromso.kommune.no/arcgis/rest/services/Temadata/FlyplassTema/MapServer/5",
-      id: "testlag"
-    });*/
+    var fl = new FeatureLayer({
+      portalItem: {  // autocasts as esri/portal/PortalItem
+        id: "1c53fe4f67094bf49fdbae16fcf17641"
+      }
+    });
 
     var bakke = ElevationLayer({
       url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer"
@@ -58,7 +59,7 @@ require([
      ground: new Ground({
        layers: [bakke]
      }),
-     layers: [bilder]
+     layers: [bilder,fl]
    });
 
   kart = map
@@ -79,6 +80,8 @@ require([
           container: "viewDiv"
         });
   view.constraints.rotationEnabled = false;
+
+
   var locateWidget = new Locate({
     view: view,   // Attaches the Locate button to the view
     graphic: new Graphic({
