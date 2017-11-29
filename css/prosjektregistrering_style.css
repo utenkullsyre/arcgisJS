@@ -36,8 +36,6 @@ body{
   height: 70px
 }
 
-#EEEEEE
-
 .wrapper{
   display:flex;
   flex: 0 1 auto;
@@ -119,7 +117,7 @@ small{
   margin-left: auto;
 }
 
-input[type=text],input[type=email],select {
+.formitem input[type=text], .formitem input[type=email], .formitem select {
     padding: 12px 20px;
     margin: 8px 0;
     background-color: #ede0ca;
@@ -204,7 +202,10 @@ input[type=month]{
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  flex: 1 1 auto;
+}
+
+.formitem>input,.formitem>select{
+  width: 100%;
 }
 
 small{
