@@ -3,7 +3,7 @@ body{
   margin:0;
   padding:0;
   font-family: "Roboto",sans-serif;
-  color: #2E3539
+  color: #2E3539;
 }
 #header{
   display: flex;
@@ -72,7 +72,25 @@ div.panel {
 .formitem{
   margin-bottom: 25px;
   font-size: 1.2em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
+
+.formitem label{
+  flex: 0 1 30%;
+  font-weight: bold;
+}
+.formitem input,select,small{
+  flex: 0 1 70%;
+}
+
+small{
+  flex: 0 1 70%;
+  margin-left: auto;
+}
+
+
 
 input[type=text],input[type=email],select {
     padding: 12px 20px;
@@ -137,7 +155,7 @@ input[type=month]{
   opacity: 0;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 600px) {
     /* For mobile phones: */
 .sidepanel{
   display: none;
@@ -146,11 +164,18 @@ input[type=month]{
 .hovedpanel{
   flex: 0 1 850px;
   min-width: 0;
+  border:none;
 }
 
 .formitem{
   display: flex;
   flex-flow: column;
+  align-items: flex-start;
+}
+
+small{
+  flex: 1;
+  margin:inherit;
 }
 
 }
