@@ -43,7 +43,7 @@ require([
       portalItem: {  // autocasts as esri/portal/PortalItem
         id: "1c53fe4f67094bf49fdbae16fcf17641"
       },
-      visible:true
+      visible:false
     });
 
     var bakke = ElevationLayer({
@@ -120,19 +120,9 @@ require([
  // create a new sketch view model
  var sketchViewModel = new SketchViewModel({
    view: view,
-   pointSymbol: { // symbol used for points
-     type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-     style: "square",
-     color: "#8A2BE2",
-     size: "16px",
-     outline: { // autocasts as new SimpleLineSymbol()
-       color: [255, 255, 255],
-       width: 3 // points
-     }
-   },
    polylineSymbol: { // symbol used for polylines
      type: "simple-line", // autocasts as new SimpleMarkerSymbol()
-     color: "#8A2BE2",
+     color: "#ED9300",
      width: "4",
      style: "dash",
      attributes:{
@@ -141,11 +131,12 @@ require([
    },
    polygonSymbol: { // symbol used for polygons
      type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
-     color: "rgba(138,43,226, 0.8)",
+     color: "rgba(237, 224, 202, 0.57)",
      style: "solid",
      outline: {
-       color: "white",
-       width: 1
+       color: "#ED9300",
+       width: "4",
+       style: "dash"
      },
      attributes:{
        "Name":"Test"
@@ -178,7 +169,7 @@ require([
  // ****************************************
  var drawLineButton = document.getElementById("polylineButton");
  drawLineButton.onclick = function() {
-
+   view.graphics.removeAll();
    // set the sketch to create a polyline geometry
    sketchViewModel.create("polyline");
    featureLayer.visible = false;
@@ -190,7 +181,7 @@ require([
  // ***************************************
  var drawPolygonButton = document.getElementById("polygonButton");
  drawPolygonButton.onclick = function() {
-
+   view.graphics.removeAll();
    // set the sketch to create a polygon geometry
    sketchViewModel.create("polygon");
    setActiveButton(this);
@@ -245,33 +236,5 @@ require([
  })
  })
 
-
-
-  view.on("click", function(event) {
-      view.hitTest(event).then(function(response){
-        hitResultat = response
-        bakke.queryElevation(hitResultat.screenPoint.mapPoint).then(function(results){
-          diverseResultat = results
-          console.log(results)
-        })
-      })
-
-
-       // you must overwrite default click-for-popup
-       // behavior to display your own popup
-       event.stopPropagation();
-
-       var screenPoint = {
-         x: event.x,
-         y: event.y
-       }
-
-       view.popup.open({
-         // Set the popup's title to the coordinates of the location
-         title: "Geokoding",
-         location: event.mapPoint, // Set the location of the popup to the clicked location,
-         content: "<a href='https://www.vegvesen.no/vegkart/vegkart/#kartlag:geodata/@"+view.toMap(screenPoint).x.toString().split(".")[0]+","+view.toMap(screenPoint).y.toString().split(".")[0]+","+view.zoom+"' target='#'>Link til vegkart</a>"  // content displayed in the popup
-       });
-      });
 
 });
