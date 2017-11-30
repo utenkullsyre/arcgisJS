@@ -133,8 +133,7 @@ small{
   border: 2px solid red!important;
 }
 
-input[type=month]{
-  width: 200px;
+#dato input{
   padding: 12px 20px;
   margin: 8px 0;
   background-color: #ede0ca;
