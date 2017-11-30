@@ -141,6 +141,13 @@ small{
   font-size: 1.1rem;
 }
 
+#dato [name="mnd"]{
+  width: 100px;
+}
+#dato [name="aar"]{
+  width: 140px;
+}
+
 
 #prosjektinfo{
   display: flex;
