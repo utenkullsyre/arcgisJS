@@ -184,8 +184,21 @@ small{
   background-color: #ecc347 !important
 }
 
+.action-button {
+    background-color: #ECC347;
+    height: 31px;
+    width: 32px;
+    border: none;
+    color: black;
+}
+
 .hide{
   opacity: 0;
+}
+
+.aktiv {
+  background: #0079c1;
+  color: #e4e4e4;
 }
 
 @media only screen and (max-width: 600px) {

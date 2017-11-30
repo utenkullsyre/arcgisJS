@@ -11,13 +11,15 @@ require([
   "esri/widgets/Locate",
   "esri/widgets/Search",
   "esri/Graphic",
+  "esri/widgets/Sketch/SketchViewModel",
   "esri/layers/ElevationLayer",
   "esri/Ground",
   "dojo/domReady!"
 ], function(
   Map,MapView,Basemap,TileLayer,
   FeatureLayer, Extent, SpatialReference,
-  LayerList, Locate, Search, Graphic,ElevationLayer,Ground
+  LayerList, Locate, Search, Graphic,SketchViewModel,
+  ElevationLayer,Ground
 ) {
 
   /************************************************************
@@ -37,10 +39,11 @@ require([
       id: "Bilder",
       visible: false
     });
-    var fl = new FeatureLayer({
+    var featureLayer = new FeatureLayer({
       portalItem: {  // autocasts as esri/portal/PortalItem
         id: "1c53fe4f67094bf49fdbae16fcf17641"
-      }
+      },
+      visible:true
     });
 
     var bakke = ElevationLayer({
@@ -59,7 +62,7 @@ require([
      ground: new Ground({
        layers: [bakke]
      }),
-     layers: [bilder,fl]
+     layers: [bilder,featureLayer]
    });
 
   kart = map
@@ -110,7 +113,113 @@ require([
       position: "top-right",
       index: 0
     });
+    view.ui.add("topbar", "bottom-right");
   //test = view;
+
+  view.then(function(evt) {
+ // create a new sketch view model
+ var sketchViewModel = new SketchViewModel({
+   view: view,
+   pointSymbol: { // symbol used for points
+     type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+     style: "square",
+     color: "#8A2BE2",
+     size: "16px",
+     outline: { // autocasts as new SimpleLineSymbol()
+       color: [255, 255, 255],
+       width: 3 // points
+     }
+   },
+   polylineSymbol: { // symbol used for polylines
+     type: "simple-line", // autocasts as new SimpleMarkerSymbol()
+     color: "#8A2BE2",
+     width: "4",
+     style: "dash",
+     attributes:{
+       "Name":"Test"
+     }
+   },
+   polygonSymbol: { // symbol used for polygons
+     type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
+     color: "rgba(138,43,226, 0.8)",
+     style: "solid",
+     outline: {
+       color: "white",
+       width: 1
+     },
+     attributes:{
+       "Name":"Test"
+     }
+   }
+ });
+
+ sketchViewModel.on("draw-complete", function(evt) {
+   var result = evt.graphic
+   result.attributes = {"Name":"Test"}
+   lag =featureLayer
+   kart = evt.graphic
+   view.graphics.add(evt.graphic);
+   var edits = {
+     addFeatures: [result]
+   };
+   if(result.symbol.type == "simple-line"){
+     featureLayer.applyEdits(edits).otherwise(function(error){
+         console.log(error)
+       });
+   } else if(result.symbol.type == "simple-fill"){
+     alert("Polygon");
+   }
+
+   setActiveButton();
+ });
+
+ // ****************************************
+ // activate the sketch to create a polyline
+ // ****************************************
+ var drawLineButton = document.getElementById("polylineButton");
+ drawLineButton.onclick = function() {
+
+   // set the sketch to create a polyline geometry
+   sketchViewModel.create("polyline");
+   featureLayer.visible = false;
+   setActiveButton(this);
+ };
+
+ // ***************************************
+ // activate the sketch to create a polygon
+ // ***************************************
+ var drawPolygonButton = document.getElementById("polygonButton");
+ drawPolygonButton.onclick = function() {
+
+   // set the sketch to create a polygon geometry
+   sketchViewModel.create("polygon");
+   setActiveButton(this);
+ };
+
+ // **************
+ // reset button
+ // **************
+ document.getElementById("resetBtn").onclick = function() {
+   view.graphics.removeAll();
+   sketchViewModel.reset();
+   setActiveButton();
+ };
+
+ function setActiveButton(selectedButton) {
+   // focus the view to activate keyboard shortcuts for sketching
+   view.focus();
+   var elements = document.getElementsByClassName("aktiv");
+   for (var i = 0; i < elements.length; i++) {
+     elements[i].classList.remove("aktiv");
+   }
+   if (selectedButton) {
+     selectedButton.classList.add("aktiv");
+   }
+ }
+}).otherwise(function(error){
+  // This function is called when the promise is rejected
+  console.error(error);  // Logs the error message
+});
 
  view.then(function(){
  var baseToggle = document.querySelector("#baseToggle");
@@ -135,6 +244,7 @@ require([
      })
  })
  })
+
 
 
   view.on("click", function(event) {
