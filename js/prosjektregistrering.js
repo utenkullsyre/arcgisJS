@@ -59,7 +59,8 @@ kart.addEventListener("click",function(){
 
 
   if(skjemaValidering()){
-    formMessage.innerHTML = "<p>Skjemaet er godkjent</p>";
+    formMessage.innerHTML = "";
+    window.scrollTo(0,document.querySelector("#kart").offsetTop);
     fjernCss();
     this.classList.add("active");
     this.nextElementSibling.classList.add("aapen");

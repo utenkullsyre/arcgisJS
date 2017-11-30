@@ -169,10 +169,8 @@ require([
  // ****************************************
  var drawLineButton = document.getElementById("polylineButton");
  drawLineButton.onclick = function() {
-   view.graphics.removeAll();
    // set the sketch to create a polyline geometry
    sketchViewModel.create("polyline");
-   featureLayer.visible = false;
    setActiveButton(this);
  };
 
@@ -236,5 +234,8 @@ require([
  })
  })
 
+document.getElementById("sendinn").addEventListener("click", function(){
+  view.graphics.removeAll();
+})
 
 });
