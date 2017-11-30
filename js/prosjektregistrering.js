@@ -73,27 +73,8 @@ kart.addEventListener("click",function(){
   }
 });
 
-submit.addEventListener("click",function(){
-  if(skjemaValidering() && document.querySelector("#viewDiv")){
-  //Hvis grafikk er registrert og skjema er fyllt ut, lagre prosjekt i AGOL
-  //og gi beskjed om at prosjektet er suksessfullt lagt inn.
-  //kanskje til og med legg til link til kart på agol for å vise det
-  fjernCss();
-  form.reset();
-  this.classList.add("active");
-  this.nextElementSibling.classList.add("aapen");
-} else {
-  document.querySelector("#kart .errorMessage").innerHTML = "<p>Prosjektinfo er ikke fyllt ut eller stedfestet</p>";
-}
-
 nyttProsjekt.addEventListener("click",function(){
   fjernCss();
   prosjekt.classList.add("active");
   document.getElementById("prosjektinfo").classList.add("aapen");
-
-
-
-
-})
-
 });

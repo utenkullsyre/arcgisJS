@@ -145,21 +145,8 @@ require([
  });
 
  sketchViewModel.on("draw-complete", function(evt) {
-   var result = evt.graphic
-   result.attributes = {"Name":"Test"}
-   lag =featureLayer
-   kart = evt.graphic
+   var result = evt.graphic;
    view.graphics.add(evt.graphic);
-   var edits = {
-     addFeatures: [result]
-   };
-   if(result.symbol.type == "simple-line"){
-     featureLayer.applyEdits(edits).otherwise(function(error){
-         console.log(error)
-       });
-   } else if(result.symbol.type == "simple-fill"){
-     alert("Polygon");
-   }
 
    setActiveButton();
  });
@@ -228,14 +215,51 @@ require([
    lag["GeocacheTrafikkJPG"].visible = !lag["GeocacheTrafikkJPG"].visible;
 
 
-    //test = lag;
-
      })
  })
  })
 
 document.getElementById("sendinn").addEventListener("click", function(){
-  view.graphics.removeAll();
-})
+  if(view.graphics.length>0 && skjemaValidering()){
+
+      var grafikk = view.graphics;
+      var grafikkArray = []
+
+      //Hvis registrert grafikk er linje, gjør noe logikk
+      if(grafikk.items[0].symbol.type == "simple-line"){
+        alert("Polyline");
+        if (grafikk.length>1){
+          console.log(grafikk)
+        } else {
+          grafikkArray = [grafikk.items[0]]
+        }
+
+        var edits = {
+          addFeatures: grafikkArray
+        };
+
+        featureLayer.applyEdits(edits).otherwise(function(error){
+            console.log(error)
+          });
+      //Hvis registrert grafikk er polygon, gjør noe annen logikk
+      } else if(grafikk.items[0].symbol.type == "simple-fill"){
+        alert("Polygon");
+      }
+
+      //Fjern aktiv, åpen og andre markør-klasser
+      fjernCss();
+      form.reset();
+      this.classList.add("active");
+      this.nextElementSibling.classList.add("aapen");
+
+
+
+
+  } else {
+    document.querySelector("#kart .errorMessage").innerHTML = "<p>Prosjektinfo er ikke fyllt ut eller stedfestet</p>";
+  }
+  //if(view.graphics)
+  //view.graphics.removeAll();
+});
 
 });
