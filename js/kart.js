@@ -272,7 +272,6 @@ document.getElementById("sendinn").addEventListener("click", function(){
 
       //Hvis registrert grafikk er polygon, gjør noe annen logikk
       } else if(grafikk.items[0].symbol.type == "simple-fill"){
-        alert("Polygon");
         oppdaterFeatureLayer(skjemaItems,grafikk.items[0],flate);
       }
 
