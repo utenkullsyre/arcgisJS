@@ -39,10 +39,14 @@ require([
       id: "Bilder",
       visible: false
     });
-    var featureLayer = new FeatureLayer({
-      portalItem: {  // autocasts as esri/portal/PortalItem
-        id: "1c53fe4f67094bf49fdbae16fcf17641"
-      },
+
+    var linje = new FeatureLayer({
+      url: "https://services1.arcgis.com/oc32TmBcUxTXagmW/ArcGIS/rest/services/Prosjekter___SVV/FeatureServer/0",
+      visible:false
+    });
+
+    var flate = new FeatureLayer({
+      url: "https://services1.arcgis.com/oc32TmBcUxTXagmW/ArcGIS/rest/services/Prosjekter___SVV/FeatureServer/1",
       visible:false
     });
 
@@ -62,7 +66,7 @@ require([
      ground: new Ground({
        layers: [bakke]
      }),
-     layers: [bilder,featureLayer]
+     layers: [bilder,linje, flate]
    });
 
   kart = map
@@ -131,7 +135,7 @@ require([
    },
    polygonSymbol: { // symbol used for polygons
      type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
-     color: "rgba(237, 224, 202, 0.57)",
+     color: "rgba(#ede0ca, 0.57)",
      style: "solid",
      outline: {
        color: "#ED9300",
@@ -223,6 +227,31 @@ require([
  })
  })
 
+function oppdaterFeatureLayer(skjemaItems,grafikk,featurelag){
+      var itemVerdier = {};
+      Array.prototype.map.call(skjemaItems, function(obj) {
+        itemVerdier[obj.name] = obj.value;
+      })
+
+      var attributter = {
+        "Prosjektnavn":itemVerdier["prosjektnavn"],
+        "Vegavdeling":itemVerdier["vegavdeling"],
+        "Seksjon":itemVerdier["seksjon"],
+        "Epost":itemVerdier["epost"],
+      }
+
+      grafikk.attributes = attributter;
+
+      var edits = {
+        addFeatures: [grafikk]
+      };
+
+      featurelag.applyEdits(edits).otherwise(function(error){
+          console.log(error)
+        });
+    }
+
+
 document.getElementById("sendinn").addEventListener("click", function(){
   if(view.graphics.length>0 && skjemaValidering()){
 
@@ -232,38 +261,19 @@ document.getElementById("sendinn").addEventListener("click", function(){
 
       //Hvis registrert grafikk er linje, gjør noe logikk
       if(grafikk.items[0].symbol.type == "simple-line"){
-        alert("Polyline");
         if (grafikk.length>1){
           console.log(grafikk)
         } else {
           grafikkArray = [grafikk.items[0]]
         }
+
         console.log("Grafikkarray",grafikkArray)
+        oppdaterFeatureLayer(skjemaItems,grafikk.items[0],linje);
 
-        var itemVerdier = {};
-        Array.prototype.map.call(skjemaItems, function(obj) {
-          itemVerdier[obj.name] = obj.value;
-        })
-
-        var attributter = {
-          "Navn":itemVerdier["prosjektnavn"],
-          "Vegavdeling":itemVerdier["vegavdeling"],
-          "Seksjon":itemVerdier["seksjon"],
-          "epost":itemVerdier["epost"],
-        }
-
-        grafikkArray[0].attributes = attributter;
-
-        var edits = {
-          addFeatures: grafikkArray
-        };
-
-        featureLayer.applyEdits(edits).otherwise(function(error){
-            console.log(error)
-          });
       //Hvis registrert grafikk er polygon, gjør noe annen logikk
       } else if(grafikk.items[0].symbol.type == "simple-fill"){
         alert("Polygon");
+        oppdaterFeatureLayer(skjemaItems,grafikk.items[0],flate);
       }
 
       //Fjern aktiv, åpen og andre markør-klasser
