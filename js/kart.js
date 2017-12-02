@@ -135,7 +135,7 @@ require([
    },
    polygonSymbol: { // symbol used for polygons
      type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
-     color: "rgba(#ede0ca, 0.57)",
+     color: "rgba(237, 224, 202, 0.57)",
      style: "solid",
      outline: {
        color: "#ED9300",
