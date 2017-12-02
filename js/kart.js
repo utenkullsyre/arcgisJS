@@ -1,4 +1,4 @@
-var kartView,kart,diverseResultat, bakkeLag,hitResultat = {};
+var kartView,kart,diverseResultat, bakkeLag,hitResultat,sketchObjekt = {};
 require([
   "esri/Map",
   "esri/views/MapView",
@@ -144,12 +144,16 @@ require([
    }
  });
 
+ sketchObjekt = sketchViewModel;
+
  sketchViewModel.on("draw-complete", function(evt) {
    var result = evt.graphic;
    view.graphics.add(evt.graphic);
 
    setActiveButton();
  });
+
+
 
  // ****************************************
  // activate the sketch to create a polyline
@@ -222,6 +226,7 @@ require([
 document.getElementById("sendinn").addEventListener("click", function(){
   if(view.graphics.length>0 && skjemaValidering()){
 
+      console.log(view.graphics)
       var grafikk = view.graphics;
       var grafikkArray = []
 
@@ -233,6 +238,21 @@ document.getElementById("sendinn").addEventListener("click", function(){
         } else {
           grafikkArray = [grafikk.items[0]]
         }
+        console.log("Grafikkarray",grafikkArray)
+
+        var itemVerdier = {};
+        Array.prototype.map.call(skjemaItems, function(obj) {
+          itemVerdier[obj.name] = obj.value;
+        })
+
+        var attributter = {
+          "Navn":itemVerdier["prosjektnavn"],
+          "Vegavdeling":itemVerdier["vegavdeling"],
+          "Seksjon":itemVerdier["seksjon"],
+          "epost":itemVerdier["epost"],
+        }
+
+        grafikkArray[0].attributes = attributter;
 
         var edits = {
           addFeatures: grafikkArray

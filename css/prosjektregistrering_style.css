@@ -124,6 +124,7 @@ small{
     box-sizing: border-box;
     font-size: 1.1rem;
     flex: 0 1 70%;
+    transition: all 0.5s;
 }
 
 .invalid{

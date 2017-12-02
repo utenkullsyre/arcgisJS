@@ -8,6 +8,7 @@ nyttProsjekt = document.querySelector("[name=nyttprosjekt]"),
 formMessage = document.querySelector("#valideringForm"),
 skjemaItems = document.querySelectorAll(".formitem input,.formitem select");
 
+console.log(form);
 
 var acc = document.getElementsByClassName("accordion");
 var i;
