@@ -61,10 +61,10 @@ kart.addEventListener("click",function(){
 
   if(skjemaValidering()){
     formMessage.innerHTML = "";
-    window.scrollTo(0,document.querySelector("#kart").offsetTop);
     fjernCss();
     this.classList.add("active");
     this.nextElementSibling.classList.add("aapen");
+    window.scrollTo(0,191);
 
   } else {
     Array.prototype.map.call(skjemaItems, function(obj) {
