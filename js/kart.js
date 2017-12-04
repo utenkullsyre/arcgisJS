@@ -1,4 +1,4 @@
-var kartView,kart,diverseResultat, bakkeLag,hitResultat,sketchObjekt = {};
+var kartView,kart,diverseResultat, bakkeLag,hitResultat,sketchObjekt,itemVerdier = {};
 require([
   "esri/Map",
   "esri/views/MapView",
@@ -228,10 +228,13 @@ require([
  })
 
 function oppdaterFeatureLayer(skjemaItems,grafikk,featurelag){
-      var itemVerdier = {};
+
       Array.prototype.map.call(skjemaItems, function(obj) {
         itemVerdier[obj.name] = obj.value;
       })
+
+      console.log("itemverdier", itemVerdier)
+
 
       var attributter = {
         "Prosjektnavn":itemVerdier["prosjektnavn"],
@@ -254,6 +257,8 @@ function oppdaterFeatureLayer(skjemaItems,grafikk,featurelag){
 
 document.getElementById("sendinn").addEventListener("click", function(){
   if(view.graphics.length>0 && skjemaValidering()){
+
+      document.querySelector("#prosjektVerdi").innerHTML = document.querySelector("[name='prosjektnavn']").value
 
       console.log(view.graphics)
       var grafikk = view.graphics;

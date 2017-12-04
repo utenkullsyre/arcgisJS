@@ -61,7 +61,7 @@ kart.addEventListener("click",function(){
 
   if(skjemaValidering()){
     formMessage.innerHTML = "";
-    window.scrollTo(0,document.querySelector("#kart").offsetTop);
+    window.scrollTo(0,191);
     fjernCss();
     this.classList.add("active");
     this.nextElementSibling.classList.add("aapen");

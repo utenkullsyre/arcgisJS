@@ -19,7 +19,7 @@
         <img id="strek" src="img\strek.png">
       </div>
       <button id="prosjektdetaljer" class="accordion active">Prosjektinfo</button>
-      <div id="prosjektinfo" class="panel aapen">
+      <div id="prosjektinfo" class="panel">
         <p>I denne seksjonen skal det fylles ut informasjon om prosjektets navn, estimert ferdigtidspunkt og referanser.
            <br/>Felter merket med * er obligatoriske
         </p>
@@ -36,7 +36,6 @@
             <div id="dato">
               <input type="number" min="1" max="12" name="mnd" placeholder="mnd" required><span>/</span><input type="number" min="2017" max="2100" name="aar" placeholder="år" required>
             </div>
-            <small>Om sluttdato er ukjent velg første dag i måneden</small>
           </div>
 
           <div class="formitem">
@@ -73,7 +72,7 @@
 
           <div class="formitem">
             <label for="kontaktperson">Kontaktperson i SVV *</label>
-            <input type="text" name="kontaktperson" placeholder="Kontaktperson for prosjektet" required>
+            <input type="name" name="kontaktperson" placeholder="Kontaktperson for prosjektet" required>
           </div>
 
           <div class="formitem">
@@ -113,12 +112,12 @@
       </div>
 
       <button id="sendinn" class="accordion">Send inn</button>
-      <div id="submit" class="panel">
-        <div class="message"></div>
+      <div id="submit" class="panel aapen">
         <div id="sluttmelding" class="errorMessage">
-              Her vil det komme en melding avhengig av om skjemaet er riktig eller ikke
+          <p>Registreringen av prosjekt med navn <span id="prosjektVerdi">Prosjektnavn</span> er fullført</p>
+          <p>For å se en kartoversikt over registrerte prosjekter i region Nord gå inn på <a href="http://vegvesen.maps.arcgis.com/apps/webappviewer/index.html?id=2c6b9e7a5a57410c9d833c7cb0e5c6b2" target="#">dette</a> kartet</p>
+          <p>Om du vil registrere et nytt prosjekt kan du gjøre dette ved å trykke på knappen under</p>
         </div>
-        <p>Prosjektet er nå registrert. Gå inn på <a href="http://vegvesen.maps.arcgis.com/apps/webappviewer/index.html?id=2c6b9e7a5a57410c9d833c7cb0e5c6b2" target="#">dette</a> kartet for å se på andre prosjekter.</p>
         <button type="button" name="nyttprosjekt">Registrer nytt prosjekt</button>
       </div>
     </div>

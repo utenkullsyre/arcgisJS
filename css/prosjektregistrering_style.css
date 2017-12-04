@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
 body{
   margin:0;
   padding:0;
-  font-family: "Roboto",sans-serif;
+  font-family: "Raleway",sans-serif;
   color: #2E3539;
   min-height: 100vh;
   background-image: url("../img/bakgrunn_blur4.jpg");
@@ -12,6 +12,15 @@ body{
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+a{
+  color: #ED9300;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
 }
 #header{
   display: flex;
@@ -45,6 +54,8 @@ body{
   flex: 0 1 850px;
   /*border: 3px #c37900 solid;*/
   min-width: 0;
+  display: flex;
+  flex-flow: column;
 }
 
 
@@ -114,7 +125,7 @@ small{
   margin-left: auto;
 }
 
-.formitem input[type=text], .formitem input[type=email], .formitem select {
+.formitem input[type=text], .formitem input[type=name], .formitem input[type=email], .formitem select {
     padding: 12px 20px;
     margin: 8px 0;
     background-color: #ede0ca;
@@ -125,6 +136,10 @@ small{
     font-size: 1.1rem;
     flex: 0 1 70%;
     transition: all 0.5s;
+}
+
+#prosjektVerdi{
+  font-weight: bold;
 }
 
 .invalid{
@@ -150,9 +165,39 @@ small{
 }
 
 
-#prosjektinfo{
+#prosjektinfo,#submit{
   display: flex;
   flex-flow: column;
+}
+
+#submit{
+  max-height: 400px;
+  padding: 0 5%;
+  flex: 1 1 400px;
+  align-items: center;
+}
+
+#sluttmelding div, #sluttmelding p,#sluttmelding button,#sluttmelding{
+  margin-top: 15px;
+}
+
+#sluttmelding{
+  max-width: 600px;
+  }
+
+
+
+
+[name="nyttprosjekt"] {
+    background-color:#ED9300;
+    border: 2px #e8af51 solid;
+    padding: 15px 32px;
+    max-width: 250px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 #kart{
@@ -213,6 +258,10 @@ small{
   flex: 0 1 850px;
   min-width: 0;
   border:none;
+}
+
+h2{
+  font-size: 1.3rem;
 }
 
 .formitem{
