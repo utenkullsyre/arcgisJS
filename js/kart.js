@@ -148,16 +148,12 @@ require([
    }
  });
 
- sketchObjekt = sketchViewModel;
-
  sketchViewModel.on("draw-complete", function(evt) {
    var result = evt.graphic;
    view.graphics.add(evt.graphic);
 
    setActiveButton();
  });
-
-
 
  // ****************************************
  // activate the sketch to create a polyline
@@ -233,14 +229,14 @@ function oppdaterFeatureLayer(skjemaItems,grafikk,featurelag){
         itemVerdier[obj.name] = obj.value;
       })
 
-      console.log("itemverdier", itemVerdier)
-
+      var dato = new Date(itemVerdier["aar"],itemVerdier["mnd"]-1,1,12,00);
 
       var attributter = {
         "Prosjektnavn":itemVerdier["prosjektnavn"],
         "Vegavdeling":itemVerdier["vegavdeling"],
         "Seksjon":itemVerdier["seksjon"],
         "Epost":itemVerdier["epost"],
+        "Ferdigdato":dato
       }
 
       grafikk.attributes = attributter;
@@ -285,6 +281,7 @@ document.getElementById("sendinn").addEventListener("click", function(){
       form.reset();
       this.classList.add("active");
       this.nextElementSibling.classList.add("aapen");
+      view.graphics.removeAll();
 
 
 

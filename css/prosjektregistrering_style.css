@@ -17,10 +17,13 @@ body{
 a{
   color: #ED9300;
   text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all ease-in 0.2s;
 }
 
 a:hover{
-  text-decoration: underline;
+  font-weight: bold;
+  border-bottom: 2px solid #ED9300;
 }
 #header{
   display: flex;

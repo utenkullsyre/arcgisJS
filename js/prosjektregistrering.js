@@ -78,4 +78,5 @@ nyttProsjekt.addEventListener("click",function(){
   fjernCss();
   prosjekt.classList.add("active");
   document.getElementById("prosjektinfo").classList.add("aapen");
+  window.scrollTo(0,0);
 });
