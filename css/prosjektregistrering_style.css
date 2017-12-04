@@ -171,7 +171,6 @@ small{
 }
 
 #submit{
-  max-height: 400px;
   padding: 0 5%;
   flex: 1 1 400px;
   align-items: center;
