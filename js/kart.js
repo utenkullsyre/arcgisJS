@@ -160,8 +160,12 @@ require([
  // ****************************************
  var drawLineButton = document.getElementById("polylineButton");
  drawLineButton.onclick = function() {
+   if(view.graphics.items[0].symbol.type == "picture-marker"){
+     view.graphics.removeAll();
+   }
    // set the sketch to create a polyline geometry
    sketchViewModel.create("polyline");
+   sketchViewModel.draw.activeAction._dragEnabled = false;
    setActiveButton(this);
  };
 
@@ -169,10 +173,11 @@ require([
  // activate the sketch to create a polygon
  // ***************************************
  var drawPolygonButton = document.getElementById("polygonButton");
- drawPolygonButton.onclick = function() {
+ drawPolygonButton.onclick = function(event) {
    view.graphics.removeAll();
    // set the sketch to create a polygon geometry
    sketchViewModel.create("polygon");
+   sketchViewModel.draw.activeAction._dragEnabled = false;
    setActiveButton(this);
  };
 
