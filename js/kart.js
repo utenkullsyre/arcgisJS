@@ -148,20 +148,34 @@ require([
    }
  });
 
+console.log(sketchViewModel)
+
  sketchViewModel.on("draw-complete", function(evt) {
+   console.log(evt)
    var result = evt.graphic;
    view.graphics.add(evt.graphic);
 
    setActiveButton();
  });
 
+ var dragEvent = {};
+ view.on("drag",function(evt){
+   if(evt.action == "start"){
+     dragEvent.start = view.toMap(evt.origin)
+   } else if(evt.action == "end"){
+     dragEvent.end = view.toMap(evt.origin)
+   }
+ })
+
  // ****************************************
  // activate the sketch to create a polyline
  // ****************************************
  var drawLineButton = document.getElementById("polylineButton");
  drawLineButton.onclick = function() {
-   if(view.graphics.items[0].symbol.type == "picture-marker"){
-     view.graphics.removeAll();
+   if(view.graphics.length>0){
+     if(view.graphics.items[0].symbol.type == "picture-marker"){
+       view.graphics.removeAll();
+     }
    }
    // set the sketch to create a polyline geometry
    sketchViewModel.create("polyline");
@@ -178,6 +192,15 @@ require([
    // set the sketch to create a polygon geometry
    sketchViewModel.create("polygon");
    sketchViewModel.draw.activeAction._dragEnabled = false;
+   sketchViewModel.draw.activeAction.on("vertex-add", function (evt) {
+     if(evt.native.ctrlKey){
+       evt.preventDefault();
+     }
+      // if(evt.native.offsetY == dragEvent.end.y || evt.native.offsetY == dragEvent.start.y){
+      //   evt.preventDefault();
+      //   console.log("Det funka!!",evt);
+      // }
+    })
    setActiveButton(this);
  };
 
@@ -190,13 +213,21 @@ require([
    setActiveButton();
  };
 
+ document.querySelector("#freehandButton").addEventListener("click",function(){
+   if(sketchViewModel.draw.activeAction){
+     sketchViewModel.draw.activeAction._dragEnabled = !sketchViewModel.draw.activeAction._dragEnabled;
+     this.classList.toggle("aktiv");
+     }
+ })
+
  function setActiveButton(selectedButton) {
    // focus the view to activate keyboard shortcuts for sketching
    view.focus();
-   var elements = document.getElementsByClassName("aktiv");
-   for (var i = 0; i < elements.length; i++) {
-     elements[i].classList.remove("aktiv");
-   }
+   var elements = document.querySelectorAll(".aktiv");
+   Array.prototype.map.call(elements, function(obj) {
+      obj.classList.remove("aktiv");
+    })
+
    if (selectedButton) {
      selectedButton.classList.add("aktiv");
    }
@@ -287,9 +318,6 @@ document.getElementById("sendinn").addEventListener("click", function(){
       this.classList.add("active");
       this.nextElementSibling.classList.add("aapen");
       view.graphics.removeAll();
-
-
-
 
   } else {
     document.querySelector("#kart .errorMessage").innerHTML = "<p>Prosjektinfo er ikke fyllt ut eller stedfestet</p>";

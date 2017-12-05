@@ -240,6 +240,19 @@ small{
     color: black;
 }
 
+
+#freehandButton{
+  position: absolute;
+  bottom: 35px;
+  color:black;
+}
+
+.action-button svg{
+  stroke:black;
+  stroke-width: 0.5;
+  fill:none;
+}
+
 .hide{
   opacity: 0;
 }
@@ -247,6 +260,10 @@ small{
 .aktiv {
   background: #0079c1;
   color: #e4e4e4;
+}
+
+.aktiv svg{
+  stroke:white !important;
 }
 
 @media only screen and (max-width: 600px) {
