@@ -105,6 +105,8 @@ require([
     view: view
   });
 
+  var freehandIcon = document.querySelector("#freehandButton");
+
 
 
   kartView = view
@@ -152,6 +154,7 @@ console.log(sketchViewModel)
 
  sketchViewModel.on("draw-complete", function(evt) {
    console.log(evt)
+   freehandIcon.classList.add("hide");
    var result = evt.graphic;
    view.graphics.add(evt.graphic);
 
@@ -172,6 +175,7 @@ console.log(sketchViewModel)
  // ****************************************
  var drawLineButton = document.getElementById("polylineButton");
  drawLineButton.onclick = function() {
+   freehandIcon.classList.remove("hide");
    if(view.graphics.length>0){
      if(view.graphics.items[0].symbol.type == "picture-marker"){
        view.graphics.removeAll();
@@ -188,6 +192,7 @@ console.log(sketchViewModel)
  // ***************************************
  var drawPolygonButton = document.getElementById("polygonButton");
  drawPolygonButton.onclick = function(event) {
+   freehandIcon.classList.remove("hide");
    view.graphics.removeAll();
    // set the sketch to create a polygon geometry
    sketchViewModel.create("polygon");
@@ -208,6 +213,7 @@ console.log(sketchViewModel)
  // reset button
  // **************
  document.getElementById("resetBtn").onclick = function() {
+   freehandIcon.classList.add("hide");
    view.graphics.removeAll();
    sketchViewModel.reset();
    setActiveButton();
@@ -238,6 +244,7 @@ console.log(sketchViewModel)
 });
 
  view.then(function(){
+
  var baseToggle = document.querySelector("#baseToggle");
  var img = document.querySelectorAll("#baseToggle img");
  var lag = {}

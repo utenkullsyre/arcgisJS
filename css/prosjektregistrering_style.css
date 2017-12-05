@@ -238,6 +238,7 @@ small{
     width: 32px;
     border: none;
     color: black;
+    transition: all 0.5s
 }
 
 
@@ -254,7 +255,8 @@ small{
 }
 
 .hide{
-  opacity: 0;
+  opacity: 0
+  /*display:none;*/
 }
 
 .aktiv {
