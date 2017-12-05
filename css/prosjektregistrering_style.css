@@ -167,6 +167,9 @@ small{
   width: 140px;
 }
 
+.karttekst{
+  padding: 20px;
+}
 
 #prosjektinfo,#submit{
   display: flex;
@@ -186,9 +189,6 @@ small{
 #sluttmelding{
   max-width: 600px;
   }
-
-
-
 
 [name="nyttprosjekt"] {
     background-color:#ED9300;
