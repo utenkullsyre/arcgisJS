@@ -272,6 +272,7 @@ function oppdaterFeatureLayer(skjemaItems,grafikk,featurelag){
         "Vegavdeling":itemVerdier["vegavdeling"],
         "Seksjon":itemVerdier["seksjon"],
         "Epost":itemVerdier["epost"],
+        "Kontaktperson":itemVerdier["kontaktperson"].replace(/\b\w/g, function(l){ return l.toUpperCase() }),
         "Ferdigdato":dato
       }
 
