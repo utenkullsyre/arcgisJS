@@ -51,10 +51,27 @@
     ul {
       margin: 0 0 10px 0;
     }
+
+    #hoydeinfo{
+      position: absolute;
+      padding: 10px;
+      overflow: hidden;
+      background-color: skyblue;
+      top: 50px;
+      left: 50px;
+      text-align:center;
+      margin: auto;
+      display: flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:10px;
+      box-shadow: 1px  1px rgb(161, 161, 161);
+      user-select:none;
+    }
   </style>
 
-  <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
-  <script src="https://js.arcgis.com/4.5/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.6/"></script>
 
   <script>
     require([
@@ -65,10 +82,14 @@
       "esri/views/SceneView",
       "esri/widgets/Locate",
       "esri/Graphic",
+      "esri/Viewpoint",
+      "esri/geometry/Point",
+      "esri/widgets/DirectLineMeasurement3D",
       "dojo/domReady!"
+
     ], function(
       Map, TileLayer, Basemap, ElevationLayer, SceneView,
-      Locate, Graphic
+      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D
     ) {
 
       // Create elevation layers
@@ -127,13 +148,71 @@
           // graphic placed at the location of the user when found
         })
       });
+      // var measureWidget = new DirectLineMeasurement3D({
+      //   view: view
+      // });
+      view.then(function(){
+        console.log("View",view);
 
-      view.ui.add(locateWidget, "bottom-right")
+        var viewpoint = new Viewpoint({
+          targetGeometry: new Point({
+            x: 644831,
+            y: 7734548
+          }),
+          scale: 2000,
+          heading: 20,
+          tilt: 10,
+        });
+
+        console.log("Viewpoint",viewpoint);
+
+        view.goTo(viewpoint);
+
+        view.ui.add(locateWidget, "bottom-right");
+        // view.ui.add(measureWidget, "top-right");
+        // view.on("click",function(){
+        //   console.log(view)
+        // });
+        // var test = view.activeTool
+        // console.log(test)
+        // var handle = test.watch("directDistance", function(nyVerdi,gmlVerdi,property,objekt){
+        //   if(objekt.verticalDistance){console.log(objekt.horizontalDistance, objekt.verticalDistance)}
+        //   console.log(objekt)
+        // });
+
+        view.on("pointer-move",function(evt){
+          var hoydeDiv = document.querySelector("#hoydeinfo");
+          hoydeDiv.style.left = evt.x + 10+"px";
+          hoydeDiv.style.top = evt.y + 10 +"px";
+          console.log(evt);
+
+          var pos = view.toMap({
+            x:evt.x,
+            y:evt.y
+          });
+          var hoyde = bakke.queryElevation(pos);
+          hoyde.then(function(res){
+            hoydeDiv.innerHTML = res.geometry.z.toFixed(0) + " moh";
+          });
+
+
+        })
+
+
+
+
+      })
+
+
 
     });
   </script>
 </head>
 <body>
-  <div id="viewDiv"></div>
+  <div id="viewDiv">
+    <div id="hoydeinfo">Hoyde</div>
+
+    </div>
+  </div>
 </body>
 </html>
