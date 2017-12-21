@@ -41,6 +41,7 @@ function testSkjemadrit (element) {
   }
 }
 
+<<<<<<< HEAD
 prosjekt.addEventListener('click', function () {
   fjernCss()
   this.classList.add('active')
@@ -60,6 +61,32 @@ kart.addEventListener('click', function () {
     this.classList.add('active')
     this.nextElementSibling.classList.add('aapen')
     window.scrollTo(0, 191)
+=======
+
+
+prosjekt.addEventListener("click",function(){
+  fjernCss();
+  this.classList.add("active");
+  this.nextElementSibling.classList.add("aapen");
+});
+
+Array.prototype.map.call(skjemaItems, function(obj) {
+      obj.addEventListener("focusout", function(){
+        testSkjemadrit(this);
+      });
+    })
+
+kart.addEventListener("click",function(){
+
+
+  if(skjemaValidering()){
+    formMessage.innerHTML = "";
+    window.scrollTo(0,191);
+    fjernCss();
+    this.classList.add("active");
+    this.nextElementSibling.classList.add("aapen");
+
+>>>>>>> 0e4f9646b5b1e8abe3b331543d5e4c7e5f1cbe41
   } else {
     Array.prototype.map.call(skjemaItems, function (obj) {
       testSkjemadrit(obj)
@@ -68,8 +95,17 @@ kart.addEventListener('click', function () {
   }
 })
 
+<<<<<<< HEAD
 nyttProsjekt.addEventListener('click', function () {
   fjernCss()
   prosjekt.classList.add('active')
   document.getElementById('prosjektinfo').classList.add('aapen')
 })
+=======
+nyttProsjekt.addEventListener("click",function(){
+  fjernCss();
+  prosjekt.classList.add("active");
+  document.getElementById("prosjektinfo").classList.add("aapen");
+  window.scrollTo(0,0);
+});
+>>>>>>> 0e4f9646b5b1e8abe3b331543d5e4c7e5f1cbe41

@@ -1,4 +1,4 @@
-var kartView,kart,diverseResultat, bakkeLag,hitResultat,sketchObjekt = {};
+var kartView,kart,diverseResultat, bakkeLag,hitResultat,sketchObjekt,itemVerdier = {};
 require([
   "esri/Map",
   "esri/views/MapView",
@@ -105,6 +105,8 @@ require([
     view: view
   });
 
+  var freehandIcon = document.querySelector("#freehandButton");
+
 
 
   kartView = view
@@ -148,24 +150,40 @@ require([
    }
  });
 
- sketchObjekt = sketchViewModel;
+console.log(sketchViewModel)
 
  sketchViewModel.on("draw-complete", function(evt) {
+   console.log(evt)
+   freehandIcon.classList.add("hide");
    var result = evt.graphic;
    view.graphics.add(evt.graphic);
 
    setActiveButton();
  });
 
-
+ var dragEvent = {};
+ view.on("drag",function(evt){
+   if(evt.action == "start"){
+     dragEvent.start = view.toMap(evt.origin)
+   } else if(evt.action == "end"){
+     dragEvent.end = view.toMap(evt.origin)
+   }
+ })
 
  // ****************************************
  // activate the sketch to create a polyline
  // ****************************************
  var drawLineButton = document.getElementById("polylineButton");
  drawLineButton.onclick = function() {
+   freehandIcon.classList.remove("hide");
+   if(view.graphics.length>0){
+     if(view.graphics.items[0].symbol.type == "picture-marker"){
+       view.graphics.removeAll();
+     }
+   }
    // set the sketch to create a polyline geometry
    sketchViewModel.create("polyline");
+   sketchViewModel.draw.activeAction._dragEnabled = false;
    setActiveButton(this);
  };
 
@@ -173,10 +191,21 @@ require([
  // activate the sketch to create a polygon
  // ***************************************
  var drawPolygonButton = document.getElementById("polygonButton");
- drawPolygonButton.onclick = function() {
+ drawPolygonButton.onclick = function(event) {
+   freehandIcon.classList.remove("hide");
    view.graphics.removeAll();
    // set the sketch to create a polygon geometry
    sketchViewModel.create("polygon");
+   sketchViewModel.draw.activeAction._dragEnabled = false;
+   sketchViewModel.draw.activeAction.on("vertex-add", function (evt) {
+     if(evt.native.ctrlKey){
+       evt.preventDefault();
+     }
+      // if(evt.native.offsetY == dragEvent.end.y || evt.native.offsetY == dragEvent.start.y){
+      //   evt.preventDefault();
+      //   console.log("Det funka!!",evt);
+      // }
+    })
    setActiveButton(this);
  };
 
@@ -184,18 +213,27 @@ require([
  // reset button
  // **************
  document.getElementById("resetBtn").onclick = function() {
+   freehandIcon.classList.add("hide");
    view.graphics.removeAll();
    sketchViewModel.reset();
    setActiveButton();
  };
 
+ document.querySelector("#freehandButton").addEventListener("click",function(){
+   if(sketchViewModel.draw.activeAction){
+     sketchViewModel.draw.activeAction._dragEnabled = !sketchViewModel.draw.activeAction._dragEnabled;
+     this.classList.toggle("aktiv");
+     }
+ })
+
  function setActiveButton(selectedButton) {
    // focus the view to activate keyboard shortcuts for sketching
    view.focus();
-   var elements = document.getElementsByClassName("aktiv");
-   for (var i = 0; i < elements.length; i++) {
-     elements[i].classList.remove("aktiv");
-   }
+   var elements = document.querySelectorAll(".aktiv");
+   Array.prototype.map.call(elements, function(obj) {
+      obj.classList.remove("aktiv");
+    })
+
    if (selectedButton) {
      selectedButton.classList.add("aktiv");
    }
@@ -206,6 +244,7 @@ require([
 });
 
  view.then(function(){
+
  var baseToggle = document.querySelector("#baseToggle");
  var img = document.querySelectorAll("#baseToggle img");
  var lag = {}
@@ -228,16 +267,20 @@ require([
  })
 
 function oppdaterFeatureLayer(skjemaItems,grafikk,featurelag){
-      var itemVerdier = {};
+
       Array.prototype.map.call(skjemaItems, function(obj) {
         itemVerdier[obj.name] = obj.value;
       })
+
+      var dato = new Date(itemVerdier["aar"],itemVerdier["mnd"]-1,1,12,00);
 
       var attributter = {
         "Prosjektnavn":itemVerdier["prosjektnavn"],
         "Vegavdeling":itemVerdier["vegavdeling"],
         "Seksjon":itemVerdier["seksjon"],
         "Epost":itemVerdier["epost"],
+        "Kontaktperson":itemVerdier["kontaktperson"].replace(/\b\w/g, function(l){ return l.toUpperCase() }),
+        "Ferdigdato":dato
       }
 
       grafikk.attributes = attributter;
@@ -254,6 +297,8 @@ function oppdaterFeatureLayer(skjemaItems,grafikk,featurelag){
 
 document.getElementById("sendinn").addEventListener("click", function(){
   if(view.graphics.length>0 && skjemaValidering()){
+
+      document.querySelector("#prosjektVerdi").innerHTML = document.querySelector("[name='prosjektnavn']").value
 
       console.log(view.graphics)
       var grafikk = view.graphics;
@@ -280,9 +325,7 @@ document.getElementById("sendinn").addEventListener("click", function(){
       form.reset();
       this.classList.add("active");
       this.nextElementSibling.classList.add("aapen");
-
-
-
+      view.graphics.removeAll();
 
   } else {
     document.querySelector("#kart .errorMessage").innerHTML = "<p>Prosjektinfo er ikke fyllt ut eller stedfestet</p>";
