@@ -117,41 +117,36 @@ require([
         img[1].classList.toggle('hide');
         lag.GeocacheBilder.visible = !lag.GeocacheBilder.visible;
         lag.GeocacheTrafikkJPG.visible = !lag.GeocacheTrafikkJPG.visible;
-
-
-      //test = lag;
-
-       })
-   })
-   })
-
-
-    view.on('click', function(event) {
-        view.hitTest(event).then(function(response){
-          hitResultat = response
-          bakke.queryElevation(hitResultat.screenPoint.mapPoint).then(function(results){
-            diverseResultat = results
-            console.log(results)
-          })
-        })
-
-
-       // you must overwrite default click-for-popup
-       // behavior to display your own popup
-       event.stopPropagation();
-
-       var screenPoint = {
-         x: event.x,
-         y: event.y
-       }
-
-       view.popup.open({
-         // Set the popup's title to the coordinates of the location
-         title: 'Geokoding',
-         location: event.mapPoint, // Set the location of the popup to the clicked location,
-         content: "<a href='https://www.vegvesen.no/vegkart/vegkart/#kartlag:geodata/@"+view.toMap(screenPoint).x.toString().split(".")[0]+","+view.toMap(screenPoint).y.toString().split(".")[0]+","+view.zoom+"' target='#'>Link til vegkart</a>"  // content displayed in the popup
-       });
       });
+    });
+  });
+
+  view.on('click', function (event) {
+        view.hitTest(event).then(function (response) {
+          hitResultat = response;
+          bakke.queryElevation(hitResultat.screenPoint.mapPoint).then(function (results) {
+            diverseResultat = results;
+            console.log(results);
+          });
+        });
+
+        // you must overwrite default click-for-popup
+        // behavior to display your own popup
+        event.stopPropagation();
+
+        var screenPoint = {
+          x: event.x,
+          y: event.y,
+        };
+
+        view.popup.open({
+          // Set the popup's title to the coordinates of the location
+          title: 'Geokoding',
+          location: event.mapPoint, // Set the location of the popup to the clicked location,
+          content: '<a href="https://www.vegvesen.no/vegkart/vegkart/#kartlag:geodata/@' + view.toMap(screenPoint).x.toString().split('.')[0] + ',' + view.toMap(screenPoint).y.toString().split('.')[0] + ',' + view.zoom + ' target="#">Link til vegkart</a>',  // content displayed in the popup
+        });
+      });
+
     view.on("pointer-move", function(event){
     var info = document.querySelector("#info");
     var screenPoint = {
