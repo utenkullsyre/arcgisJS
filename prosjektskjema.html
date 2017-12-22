@@ -30,6 +30,7 @@
           <div class="formitem">
             <label for="prosjektnavn">Prosjektnavn *</label>
             <input type="text" name="prosjektnavn" placeholder="Skriv inn prosjektets navn" required>
+
           </div>
 
           <div class="formitem">
@@ -41,7 +42,15 @@
 
           <div class="formitem">
             <label for="vegreferanse">Vegreferanse</label>
-            <input type="text" name="vegreferanse" placeholder="Skriv inn vegreferanse">
+            <div id="vegrefWrapper">
+              <input type="text" name="vegreferanse" placeholder="Skriv inn vegreferanse">
+              <i class="fa fa-crosshairs" aria-hidden="true"></i>
+            </div>
+
+            <div id="vegrefDiv">
+              <button class="action-button esri-icon-applications hide" id="vegrefIcon" type="button"
+                title="Draw polyline"></button>
+            </div>
           </div>
 
 
@@ -114,8 +123,7 @@
               	</style><title>Side-1</title> -->
                 <g transform="translate(11.6257,-3.96228) rotate(56.2997)"><title>Ark.2</title><path d="M0 10.8C0.07 10.95 0.1 11.14 0.13 11.31 0.28 12.08 0.55 12.35 0.96 12.92 1.24 13.33 1.59 13.88 2.01 13.96 2.32 14.02 2.66 13.84 2.83 13.6 3.15 13.16 2.88 12.51 2.62 11.85 2.47 11.46 2.33 11.07 2.41 10.77 2.51 10.38 2.98 10.15 3.36 10.24 3.99 10.38 4.33 11.4 4.87 12.08 5.7 13.13 7.01 13.38 8.06 12.71 8.68 12.31 9.21 11.58 9.53 10.88 9.88 10.1 9.96 9.36 9.67 8.6 9.49 8.12 9.15 7.62 8.71 7.36 8.26 7.09 7.71 7.06 7.32 7.31 6.66 7.74 6.47 8.98 6.84 9.79 7.68 11.61 11.41 11.19 12.24 10.8" class="st1"/></g></svg>
             </button>
-            <button class="action-button hide" id="undoButton" type="button"
-              title="Undo"><i class="fa fa-undo" aria-hidden="true"></i></button>
+            <button class="action-button esri-icon-rotate-back hide" id="undoButton" type="button" title="Undo"></button>
             <button class="action-button esri-icon-trash" id="resetBtn" type="button" title="Clear graphics"></button>
           </div>
         </div>

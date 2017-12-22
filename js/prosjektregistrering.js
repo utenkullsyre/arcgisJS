@@ -6,6 +6,8 @@ var kart = document.querySelector('#stedfesting')
 var nyttProsjekt = document.querySelector('[name=nyttprosjekt]')
 var formMessage = document.querySelector('#valideringForm')
 var skjemaItems = document.querySelectorAll('.formitem input,.formitem select')
+var vegref = document.querySelector('.fa-crosshairs')
+var vegrefDiv = document.querySelector('#vegrefDiv')
 
 function fjernCss () {
   var acc = document.getElementsByClassName('accordion')
@@ -40,6 +42,10 @@ prosjekt.addEventListener('click', function () {
   fjernCss()
   this.classList.add('active')
   this.nextElementSibling.classList.add('aapen')
+})
+
+vegref.addEventListener('click', function () {
+  vegrefDiv.classList.add('aapen')
 })
 
 Array.prototype.map.call(skjemaItems, function (obj) {

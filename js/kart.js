@@ -251,7 +251,7 @@ require([
     console.error(error)  // Logs the error message
   })
 
-  view.then(function () {
+  view.when(function () {
     var baseToggle = document.querySelector('#baseToggle')
     var img = document.querySelectorAll('#baseToggle img')
     var lag = {}
@@ -299,6 +299,25 @@ require([
       console.log(error)
     })
   }
+
+  var vegrefView = new MapView({
+    map: map,
+    container: 'vegrefDiv'
+  })
+
+  var refKnapp = document.querySelector('#vegrefIcon')
+
+  vegrefView.constraints.rotationEnabled = false
+  vegrefView.extent = extent
+  vegrefView.ui.add('vegrefIcon', 'top-right')
+  vegrefView.when(function () {
+    refKnapp.classList.remove('hide')
+  })
+
+  refKnapp.addEventListener('click', function (evt) {
+    // Ajax-kall for å hente inn vegrefDiv
+    console.log(evt)
+  })
 
   document.getElementById('sendinn').addEventListener('click', function () {
     console.log('Skjemaitems', skjemaItems)
