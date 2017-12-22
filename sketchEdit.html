@@ -96,6 +96,7 @@
       view.ui.add(search, "bottom-left");
       view.ui.add("info", "bottom-right");
 
+      console.log(view)
       //add an editable featurelayer from portal
       Layer.fromPortalItem({
           portalItem: { // autocasts as new PortalItem()
@@ -105,6 +106,7 @@
 
         function addLayer(lyr) {
           featureLayer = lyr;
+          console.log("Lag",lyr)
           lyr.visible = false;
           map.add(lyr);
         }
