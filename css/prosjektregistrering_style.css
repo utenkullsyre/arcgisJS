@@ -144,7 +144,12 @@ small{
 
 #vegrefWrapper{
   position: relative;
+  flex: 0 1 70%;
 }
+
+ #vegrefWrapper input{
+   width:100%
+ }
 
 #vegrefWrapper i{
   position: absolute;

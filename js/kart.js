@@ -306,17 +306,25 @@ require([
   })
 
   var refKnapp = document.querySelector('#vegrefIcon')
+  var lukkRefKnapp = document.querySelector('#lukkVegref')
 
   vegrefView.constraints.rotationEnabled = false
   vegrefView.extent = extent
-  vegrefView.ui.add('vegrefIcon', 'top-right')
+  vegrefView.ui.add('vegrefIcon', 'bottom-right')
+  vegrefView.ui.add('lukkVegref', 'top-right')
   vegrefView.when(function () {
     refKnapp.classList.remove('hide')
+    lukkRefKnapp.classList.remove('hide')
   })
 
   refKnapp.addEventListener('click', function (evt) {
+    vegrefDiv.style.cursor = "crosshair"
     // Ajax-kall for å hente inn vegrefDiv
     console.log(evt)
+  })
+
+  lukkRefKnapp.addEventListener('click', function () {
+    vegrefDiv.classList.remove('aapen')
   })
 
   document.getElementById('sendinn').addEventListener('click', function () {
