@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
+
 body{
   margin:0;
   padding:0;
@@ -238,6 +239,7 @@ small{
     width: 32px;
     border: none;
     color: black;
+    -webkit-transition: all 0.5s;
     transition: all 0.5s
 }
 
@@ -246,6 +248,23 @@ small{
   position: absolute;
   bottom: 35px;
   color:black;
+}
+
+#undoButton{
+  position: absolute;
+  bottom: 35px;
+  right: 36.5px;
+  color: black;
+  -webkit-transition: background-color 0.3s;
+  -webkit-transition: opacity 0.5s;
+  transition: background-color 0.3s;
+  transition: opacity 0.5s
+}
+
+
+#undoButton:active{
+  background-color: #0079c1;
+  color:white;
 }
 
 .action-button svg{
@@ -271,33 +290,40 @@ small{
 @media only screen and (max-width: 600px) {
     /* For mobile phones: */
 
-.sidepanel{
-  display: none;
-}
+  .sidepanel{
+    display: none;
+  }
 
-.hovedpanel{
-  flex: 0 1 850px;
-  min-width: 0;
-  border:none;
-}
+  .hovedpanel{
+    flex: 0 1 850px;
+    min-width: 0;
+    border:none;
+  }
 
-h2{
-  font-size: 1.3rem;
-}
+  h2{
+    font-size: 1.3rem;
+  }
 
-.formitem{
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-}
+  .formitem{
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+  }
 
-.formitem>input,.formitem>select{
-  width: 100%;
-}
+  .formitem>input,.formitem>select{
+    width: 100%;
+  }
 
-small{
-  flex: 1;
-  margin:inherit;
-}
+  small{
+    flex: 1;
+    margin:inherit;
+  }
+
+  #baseToggle img{
+    -webkit-transform: scale(.6, .6); /* Safari */
+    transform: scale(.6, .6);
+    bottom:-14px;
+    left: -14px
+  }
 
 }

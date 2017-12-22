@@ -3,14 +3,9 @@ var seksjon = document.querySelector('[name=seksjon]')
 var form = document.querySelector('[name=prosjektregistrering]')
 var prosjekt = document.querySelector('#prosjektdetaljer')
 var kart = document.querySelector('#stedfesting')
-var submit = document.querySelector('#sendinn')
 var nyttProsjekt = document.querySelector('[name=nyttprosjekt]')
 var formMessage = document.querySelector('#valideringForm')
 var skjemaItems = document.querySelectorAll('.formitem input,.formitem select')
-
-console.log(form)
-
-var acc = document.getElementsByClassName('accordion')
 
 function fjernCss () {
   var acc = document.getElementsByClassName('accordion')
