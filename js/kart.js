@@ -20,12 +20,14 @@ require([
   'esri/widgets/Sketch/SketchViewModel',
   'esri/layers/ElevationLayer',
   'esri/Ground',
+  'dojo/on',
+  'dojo/dom',
   'dojo/domReady!'
 ], function (
   Map, MapView, Basemap, TileLayer,
   FeatureLayer, Extent, SpatialReference,
   LayerList, Locate, Search, Graphic, SketchViewModel,
-  ElevationLayer, Ground
+  ElevationLayer, Ground, on, dom
 ) {
   /************************************************************
    * Creates a new WebMap instance. A WebMap must reference
@@ -300,6 +302,16 @@ require([
     })
   }
 
+  function getAjax(url, success) {
+    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP')
+    xhr.open('GET', url)
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState > 3 && xhr.status === 200) success(xhr.responseText)
+    }
+    xhr.send()
+    return xhr
+  }
+
   var vegrefView = new MapView({
     map: map,
     container: 'vegrefDiv'
@@ -317,10 +329,20 @@ require([
     lukkRefKnapp.classList.remove('hide')
   })
 
-  refKnapp.addEventListener('click', function (evt) {
-    vegrefDiv.style.cursor = "crosshair"
+  on(refKnapp, 'click', function () {
+    vegrefDiv.style.cursor = 'crosshair'
+    on.once(vegrefView, 'click', function (evt) {
+      evt.stopPropagation()
+      if (evt.mapPoint) {
+        var url = 'https://www.vegvesen.no/nvdb/api/v2/posisjon.json?nord=' + evt.mapPoint.y + '&ost=' + evt.mapPoint.x
+        getAjax(url, function (data) {
+          var json = JSON.parse(data)
+          console.log(json)
+        })
+      }
+    })
+    // vegrefDiv.style.cursor = "crosshair"
     // Ajax-kall for å hente inn vegrefDiv
-    console.log(evt)
   })
 
   lukkRefKnapp.addEventListener('click', function () {
