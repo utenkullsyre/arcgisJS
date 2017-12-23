@@ -287,6 +287,7 @@ require([
       'Vegavdeling': itemVerdier['vegavdeling'],
       'Seksjon': itemVerdier['seksjon'],
       'Epost': itemVerdier['epost'],
+      'Vegreferanse': itemVerdier['vegreferanse'],
       'Kontaktperson': itemVerdier['kontaktperson'].replace(/\b\w/g, function (l) { return l.toUpperCase() }),
       'Ferdigdato': dato
     }
@@ -300,16 +301,6 @@ require([
     featurelag.applyEdits(edits).otherwise(function (error) {
       console.log(error)
     })
-  }
-
-  function getAjax(url, success) {
-    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP')
-    xhr.open('GET', url)
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState > 3 && xhr.status === 200) success(xhr.responseText)
-    }
-    xhr.send()
-    return xhr
   }
 
   var vegrefView = new MapView({
@@ -330,15 +321,45 @@ require([
   })
 
   on(refKnapp, 'click', function () {
+    var modal = document.querySelector('.vegrefModal')
+    var meldingTekst = document.querySelector('.vegref-prompt p')
+    var jaKnapp = document.querySelector('[name="yes"]')
+    var nyttSok = document.querySelector('[name="newsearch"]')
     vegrefDiv.style.cursor = 'crosshair'
     on.once(vegrefView, 'click', function (evt) {
+      vegrefDiv.style.cursor = 'default'
       evt.stopPropagation()
       if (evt.mapPoint) {
         var url = 'https://www.vegvesen.no/nvdb/api/v2/posisjon.json?nord=' + evt.mapPoint.y + '&ost=' + evt.mapPoint.x
-        getAjax(url, function (data) {
-          var json = JSON.parse(data)
-          console.log(json)
-        })
+        var oReq = new XMLHttpRequest()
+        oReq.open('GET', url, true)
+        oReq.onload = function (oEvent) {
+          on.once(nyttSok, 'click', function () {
+            modal.classList.add('borte')
+            vegrefDiv.style.cursor = 'default'
+
+          })
+          if (oReq.status === 200) {
+            jaKnapp.classList.remove('borte')
+            var querySvar = JSON.parse(oReq.response) // Sender tekst tilbake fra php-scriptet
+            meldingTekst.innerHTML = '<p>Funnet vegreferanse er: <b>' +
+                                      querySvar[0].vegreferanse.kortform +
+                                      '</b>.</p><p>Vil du legge til denne vegreferansen eller søke på nytt?</p>'
+            modal.classList.remove('borte')
+            on.once(jaKnapp, 'click', function () {
+              document.querySelector('[name="vegreferanse"]').value = querySvar[0].vegreferanse.kortform
+              modal.classList.add('borte')
+              vegrefDiv.classList.remove('aapen')
+              vegrefDiv.style.cursor = 'default'
+            })
+          } else if ((oReq.status === 404)) {
+            meldingTekst.innerHTML = '<p>Avstanden til nærmeste veg er for lang. Søk på nytt og klikk nærmere vegkroppen</p>'
+            modal.classList.remove('borte')
+            jaKnapp.classList.add('borte')
+
+          }
+        }
+        oReq.send()
       }
     })
     // vegrefDiv.style.cursor = "crosshair"

@@ -62,7 +62,65 @@ a:hover{
   flex-flow: column;
 }
 
+.vegrefModal{
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+}
 
+
+.dimmed{
+  z-index: 10;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  opacity: .5;
+  background: black;
+
+}
+
+.vegref-prompt{
+  z-index: 11;
+  color: black;
+  flex:0 1 500px;
+  background-color: white;
+  padding: 15px;
+  margin: 5px;
+  display: flex;
+  flex-flow: row wrap ;
+  justify-content: center
+}
+
+.vegref-prompt button{
+  width: 150px;
+  padding: 5px;
+  margin: 10px;
+  background-color:#ED9300;
+  border: 2px #e8af51 solid;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.vegref-prompt button:active{
+  opacity: .8;
+}
+
+#refMessage{
+  flex: 1 1 100%;
+}
+
+.vegref-prompt button{
+
+}
 
 button.accordion {
     background-color: #e8af51;
@@ -224,11 +282,13 @@ small{
 }
 
 #vegrefDiv{
-  height: 40vh;
+  position: relative;
+  height: 60vh;
   width: 100%;
   border-radius: 5px;
   max-height: 0;
   transition: max-height 0.4s;
+  z-index: 1;
 }
 
 #kart{
@@ -241,6 +301,7 @@ small{
   height: 80vh;
   max-height: 700px;
   width: 100%;
+
 }
 
 #baseToggle{
@@ -304,6 +365,10 @@ small{
 .hide{
   opacity: 0
   /*display:none;*/
+}
+/* TODO: Fjern denne her etter jeg har funnet en god løsning på display:none transition */
+.borte{
+  display: none;
 }
 
 .aktiv {
