@@ -4,7 +4,9 @@ var diverseResultat
 var bakkeLag
 var hitResultat
 var sketchObjekt
+var valgtExtent = {}
 var itemVerdier = {}
+var lag = {}
 require([
   'esri/Map',
   'esri/views/MapView',
@@ -78,11 +80,11 @@ require([
 
   kart = map
 
-  var extent = new Extent({
-    xmin: 373601,
-    ymin: 7507874,
-    xmax: 721751,
-    ymax: 7743925,
+  var startVindu = new Extent({
+    xmin: 359715.6240792491,
+    ymin: 7608796.799127923,
+    xmax: 635390.8420963518,
+    ymax: 7609135.466471925,
     spatialReference: new SpatialReference({wkid: 25833})
   })
 
@@ -112,7 +114,9 @@ require([
 
   kartView = view
 
-  view.extent = extent
+  view.when(function () {
+    view.extent = startVindu
+  })
   view.ui.add('baseToggle', 'bottom-left')
   //  view.ui.add(layerList, 'top-left');
 
@@ -151,9 +155,6 @@ require([
         }
       }
     })
-
-    console.log(sketchViewModel)
-
     sketchViewModel.on('draw-complete', function (evt) {
       console.log(evt)
       //  TODO:Lag logikk som ikke kopierer kode her
@@ -256,7 +257,6 @@ require([
   view.when(function () {
     var baseToggle = document.querySelector('#baseToggle')
     var img = document.querySelectorAll('#baseToggle img')
-    var lag = {}
 
     baseToggle.classList.remove('hide')
     bilder.load().then(function () {
@@ -275,8 +275,6 @@ require([
 
   function oppdaterFeatureLayer (skjemaItems, grafikk, featurelag) {
     Array.prototype.map.call(skjemaItems, function (obj) {
-      console.log('\n\n\n', skjemaItems)
-      console.log(obj.value, obj.name)
       itemVerdier[obj.name] = obj.value
     })
 
@@ -312,8 +310,8 @@ require([
   var lukkRefKnapp = document.querySelector('#lukkVegref')
 
   vegrefView.constraints.rotationEnabled = false
-  vegrefView.extent = extent
-  vegrefView.ui.add('vegrefIcon', 'bottom-right')
+  vegrefView.extent = startVindu
+  vegrefView.ui.add('vegrefIcon', 'top-left')
   vegrefView.ui.add('lukkVegref', 'top-right')
   vegrefView.when(function () {
     refKnapp.classList.remove('hide')
@@ -337,7 +335,6 @@ require([
           on.once(nyttSok, 'click', function () {
             modal.classList.add('borte')
             vegrefDiv.style.cursor = 'default'
-
           })
           if (oReq.status === 200) {
             jaKnapp.classList.remove('borte')
@@ -348,15 +345,16 @@ require([
             modal.classList.remove('borte')
             on.once(jaKnapp, 'click', function () {
               document.querySelector('[name="vegreferanse"]').value = querySvar[0].vegreferanse.kortform
+              view.extent = vegrefView.extent
               modal.classList.add('borte')
               vegrefDiv.classList.remove('aapen')
               vegrefDiv.style.cursor = 'default'
+              console.log(vegrefView)
             })
           } else if ((oReq.status === 404)) {
             meldingTekst.innerHTML = '<p>Avstanden til nærmeste veg er for lang. Søk på nytt og klikk nærmere vegkroppen</p>'
             modal.classList.remove('borte')
             jaKnapp.classList.add('borte')
-
           }
         }
         oReq.send()
@@ -371,23 +369,17 @@ require([
   })
 
   document.getElementById('sendinn').addEventListener('click', function () {
-    console.log('Skjemaitems', skjemaItems)
-    console.log('Itemverdier', itemVerdier)
     if (view.graphics.length > 0 && skjemaValidering()) {
       document.querySelector('#prosjektVerdi').innerHTML = document.querySelector('[name="prosjektnavn"]').value
-      console.log(view.graphics)
       var grafikk = view.graphics
       var grafikkArray = []
 
       //  Hvis registrert grafikk er linje, gjør noe logikk
       if (grafikk.items[0].symbol.type === 'simple-line') {
         if (grafikk.length > 1) {
-          console.log(grafikk)
         } else {
           grafikkArray = [grafikk.items[0]]
         }
-
-        console.log('Grafikkarray', grafikkArray)
         oppdaterFeatureLayer(skjemaItems, grafikk.items[0], linje)
 
       //  Hvis registrert grafikk er polygon, gjør noe annen logikk
@@ -398,8 +390,12 @@ require([
       //  Fjern aktiv, åpen og andre markør-klasser
       fjernCss()
       form.reset()
+      vegrefView.extent = startVindu
+      view.extent = startVindu
       this.classList.add('active')
       this.nextElementSibling.classList.add('aapen')
+      lag.GeocacheBilder.visible = false
+      lag.GeocacheTrafikkJPG.visible = true
       view.graphics.removeAll()
     } else {
       document.querySelector('#kart .errorMessage').innerHTML = '<p>Prosjektinfo er ikke fyllt ut eller stedfestet</p>'
