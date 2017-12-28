@@ -64,11 +64,8 @@
       background-color: none;
       top: 50px;
       left: 50px;
-      text-align:center;
       margin: auto;
       display: flex;
-      align-items:center;
-      justify-content:center;
       border-radius:10px;
       user-select:none;
     }
@@ -81,6 +78,7 @@
     require([
       "esri/Map",
       "esri/layers/TileLayer",
+      "esri/layers/MapImageLayer",
       "esri/Basemap",
       "esri/layers/ElevationLayer",
       "esri/views/SceneView",
@@ -89,11 +87,12 @@
       "esri/Viewpoint",
       "esri/geometry/Point",
       "esri/widgets/DirectLineMeasurement3D",
+      "esri/widgets/Legend",
       "dojo/domReady!"
 
     ], function(
-      Map, TileLayer, Basemap, ElevationLayer, SceneView,
-      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D
+      Map, TileLayer, MapImageLayer, Basemap, ElevationLayer, SceneView,
+      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend
     ) {
 
       // Create elevation layers
@@ -101,16 +100,30 @@
         url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer"
       });
 
-      var nvdbBasemap = new TileLayer({
-         url: "https://nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer",
-         id:"NVDB-trafikk",
-         visible: false
-       });
       var bilder = new TileLayer({
           url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheBilder/MapServer",
           id: "Bilder",
           visible: true
         });
+
+      var bratthet = new MapImageLayer({
+        url: "https://wms3.nve.no/map/rest/services/Bratthet/MapServer",
+        sublayers: [
+            {
+              id: 0,
+              visible: true,
+              opacity: .5,
+              legendEnabled: true,
+            }
+          ]
+        });
+
+      var skredHendelser = new MapImageLayer({
+        url: "https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer",
+        });
+
+      console.log('Lag', bratthet, skredHendelser)
+
 
 
        var bilder = new Basemap({
@@ -145,6 +158,9 @@
         }
       });
 
+      view.map.addMany([bratthet, skredHendelser])
+      console.log("Lag",view)
+
       var locateWidget = new Locate({
         view: view,   // Attaches the Locate button to the view
         graphic: new Graphic({
@@ -155,7 +171,7 @@
       // var measureWidget = new DirectLineMeasurement3D({
       //   view: view
       // });
-      view.then(function(){
+      view.when(function(){
         console.log("View",view);
 
         var viewpoint = new Viewpoint({
@@ -168,7 +184,13 @@
           tilt: 10,
         });
 
-        console.log("Viewpoint",viewpoint);
+        var legend = new Legend({
+          view: view
+        });
+
+        // Add widget to the bottom right corner of the view
+        view.ui.add(legend, "top-right");
+
 
         view.goTo(viewpoint);
 
@@ -184,32 +206,42 @@
         //   console.log(objekt)
         // });
 
-        view.on("pointer-move",function(evt){
+        // view.on("pointer-move",function(evt){
+        //   var hoydeDiv = document.querySelector("#hoydeinfo");
+        //   hoydeDiv.style.left = evt.x + 10+"px";
+        //   hoydeDiv.style.top = evt.y + 10 +"px";
+        //
+        //   var pos = view.toMap({
+        //     x:evt.x,
+        //     y:evt.y
+        //   });
+        //   var hoyde = bakke.queryElevation(pos);
+        //   hoyde.then(function(res){
+        //     hoydeDiv.innerHTML = res.geometry.z.toFixed(0) + " moh";
+        //   })
+        // })
+
+        function copyToClipboard(text) {
+          window.prompt("x,y,z koordinat\nSRID: 25833\n\nKopier tekst: Ctrl+C, Enter", text);
+        }
+
+        view.on('click', function(evt) {
           var hoydeDiv = document.querySelector("#hoydeinfo");
-          hoydeDiv.style.left = evt.x + 10+"px";
-          hoydeDiv.style.top = evt.y + 10 +"px";
-          console.log(evt);
 
           var pos = view.toMap({
             x:evt.x,
             y:evt.y
           });
           var hoyde = bakke.queryElevation(pos);
+          console.log('Høyde',hoyde)
           hoyde.then(function(res){
-            hoydeDiv.innerHTML = res.geometry.z.toFixed(0) + " moh";
-          });
 
-
+            hoydeDiv.innerHTML = 'x: ' + pos.x.toFixed(0) + ' <br />y: ' + pos.y.toFixed(0) + ' <br />moh: ' + res.geometry.z.toFixed(0)
+            copyToClipboard(pos.x.toFixed(0) + ', ' + pos.y.toFixed(0) + ', ' + res.geometry.z.toFixed(0))
+          })
         })
-
-
-
-
       })
-
-
-
-    });
+    })
   </script>
 </head>
 <body>
@@ -217,6 +249,5 @@
     <div id="hoydeinfo">Hoyde</div>
 
     </div>
-  </div>
 </body>
 </html>
