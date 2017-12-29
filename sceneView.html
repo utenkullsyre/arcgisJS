@@ -179,6 +179,9 @@
       // var measureWidget = new DirectLineMeasurement3D({
       //   view: view
       // });
+
+
+
       view.when(function(){
         console.log("View",view);
 
@@ -243,28 +246,31 @@
           window.prompt("x,y,z koordinat\nSRID: 25833\n\nKopier tekst: Ctrl+C, Enter", text);
         }
 
-        // var options = {
-        //   query: {
-        //     where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
-        //     geometry:'{xmin: 521256.3129123358, ymin: 7596090.8146137325, xmax: 544625.4302048155, ymax: 7611335.512222498}',
-        //     geometryType: 'esriGeometryEnvelope',
-        //     inSR:28533,
-        //     spatialRel: 'esriSpatialRelIntersects',
-        //     // outFields: 'skredType, skredNavn, stedsnavn, skredTidspunkt, noySkredTidspunkt, persBerort, annetSkadet, redningsaksjon, vaerObservasjon, totAntPersOmkommet, ansvarligInstitusjon, beskrivelse, objektType, registrertDato, utlosningArsak, dokumentasjon',
-        //     outFields: '*',
-        //     returnGeometry:true,
-        //     returnTrueCurves:false,
-        //     outSR:25833,
-        //     returnIdsOnly:false,
-        //     returnCountOnly:false,
-        //     returnZ:false,
-        //     returnM:false,
-        //     returnDistinctValues:false,
-        //     returnExtentsOnly:false,
-        //     f: 'json'
-        //   },
-        //   responseType: 'json'
-        // };
+        function queryOptions(){
+          var options = {
+            query: {
+              where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
+              geometry:'{xmin: ' + view.extent.xmin + ', ymin: ' + view.extent.ymin + ', xmax: ' + view.extent.xmax + ', ymax: ' + view.extent.ymax + '}',
+              geometryType: 'esriGeometryEnvelope',
+              inSR:28533,
+              spatialRel: 'esriSpatialRelIntersects',
+              outFields: 'skredType, skredNavn, stedsnavn, skredTidspunkt, noySkredTidspunkt, persBerort, annetSkadet, redningsaksjon, vaerObservasjon, totAntPersOmkommet, ansvarligInstitusjon, beskrivelse, objektType, registrertDato, utlosningArsak, dokumentasjon',
+              // outFields: '*',
+              returnGeometry:true,
+              returnTrueCurves:false,
+              outSR:25833,
+              returnIdsOnly:false,
+              returnCountOnly:false,
+              returnZ:false,
+              returnM:false,
+              returnDistinctValues:false,
+              returnExtentsOnly:false,
+              f: 'geojson',
+            },
+            responseType: 'json'
+          };
+        return options
+        }
 
         view.on('click', function(evt) {
           var hoydeDiv = document.querySelector("#hoydeinfo");
@@ -274,26 +280,25 @@
             y:evt.y
           });
 
-          var options = {
-            query: {
-              f: 'json'
-            },
-            responseType: 'json'
-          };
-
-          var queryOmr = queryExtent(pos)
-
-          var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?where=skredtype+in+%28130%2C131%2C132%2C133%2C134%2C135%2C136%2C137%2C138%2C139%29&text=&objectIds=&time=&geometry=%7Bxmin%3A+' + queryOmr.xmin + '%2C+ymin%3A+' + queryOmr.ymin + '%2C+xmax%3A+' + queryOmr.xmax + '%2C+ymax%3A+' + queryOmr.ymax + '%7D&geometryType=esriGeometryEnvelope&inSR=28533&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=25833&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=geojson'
-
-          console.log('url',url)
-          esriRequest(url, options).then(function(response) {
+          var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
+          esriRequest(url, queryOptions()).then(function(response) {
             console.log('response', response)
+            var item = response.data.features["0"]
+            console.log(item.geometry.coordinates["0"], item.geometry.coordinates["1"], item.properties);
+            var grafikk = new Graphic({
+              geometry: new Point({
+                  x: item.geometry.coordinates["0"],
+                  y: item.geometry.coordinates["1"],
+                }),
+              symbol: { type: "simple-marker" },
+              attributes: item.properties
+            })
+            view.graphics.add(grafikk)
           })
 
           var hoyde = bakke.queryElevation(pos)
           console.log('Høyde',hoyde)
           hoyde.then(function(res){
-
             hoydeDiv.innerHTML = 'x: ' + pos.x.toFixed(0) + ' <br />y: ' + pos.y.toFixed(0) + ' <br />moh: ' + res.geometry.z.toFixed(0)
             copyToClipboard(pos.x.toFixed(0) + ', ' + pos.y.toFixed(0) + ', ' + res.geometry.z.toFixed(0))
           })
