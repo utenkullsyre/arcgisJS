@@ -88,11 +88,12 @@
       "esri/geometry/Point",
       "esri/widgets/DirectLineMeasurement3D",
       "esri/widgets/Legend",
+      "esri/request",
       "dojo/domReady!"
 
     ], function(
       Map, TileLayer, MapImageLayer, Basemap, ElevationLayer, SceneView,
-      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend
+      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend, esriRequest
     ) {
 
       // Create elevation layers
@@ -120,6 +121,13 @@
 
       var skredHendelser = new MapImageLayer({
         url: "https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer",
+        sublayers: [
+            {
+              id: 1,
+              visible: true,
+              legendEnabled: true,
+            }
+          ]
         });
 
       console.log('Lag', bratthet, skredHendelser)
@@ -189,7 +197,7 @@
         });
 
         // Add widget to the bottom right corner of the view
-        view.ui.add(legend, "top-right");
+        // view.ui.add(legend, "top-right");
 
 
         view.goTo(viewpoint);
@@ -221,9 +229,42 @@
         //   })
         // })
 
+        function queryExtent(pos) {
+          var extent =  {}
+          extent.xmin = pos.x - 5
+          extent.xmax = pos.x + 5
+          extent.ymin = pos.y - 5
+          extent.ymax  = pos.y + 5
+          return extent
+        }
+
+
         function copyToClipboard(text) {
           window.prompt("x,y,z koordinat\nSRID: 25833\n\nKopier tekst: Ctrl+C, Enter", text);
         }
+
+        // var options = {
+        //   query: {
+        //     where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
+        //     geometry:'{xmin: 521256.3129123358, ymin: 7596090.8146137325, xmax: 544625.4302048155, ymax: 7611335.512222498}',
+        //     geometryType: 'esriGeometryEnvelope',
+        //     inSR:28533,
+        //     spatialRel: 'esriSpatialRelIntersects',
+        //     // outFields: 'skredType, skredNavn, stedsnavn, skredTidspunkt, noySkredTidspunkt, persBerort, annetSkadet, redningsaksjon, vaerObservasjon, totAntPersOmkommet, ansvarligInstitusjon, beskrivelse, objektType, registrertDato, utlosningArsak, dokumentasjon',
+        //     outFields: '*',
+        //     returnGeometry:true,
+        //     returnTrueCurves:false,
+        //     outSR:25833,
+        //     returnIdsOnly:false,
+        //     returnCountOnly:false,
+        //     returnZ:false,
+        //     returnM:false,
+        //     returnDistinctValues:false,
+        //     returnExtentsOnly:false,
+        //     f: 'json'
+        //   },
+        //   responseType: 'json'
+        // };
 
         view.on('click', function(evt) {
           var hoydeDiv = document.querySelector("#hoydeinfo");
@@ -232,7 +273,24 @@
             x:evt.x,
             y:evt.y
           });
-          var hoyde = bakke.queryElevation(pos);
+
+          var options = {
+            query: {
+              f: 'json'
+            },
+            responseType: 'json'
+          };
+
+          var queryOmr = queryExtent(pos)
+
+          var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?where=skredtype+in+%28130%2C131%2C132%2C133%2C134%2C135%2C136%2C137%2C138%2C139%29&text=&objectIds=&time=&geometry=%7Bxmin%3A+' + queryOmr.xmin + '%2C+ymin%3A+' + queryOmr.ymin + '%2C+xmax%3A+' + queryOmr.xmax + '%2C+ymax%3A+' + queryOmr.ymax + '%7D&geometryType=esriGeometryEnvelope&inSR=28533&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=25833&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=geojson'
+
+          console.log('url',url)
+          esriRequest(url, options).then(function(response) {
+            console.log('response', response)
+          })
+
+          var hoyde = bakke.queryElevation(pos)
           console.log('Høyde',hoyde)
           hoyde.then(function(res){
 
