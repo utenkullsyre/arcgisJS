@@ -99,12 +99,14 @@
       "esri/request",
       "esri/geometry/Circle",
       "esri/layers/GraphicsLayer",
+      "esri/symbols/PictureMarkerSymbol",
       'dojo/on',
+      "esri/config",
       "dojo/domReady!"
 
     ], function(
       Map, TileLayer, MapImageLayer, Basemap, ElevationLayer, SceneView,
-      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend, esriRequest, Circle,GraphicsLayer,on
+      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend, esriRequest, Circle,GraphicsLayer,PictureMarkerSymbol,on, esriConfig
     ) {
 
       // Create elevation layers
@@ -135,7 +137,7 @@
         sublayers: [
             {
               id: 1,
-              visible: true,
+              visible: false,
               legendEnabled: true,
             }
           ]
@@ -191,12 +193,12 @@
         type: "point-3d",  // autocasts as new PointSymbol3D()
         symbolLayers: [{
           type: "icon",  // autocasts as new IconSymbol3DLayer()
-          size: 8,  // points
-          resource: { primitive: "x" },
-          material: { color: "blue" },
+          size: 12,  // points
+          resource: { primitive: "square" },
+          material: { color: [165, 201, 213,0.5] },
           outline: {
             color: "blue",
-            size: "3px"
+            size: "1px"
           }
         }]
       };
@@ -369,18 +371,6 @@
             })
             var pos2
             view.graphics.removeAll();
-
-            var punkt1 = new Graphic({
-              geometry: new Point({
-                x: pos1.x,
-                y: pos1.y,
-                spatialReference:{
-                  wkid: 25833
-                }
-              }),
-              symbol: markerSymbol
-            })
-            view.graphics.add(punkt1)
             // on.once(view, "key-down", function(evt){
             //   if(test){
             //     view.graphics.removeAll()
@@ -392,16 +382,6 @@
               pos2 = view.toMap({
                 x: evt.x,
                 y: evt.y
-              })
-              var punkt2 = new Graphic({
-                geometry: new Point({
-                  x: pos2.x,
-                  y: pos2.y,
-                  spatialReference: {
-                    wkid: 25833
-                  }
-                }),
-                symbol: markerSymbol
               })
               var polygon = new Graphic({
                 geometry: {
@@ -419,7 +399,7 @@
                 },
                 symbol: fillSymbol
               })
-              view.graphics.addMany([punkt1,punkt2,polygon])
+              view.graphics.addMany([polygon])
             })
             var tov = on.once(view, "click", function(evt){
 
