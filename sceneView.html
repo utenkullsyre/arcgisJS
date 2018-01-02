@@ -69,6 +69,14 @@
       border-radius:10px;
       user-select:none;
     }
+
+    #queryRes{
+      width: 250px;
+      background-color: #ffcd7d;
+      font-size: 1.2em;
+      padding: 5px;
+      max-height: 150px;
+    }
   </style>
 
   <link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
@@ -89,11 +97,14 @@
       "esri/widgets/DirectLineMeasurement3D",
       "esri/widgets/Legend",
       "esri/request",
+      "esri/geometry/Circle",
+      "esri/layers/GraphicsLayer",
+      'dojo/on',
       "dojo/domReady!"
 
     ], function(
       Map, TileLayer, MapImageLayer, Basemap, ElevationLayer, SceneView,
-      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend, esriRequest
+      Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend, esriRequest, Circle,GraphicsLayer,on
     ) {
 
       // Create elevation layers
@@ -166,7 +177,31 @@
         }
       });
 
-      view.map.addMany([bratthet, skredHendelser])
+      // Create a symbol for rendering the graphic
+      var fillSymbol = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: [0, 0, 0, 0],
+        outline: { // autocasts as new SimpleLineSymbol()
+          color: [241, 33, 0],
+          width: 2
+        }
+      };
+
+      var markerSymbol = {
+        type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+        color: [226, 119, 40],
+        size: 1,
+        outline: { // autocasts as new SimpleLineSymbol()
+          color: [255, 255, 255],
+          width: 1
+        }
+      };
+
+      var grafikkLag = new GraphicsLayer({
+        elevationInfo: "on-the-ground"
+      })
+
+      view.map.addMany([bratthet, skredHendelser, grafikkLag])
       console.log("Lag",view)
 
       var locateWidget = new Locate({
@@ -204,8 +239,10 @@
 
 
         view.goTo(viewpoint);
+        var grafikkLag = new GraphicsLayer({})
 
         view.ui.add(locateWidget, "bottom-right");
+        view.ui.add("queryRes", "bottom-left")
         // view.ui.add(measureWidget, "top-right");
         // view.on("click",function(){
         //   console.log(view)
@@ -232,12 +269,12 @@
         //   })
         // })
 
-        function queryExtent(pos) {
+        function queryExtent(pos,d) {
           var extent =  {}
-          extent.xmin = pos.x - 5
-          extent.xmax = pos.x + 5
-          extent.ymin = pos.y - 5
-          extent.ymax  = pos.y + 5
+          extent.xmin = pos.x - d
+          extent.xmax = pos.x + d
+          extent.ymin = pos.y - d
+          extent.ymax  = pos.y + d
           return extent
         }
 
@@ -245,6 +282,32 @@
         function copyToClipboard(text) {
           window.prompt("x,y,z koordinat\nSRID: 25833\n\nKopier tekst: Ctrl+C, Enter", text);
         }
+
+        // function queryOptions(){
+        //   var options = {
+        //     query: {
+        //       where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
+        //       geometry:'{xmin: ' + view.extent.xmin + ', ymin: ' + view.extent.ymin + ', xmax: ' + view.extent.xmax + ', ymax: ' + view.extent.ymax + '}',
+        //       geometryType: 'esriGeometryEnvelope',
+        //       inSR:28533,
+        //       spatialRel: 'esriSpatialRelIntersects',
+        //       outFields: 'skredType, skredNavn, stedsnavn, skredTidspunkt, noySkredTidspunkt, persBerort, annetSkadet, redningsaksjon, vaerObservasjon, totAntPersOmkommet, ansvarligInstitusjon, beskrivelse, objektType, registrertDato, utlosningArsak, dokumentasjon',
+        //       // outFields: '*',
+        //       returnGeometry:true,
+        //       returnTrueCurves:false,
+        //       outSR:25833,
+        //       returnIdsOnly:false,
+        //       returnCountOnly:false,
+        //       returnZ:false,
+        //       returnM:false,
+        //       returnDistinctValues:false,
+        //       returnExtentsOnly:false,
+        //       f: 'geojson',
+        //     },
+        //     responseType: 'json'
+        //   };
+        // return options
+        // }
 
         function queryOptions(){
           var options = {
@@ -254,7 +317,7 @@
               geometryType: 'esriGeometryEnvelope',
               inSR:28533,
               spatialRel: 'esriSpatialRelIntersects',
-              outFields: 'skredType, skredNavn, stedsnavn, skredTidspunkt, noySkredTidspunkt, persBerort, annetSkadet, redningsaksjon, vaerObservasjon, totAntPersOmkommet, ansvarligInstitusjon, beskrivelse, objektType, registrertDato, utlosningArsak, dokumentasjon',
+              outFields: 'skredType, skredNavn, stedsnavn,vaerObservasjonbeskrivelse, objektType, utlosningArsak, dokumentasjon',
               // outFields: '*',
               returnGeometry:true,
               returnTrueCurves:false,
@@ -272,37 +335,198 @@
         return options
         }
 
-        view.on('click', function(evt) {
-          var hoydeDiv = document.querySelector("#hoydeinfo");
+        var test = document.querySelector('#queryRes')
 
-          var pos = view.toMap({
-            x:evt.x,
-            y:evt.y
-          });
-
-          var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
-          esriRequest(url, queryOptions()).then(function(response) {
-            console.log('response', response)
-            var item = response.data.features["0"]
-            console.log(item.geometry.coordinates["0"], item.geometry.coordinates["1"], item.properties);
-            var grafikk = new Graphic({
-              geometry: new Point({
-                  x: item.geometry.coordinates["0"],
-                  y: item.geometry.coordinates["1"],
-                }),
-              symbol: { type: "simple-marker" },
-              attributes: item.properties
+        on(test, "click", function() {
+          var tull = on.once(view, "click", function(evt) {
+            var pos1 = view.toMap({
+              x: evt.x,
+              y: evt.y
             })
-            view.graphics.add(grafikk)
-          })
+            var pos2
+            view.graphics.removeAll();
 
-          var hoyde = bakke.queryElevation(pos)
-          console.log('Høyde',hoyde)
-          hoyde.then(function(res){
-            hoydeDiv.innerHTML = 'x: ' + pos.x.toFixed(0) + ' <br />y: ' + pos.y.toFixed(0) + ' <br />moh: ' + res.geometry.z.toFixed(0)
-            copyToClipboard(pos.x.toFixed(0) + ', ' + pos.y.toFixed(0) + ', ' + res.geometry.z.toFixed(0))
+            var punkt1 = new Graphic({
+              geometry: new Point({
+                x: pos1.x,
+                y: pos1.y,
+                spatialReference:{
+                  wkid: 25833
+                }
+              }),
+              symbol: markerSymbol
+            })
+            view.graphics.add(punkt1)
+            on.once(view, "key-down", function(evt){
+              if(test){
+                view.graphics.removeAll()
+                test.remove()
+                tull.remove()
+              };
+            })
+            var test = on(view, "pointer-move", function(evt){
+              view.graphics.removeAll()
+              pos2 = view.toMap({
+                x: evt.x,
+                y: evt.y
+              })
+              var punkt2 = new Graphic({
+                geometry: new Point({
+                  x: pos2.x,
+                  y: pos2.y,
+                  spatialReference: {
+                    wkid: 25833
+                  }
+                }),
+                symbol: markerSymbol
+              })
+              var polygon = new Graphic({
+                geometry: {
+                  type: "polygon",
+                  rings: [
+                    [pos1.x, pos1.y],
+                    [pos1.x, pos2.y],
+                    [pos2.x, pos2.y],
+                    [pos2.x, pos1.y],
+                    [pos1.x, pos1.y]
+                  ],
+                  spatialReference: {
+                    wkid: 25833
+                  }
+                },
+                symbol: fillSymbol
+              })
+              view.graphics.addMany([punkt1,punkt2,polygon])
+            })
+            var tov = on.once(view, "double-click", function(evt){
+
+                var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
+                var options = {
+                  query: {
+                    // where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
+                    where: '1=1',
+                    geometry:'{xmin: ' + pos1.x + ', ymin: ' + pos1.y + ', xmax: ' + pos2.x + ', ymax: ' + pos2.y + '}',
+                    geometryType: 'esriGeometryEnvelope',
+                    inSR:25833,
+                    spatialRel: 'esriSpatialRelIntersects',
+                    // outFields: 'skredType, skredNavn, stedsnavn,vaerObservasjonbeskrivelse, objektType, utlosningArsak, dokumentasjon',
+                    outFields: '*',
+                    returnGeometry:true,
+                    returnTrueCurves:false,
+                    outSR:25833,
+                    returnIdsOnly:false,
+                    returnCountOnly:false,
+                    returnZ:false,
+                    returnM:false,
+                    returnDistinctValues:false,
+                    returnExtentsOnly:false,
+                    f: 'geojson',
+                  },
+                  responseType: 'json'
+                };
+                esriRequest(url, options).then(function(response) {
+                  var item = response.data.features["0"]
+                  if(item){
+                    console.log(response);
+                    console.log(item.geometry.coordinates["0"], item.geometry.coordinates["1"], item.properties);
+                  }
+                })
+
+              test.remove()
+              tov.remove()
+            })
           })
         })
+
+        // view.on('click', function(evt) {
+        //   var hoydeDiv = document.querySelector("#hoydeinfo");
+        //
+        //   var pos = view.toMap({
+        //     x:evt.x,
+        //     y:evt.y
+        //   });
+        //
+        //   var extent = queryExtent(pos,50)
+        //
+        //   var sirkel = new Circle({
+        //     center: new Point({
+        //       x: pos.x,
+        //       y: pos.y,
+        //       // z: pos.z + 100, Om man legger til Z vil symbolet automatisk bli plassert 3dimensjonalt
+        //       spatialReference: {
+        //         wkid: 25833
+        //       }
+        //     }),
+        //     geodesic: false,
+        //     radius: 50,
+        //     radiusUnit: "meters",
+        //     spatialReference: 25833,
+        //     type: "polygon"
+        //   })
+        //
+        //
+        //
+        //   var polygonGraphic = new Graphic({
+        //     geometry: sirkel,
+        //     symbol: fillSymbol
+        //   })
+        //
+        //   // view.graphics.add(polygonGraphic)
+        //
+        //   console.log("Sirkel", sirkel)
+        //
+        //   var options = {
+        //     query: {
+        //       // where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
+        //       where: '1=1',
+        //       geometry:'{xmin: ' + extent.xmin + ', ymin: ' + extent.ymin + ', xmax: ' + extent.xmax + ', ymax: ' + extent.ymax + '}',
+        //       geometryType: 'esriGeometryEnvelope',
+        //       inSR:25833,
+        //       spatialRel: 'esriSpatialRelIntersects',
+        //       // outFields: 'skredType, skredNavn, stedsnavn,vaerObservasjonbeskrivelse, objektType, utlosningArsak, dokumentasjon',
+        //       outFields: '*',
+        //       returnGeometry:true,
+        //       returnTrueCurves:false,
+        //       outSR:25833,
+        //       returnIdsOnly:false,
+        //       returnCountOnly:false,
+        //       returnZ:false,
+        //       returnM:false,
+        //       returnDistinctValues:false,
+        //       returnExtentsOnly:false,
+        //       f: 'geojson',
+        //     },
+        //     responseType: 'json'
+        //   };
+        //
+        //   var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
+        //   esriRequest(url, options).then(function(response) {
+        //     var item = response.data.features["0"]
+        //     if(item){
+        //       console.log(item.geometry.coordinates["0"], item.geometry.coordinates["1"], item.properties);
+        //       var grafikk = new Graphic({
+        //         geometry: new Point({
+        //             x: item.geometry.coordinates["0"],
+        //             y: item.geometry.coordinates["1"],
+        //             spatialReference: {
+        //               wkid: 25833
+        //             }
+        //           }),
+        //         symbol: markerSymbol,
+        //         attributes: item.properties
+        //       })
+        //       view.graphics.add(grafikk)
+        //     }
+        //   })
+        //
+        //   var hoyde = bakke.queryElevation(pos)
+        //   console.log('Høyde',hoyde)
+        //   hoyde.then(function(res){
+        //     hoydeDiv.innerHTML = 'x: ' + pos.x.toFixed(0) + ' <br />y: ' + pos.y.toFixed(0) + ' <br />moh: ' + res.geometry.z.toFixed(0)
+        //
+        //     copyToClipboard(pos.x.toFixed(0) + ', ' + pos.y.toFixed(0) + ', extent: ' + extent.xmin.toFixed(0) + ','  + extent.ymin.toFixed(0) + ','  + extent.xmax.toFixed(0) + ','  + extent.ymax.toFixed(0))
+        //   })
+        // })
       })
     })
   </script>
@@ -310,6 +534,7 @@
 <body>
   <div id="viewDiv">
     <div id="hoydeinfo">Hoyde</div>
+    <div id="queryRes">Resultat fra spørring</div>
 
     </div>
 </body>
