@@ -1,0 +1,79 @@
+html,
+body,
+#viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#paneDiv {
+  position: absolute;
+  top: 12px;
+  left: 62px;
+  width: 80%;
+  padding: 0 12px 0 12px;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid white;
+  color: black;
+}
+
+#resultsDiv {
+  font-size: 1.2em;
+  text-align: center;
+  border-bottom: 1px solid gray;
+  padding: 10px 0px;
+}
+
+#activeElevationLayerDiv {
+  margin: 10px 0;
+}
+
+ul #red {
+  color: rgb(150, 26, 15);
+}
+
+ul #green {
+  color: rgb(21, 150, 15);
+}
+
+ul span {
+  color: black;
+}
+
+ul {
+  margin: 0 0 10px 0;
+}
+
+#hoydeinfo{
+  position: absolute;
+  color: white;
+  font-family: sans-serif;
+  size:1.3em;
+  font-weight:bold;
+  -webkit-text-stroke: .5px black;
+  padding: 10px;
+  overflow: hidden;
+  background-color: none;
+  top: 50px;
+  left: 50px;
+  margin: auto;
+  display: flex;
+  border-radius:10px;
+  user-select:none;
+}
+
+#queryRes, #hitTest{
+  width: 250px;
+  font-size: 1.2em;
+  padding: 5px;
+  max-height: 150px;
+  border: 1px #ababab solid;
+}
+#queryRes{
+  background-color: #ffcd7d;
+}
+
+#hitTest{
+background-color: #86c2b9;
+}
