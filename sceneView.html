@@ -188,17 +188,22 @@
       };
 
       var markerSymbol = {
-        type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-        color: [226, 119, 40],
-        size: 1,
-        outline: { // autocasts as new SimpleLineSymbol()
-          color: [255, 255, 255],
-          width: 1
-        }
+        type: "point-3d",  // autocasts as new PointSymbol3D()
+        symbolLayers: [{
+          type: "icon",  // autocasts as new IconSymbol3DLayer()
+          size: 8,  // points
+          resource: { primitive: "x" },
+          material: { color: "blue" },
+          outline: {
+            color: "blue",
+            size: "3px"
+          }
+        }]
       };
 
       var grafikkLag = new GraphicsLayer({
-        elevationInfo: "on-the-ground"
+        elevationInfo: "on-the-ground",
+        visible: true
       })
 
       view.map.addMany([bratthet, skredHendelser, grafikkLag])
@@ -239,7 +244,6 @@
 
 
         view.goTo(viewpoint);
-        var grafikkLag = new GraphicsLayer({})
 
         view.ui.add(locateWidget, "bottom-right");
         view.ui.add("queryRes", "bottom-left")
@@ -335,9 +339,29 @@
         return options
         }
 
+        function addResponseData(item){
+                var grafikk = new Graphic({
+                  geometry: new Point({
+                      x: item.geometry.coordinates["0"],
+                      y: item.geometry.coordinates["1"],
+                      spatialReference: {
+                        wkid: 25833
+                      }
+                    }),
+                  symbol: markerSymbol,
+                  attributes: item.properties
+                })
+                console.log("Legger til grafikk", grafikk)
+                grafikkLag.graphics.add(grafikk)
+        }
+
         var test = document.querySelector('#queryRes')
 
-        on(test, "click", function() {
+        var test1 = on(test, "click", function() {
+          var kameraView = view.camera
+          kameraView.heading = 0
+          view.goTo(kameraView)
+          console.log(test1);
           var tull = on.once(view, "click", function(evt) {
             var pos1 = view.toMap({
               x: evt.x,
@@ -357,15 +381,14 @@
               symbol: markerSymbol
             })
             view.graphics.add(punkt1)
-            on.once(view, "key-down", function(evt){
-              if(test){
-                view.graphics.removeAll()
-                test.remove()
-                tull.remove()
-              };
-            })
+            // on.once(view, "key-down", function(evt){
+            //   if(test){
+            //     view.graphics.removeAll()
+            //   };
+            // })
             var test = on(view, "pointer-move", function(evt){
               view.graphics.removeAll()
+              grafikkLag.graphics.removeAll()
               pos2 = view.toMap({
                 x: evt.x,
                 y: evt.y
@@ -398,7 +421,7 @@
               })
               view.graphics.addMany([punkt1,punkt2,polygon])
             })
-            var tov = on.once(view, "double-click", function(evt){
+            var tov = on.once(view, "click", function(evt){
 
                 var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
                 var options = {
@@ -428,13 +451,16 @@
                   var item = response.data.features["0"]
                   if(item){
                     console.log(response);
-                    console.log(item.geometry.coordinates["0"], item.geometry.coordinates["1"], item.properties);
+                    response.data.features.forEach(function(obj){
+                      addResponseData(obj)
+                    })
                   }
                 })
-
+              view.graphics.removeAll()
               test.remove()
               tov.remove()
             })
+
           })
         })
 
