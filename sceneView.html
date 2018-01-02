@@ -360,9 +360,15 @@
         var test = document.querySelector('#queryRes')
 
         var test1 = on(test, "click", function() {
-          var kameraView = view.camera
-          kameraView.heading = 0
-          view.goTo(kameraView)
+          var initCamera = view.camera
+          var heading = view.camera.heading;
+          var heading = view.camera.tilt;
+          view.goTo({
+            heading:0,
+            tilt: 35,
+            scale: view.scale * 3.4
+          })
+          view.map.zoom = 4
           console.log(test1);
           var tull = on.once(view, "click", function(evt) {
             var pos1 = view.toMap({
@@ -402,6 +408,8 @@
               view.graphics.addMany([polygon])
             })
             var tov = on.once(view, "click", function(evt){
+              view.goTo(initCamera)
+
 
                 var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
                 var options = {
