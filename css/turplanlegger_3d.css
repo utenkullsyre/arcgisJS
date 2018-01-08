@@ -95,7 +95,7 @@ background-color: #86c2b9;
   color: rgb(233, 118, 16);
   top: 100px;
   left: 200px;
-  transition: opacity .3s;
+  transition: opacity .2s;
 }
 
 #contextMenu button {

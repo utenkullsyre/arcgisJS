@@ -353,6 +353,7 @@ var viewElement
           view.graphics.addMany([polygon])
         })
         var tov = on.once(view, "click", function(evt){
+          evt.stopPropagation()
           view.goTo(initCamera)
 
 
