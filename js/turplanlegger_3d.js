@@ -128,7 +128,7 @@ require([
 
   view.map.addMany([bratthet, skredHendelser, grafikkLag])
   console.log("Lag",view)
-  
+
   // var measureWidget = new DirectLineMeasurement3D({
   //   view: view
   // });
@@ -157,8 +157,10 @@ require([
     // view.ui.add(legend, "top-right");
     view.goTo(viewpoint);
     view.ui.move(['zoom','navigation-toggle','compass'], 'top-right')
+    view.ui.add('search', 'top-left')
     view.ui.add("queryRes", "top-left")
     view.ui.add('hitTest', 'bottom-left')
+
     // view.ui.add(measureWidget, "top-right");
     // view.on("click",function(){
     //   console.log(view)
@@ -293,6 +295,28 @@ require([
       })
     })
 
+    var sidenav = document.querySelector('.sidenav')
+
+    function openNav(){
+      sidenav.style.minWidth = '250px'
+    }
+
+    function closeNav(){
+      sidenav.style.minWidth = '0px'
+    }
+
+    on(document.querySelector('#search span:first-child'),'click', function () {
+      openNav()
+    })
+    on(document.querySelector('.closebtn'),'click', function () {
+      closeNav()
+      var dragHandler = on(window, 'click', function(evt) {
+        if (evt.target !== sidenav) {
+          closeNav()
+          dragHandler.remove()
+        }
+      })
+    })
     on(test, "click", function () {
       fjernMeny()
       view.toolactive = true

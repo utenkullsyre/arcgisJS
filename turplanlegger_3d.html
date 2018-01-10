@@ -10,10 +10,27 @@
   <script type="text/javascript" src="js\turplanlegger_3d.js"></script>
 </head>
 <body>
+  <div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn">&times;</a>
+</div>
   <div id="viewDiv" data-toolactive="false">
+    <div id="search">
+      <span class="esri-icon-drag-horizontal"></span>
+      <input type="text" name="stedsnavn" placeholder="Søk på stedsnavn">
+      <span class="esri-icon-search"></span>
+    </div>
     <div id="hoydeinfo" class="skjult">Hoyde</div>
     <div id="hitTest" >Hittest</div>
-    <div id="queryRes">Resultat fra spørring</div>
+    <div id="queryRes">
+      <h3 id="stedsnavnPkt"></p>
+      <p id="hoydePkt"></p>
+      <div id="verktoy">
+        <div id="koordinat" class=""></div>
+        <div id="yr" class=""></div>
+      </div>
+      <button type="button" name="zoompkt"></button>
+
+      </div>
     <div id="contextMenu" class="skjult">
       <span id="menyIkon" class="esri-icon-locate"></span>
       <button type="button" name="button">
