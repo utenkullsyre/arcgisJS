@@ -21,32 +21,7 @@ body,
   color: black;
 }
 
-#resultsDiv {
-  font-size: 1.2em;
-  text-align: center;
-  border-bottom: 1px solid gray;
-  padding: 10px 0px;
-}
 
-#activeElevationLayerDiv {
-  margin: 10px 0;
-}
-
-ul #red {
-  color: rgb(150, 26, 15);
-}
-
-ul #green {
-  color: rgb(21, 150, 15);
-}
-
-ul span {
-  color: black;
-}
-
-ul {
-  margin: 0 0 10px 0;
-}
 
 #hoydeinfo{
   position: absolute;
@@ -67,14 +42,19 @@ ul {
 }
 
 #queryRes, #hitTest{
-  width: 250px;
   font-size: 1.2em;
   padding: 5px;
   max-height: 150px;
   border: 1px #ababab solid;
 }
+
 #queryRes{
-  background-color: #ffcd7d;
+  width: 350px;
+  background-color: white;
+  box-sizing: border-box;
+  max-height: 500px;
+  border-radius: 2px
+
 }
 
 #hitTest{

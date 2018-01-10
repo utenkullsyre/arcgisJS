@@ -6,6 +6,7 @@ require([
   "esri/layers/ElevationLayer",
   "esri/views/SceneView",
   "esri/widgets/Locate",
+  "esri/widgets/Search",
   "esri/Graphic",
   "esri/Viewpoint",
   "esri/geometry/Point",
@@ -21,9 +22,10 @@ require([
 
 ], function(
   Map, TileLayer, MapImageLayer, Basemap, ElevationLayer, SceneView,
-  Locate, Graphic, Viewpoint, Point, DirectLineMeasurement3D, Legend, esriRequest, Circle,GraphicsLayer,PictureMarkerSymbol,on, esriConfig
+  Locate, Search, Graphic, Viewpoint, Point, DirectLineMeasurement3D,
+   Legend, esriRequest, Circle, GraphicsLayer, PictureMarkerSymbol, on,
+    esriConfig
 ) {
-
   // Create elevation layers
   var bakke = new ElevationLayer({
     url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer"
@@ -126,20 +128,12 @@ require([
 
   view.map.addMany([bratthet, skredHendelser, grafikkLag])
   console.log("Lag",view)
-
-  var locateWidget = new Locate({
-    view: view,   // Attaches the Locate button to the view
-    graphic: new Graphic({
-      symbol: { type: "simple-marker" }  // overwrites the default symbol used for the
-      // graphic placed at the location of the user when found
-    })
-  });
+  
   // var measureWidget = new DirectLineMeasurement3D({
   //   view: view
   // });
 
-var viewElement
-
+  var viewElement
   view.when(function () {
     viewElement = document.querySelector('#viewDiv')
     console.log("View",view);
@@ -160,13 +154,10 @@ var viewElement
     view.toolactive = false
 
     // Add widget to the bottom right corner of the view
-    view.ui.add(legend, "top-right");
-
-
+    // view.ui.add(legend, "top-right");
     view.goTo(viewpoint);
-
-    view.ui.add(locateWidget, "bottom-right")
-    view.ui.add("queryRes", "bottom-left")
+    view.ui.move(['zoom','navigation-toggle','compass'], 'top-right')
+    view.ui.add("queryRes", "top-left")
     view.ui.add('hitTest', 'bottom-left')
     // view.ui.add(measureWidget, "top-right");
     // view.on("click",function(){
