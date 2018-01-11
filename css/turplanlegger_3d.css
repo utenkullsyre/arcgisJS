@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
 html,
 body,
 #viewDiv {
+  font-family: 'Raleway', sans-serif;
   padding: 0;
   margin: 0;
   height: 100%;
@@ -22,16 +25,18 @@ body,
 }
 
 .sidenav {
-    height: 100%;
-    min-width: 0;
-    position: fixed;
-    z-index: 4;
-    top: 0;
-    left: 0;
-    background-color: #bfc8ba;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  background-color: #bfc8ba;
+  overflow-x: hidden;
+  transition: 0.5s;
+  display: flex;
+  flex-flow: column;
+  box-sizing:border-box;
 }
 
 .sidenav a{
@@ -39,17 +44,26 @@ body,
   color:white
 }
 
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+.topGroup{
+  height: 40px;
+  height: 35px;
+  background-color: skyblue;
 }
 
-@media screen and (max-height: 450px) {
+.topGroup .closebtn {
+  margin-right: 20px;
+  font-size: 36px;
+}
+
+.openNav{
+  width:350px!important;
+}
+
+@media only screen and (max-width: 350px) {
+    /* For mobile phones: */
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+  .openNav {min-width: 100%!important;box-sizing: border-box;padding: 5px}
 }
 
 #search{
@@ -66,7 +80,6 @@ body,
 }
 
 #search input{
-  font-family: sans-serif;
   font-size: 1.1em;
   color: rgb(170, 170, 170);
   position: absolute;
@@ -170,14 +183,6 @@ background-color: #86c2b9;
   z-index: 2;
 }
 
-.gjemt{
-  opacity: 0 !important;
-}
-
-.skjult{
-  display: none!important;
-}
-
 #snackbar {
     visibility: hidden;
     min-width: 250px;
@@ -218,4 +223,18 @@ background-color: #86c2b9;
 @keyframes fadeout {
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
+}
+
+.center-content{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gjemt{
+  opacity: 0 !important;
+}
+
+.skjult{
+  display: none!important;
 }

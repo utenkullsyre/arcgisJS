@@ -1,24 +1,24 @@
 require([
-  "esri/Map",
-  "esri/layers/TileLayer",
-  "esri/layers/MapImageLayer",
-  "esri/Basemap",
-  "esri/layers/ElevationLayer",
-  "esri/views/SceneView",
-  "esri/widgets/Locate",
-  "esri/widgets/Search",
-  "esri/Graphic",
-  "esri/Viewpoint",
-  "esri/geometry/Point",
-  "esri/widgets/DirectLineMeasurement3D",
-  "esri/widgets/Legend",
-  "esri/request",
-  "esri/geometry/Circle",
-  "esri/layers/GraphicsLayer",
-  "esri/symbols/PictureMarkerSymbol",
+  'esri/Map',
+  'esri/layers/TileLayer',
+  'esri/layers/MapImageLayer',
+  'esri/Basemap',
+  'esri/layers/ElevationLayer',
+  'esri/views/SceneView',
+  'esri/widgets/Locate',
+  'esri/widgets/Search',
+  'esri/Graphic',
+  'esri/Viewpoint',
+  'esri/geometry/Point',
+  'esri/widgets/DirectLineMeasurement3D',
+  'esri/widgets/Legend',
+  'esri/request',
+  'esri/geometry/Circle',
+  'esri/layers/GraphicsLayer',
+  'esri/symbols/PictureMarkerSymbol',
   'dojo/on',
-  "esri/config",
-  "dojo/domReady!"
+  'esri/config',
+  'dojo/domReady!'
 
 ], function(
   Map, TileLayer, MapImageLayer, Basemap, ElevationLayer, SceneView,
@@ -28,17 +28,17 @@ require([
 ) {
   // Create elevation layers
   var bakke = new ElevationLayer({
-    url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer"
+    url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer'
   });
 
   var bilder = new TileLayer({
-      url: "https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheBilder/MapServer",
-      id: "Bilder",
+      url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheBilder/MapServer',
+      id: 'Bilder',
       visible: true
     });
 
   var bratthet = new MapImageLayer({
-    url: "https://wms3.nve.no/map/rest/services/Bratthet/MapServer",
+    url: 'https://wms3.nve.no/map/rest/services/Bratthet/MapServer',
     sublayers: [
         {
           id: 0,
@@ -50,7 +50,7 @@ require([
     });
 
   var skredHendelser = new MapImageLayer({
-    url: "https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer",
+    url: 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer',
     sublayers: [
         {
           id: 1,
@@ -66,8 +66,8 @@ require([
 
    var bilder = new Basemap({
      baseLayers: [bilder],
-     title: "Bilder",
-     id: "bilder"
+     title: 'Bilder',
+     id: 'bilder'
    });
 
   // Create Map and View
@@ -79,7 +79,7 @@ require([
   });
 
   var view = new SceneView({
-    container: "viewDiv",
+    container: 'viewDiv',
     map: map,
     camera: {
       // initial view:
@@ -98,7 +98,7 @@ require([
 
   // Create a symbol for rendering the graphic
   var fillSymbol = {
-    type: "simple-fill", // autocasts as new SimpleFillSymbol()
+    type: 'simple-fill', // autocasts as new SimpleFillSymbol()
     color: [0, 0, 0, 0],
     outline: { // autocasts as new SimpleLineSymbol()
       color: [241, 33, 0],
@@ -107,27 +107,27 @@ require([
   }
 
   var markerSymbol = {
-    type: "point-3d",  // autocasts as new PointSymbol3D()
+    type: 'point-3d',  // autocasts as new PointSymbol3D()
     symbolLayers: [{
-      type: "icon",  // autocasts as new IconSymbol3DLayer()
+      type: 'icon',  // autocasts as new IconSymbol3DLayer()
       size: 12,  // points
-      resource: { primitive: "square" },
+      resource: { primitive: 'square' },
       material: { color: [165, 201, 213,0.5] },
       outline: {
-        color: "blue",
-        size: "1px"
+        color: 'blue',
+        size: '1px'
       }
     }]
   };
 
   var grafikkLag = new GraphicsLayer({
-    elevationInfo: "on-the-ground",
+    elevationInfo: 'on-the-ground',
     visible: true,
     title: 'Skredhendelser'
   })
 
   view.map.addMany([bratthet, skredHendelser, grafikkLag])
-  console.log("Lag",view)
+  console.log('Lag',view)
 
   // var measureWidget = new DirectLineMeasurement3D({
   //   view: view
@@ -136,7 +136,7 @@ require([
   var viewElement
   view.when(function () {
     viewElement = document.querySelector('#viewDiv')
-    console.log("View",view);
+    console.log('View',view);
 
     var viewpoint = new Viewpoint({
       targetGeometry: new Point({
@@ -154,28 +154,28 @@ require([
     view.toolactive = false
 
     // Add widget to the bottom right corner of the view
-    // view.ui.add(legend, "top-right");
+    // view.ui.add(legend, 'top-right');
     view.goTo(viewpoint);
     view.ui.move(['zoom','navigation-toggle','compass'], 'top-right')
     view.ui.add('search', 'top-left')
-    view.ui.add("queryRes", "top-left")
+    view.ui.add('queryRes', 'top-left')
     view.ui.add('hitTest', 'bottom-left')
 
-    // view.ui.add(measureWidget, "top-right");
-    // view.on("click",function(){
+    // view.ui.add(measureWidget, 'top-right');
+    // view.on('click',function(){
     //   console.log(view)
     // });
     // var test = view.activeTool
     // console.log(test)
-    // var handle = test.watch("directDistance", function(nyVerdi,gmlVerdi,property,objekt){
+    // var handle = test.watch('directDistance', function(nyVerdi,gmlVerdi,property,objekt){
     //   if(objekt.verticalDistance){console.log(objekt.horizontalDistance, objekt.verticalDistance)}
     //   console.log(objekt)
     // });
 
-    // view.on("pointer-move",function(evt){
-    //   var hoydeDiv = document.querySelector("#hoydeinfo");
-    //   hoydeDiv.style.left = evt.x + 10+"px";
-    //   hoydeDiv.style.top = evt.y + 10 +"px";
+    // view.on('pointer-move',function(evt){
+    //   var hoydeDiv = document.querySelector('#hoydeinfo');
+    //   hoydeDiv.style.left = evt.x + 10+'px';
+    //   hoydeDiv.style.top = evt.y + 10 +'px';
     //
     //   var pos = view.toMap({
     //     x:evt.x,
@@ -183,7 +183,7 @@ require([
     //   });
     //   var hoyde = bakke.queryElevation(pos);
     //   hoyde.then(function(res){
-    //     hoydeDiv.innerHTML = res.geometry.z.toFixed(0) + " moh";
+    //     hoydeDiv.innerHTML = res.geometry.z.toFixed(0) + ' moh';
     //   })
     // })
 
@@ -198,7 +198,7 @@ require([
 
 
     function copyToClipboard(text) {
-      window.prompt("x,y,z koordinat\nSRID: 25833\n\nKopier tekst: Ctrl+C, Enter", text);
+      window.prompt('x,y,z koordinat\nSRID: 25833\n\nKopier tekst: Ctrl+C, Enter', text);
     }
 
     // function queryOptions(){
@@ -256,8 +256,8 @@ require([
     function addResponseData(item){
             var grafikk = new Graphic({
               geometry: new Point({
-                  x: item.geometry.coordinates["0"],
-                  y: item.geometry.coordinates["1"],
+                  x: item.geometry.coordinates['0'],
+                  y: item.geometry.coordinates['1'],
                   spatialReference: {
                     wkid: 25833
                   }
@@ -298,11 +298,11 @@ require([
     var sidenav = document.querySelector('.sidenav')
 
     function openNav(){
-      sidenav.style.minWidth = '250px'
+      sidenav.classList.add('openNav')
     }
 
     function closeNav(){
-      sidenav.style.minWidth = '0px'
+      sidenav.classList.remove('openNav')
     }
 
     on(document.querySelector('#search span:first-child'),'click', function () {
@@ -317,7 +317,7 @@ require([
         }
       })
     })
-    on(test, "click", function () {
+    on(test, 'click', function () {
       fjernMeny()
       view.toolactive = true
       viewElement.style.cursor = 'crosshair'
@@ -330,19 +330,19 @@ require([
         scale: view.scale * 3.4
       })
       view.map.zoom = 4
-      var tull = on.once(view, "click", function(evt) {
+      var tull = on.once(view, 'click', function(evt) {
         var pos1 = view.toMap({
           x: evt.x,
           y: evt.y
         })
         var pos2
         view.graphics.removeAll();
-        // on.once(view, "key-down", function(evt){
+        // on.once(view, 'key-down', function(evt){
         //   if(test){
         //     view.graphics.removeAll()
         //   };
         // })
-        var test = on(view, "pointer-move", function(evt){
+        var test = on(view, 'pointer-move', function(evt){
           view.graphics.removeAll()
           grafikkLag.graphics.removeAll()
           pos2 = view.toMap({
@@ -351,7 +351,7 @@ require([
           })
           var polygon = new Graphic({
             geometry: {
-              type: "polygon",
+              type: 'polygon',
               rings: [
                 [pos1.x, pos1.y],
                 [pos1.x, pos2.y],
@@ -367,7 +367,7 @@ require([
           })
           view.graphics.addMany([polygon])
         })
-        var tov = on.once(view, "click", function(evt){
+        var tov = on.once(view, 'click', function(evt){
           evt.stopPropagation()
           view.goTo(initCamera)
 
@@ -377,7 +377,7 @@ require([
               query: {
                 // where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
                 where: '1=1',
-                geometry:'{xmin: ' + pos1.x + ', ymin: ' + pos1.y + ', xmax: ' + pos2.x + ', ymax: ' + pos2.y + '}',
+                geometry: '{xmin: ' + pos1.x + ', ymin: ' + pos1.y + ', xmax: ' + pos2.x + ', ymax: ' + pos2.y + '}',
                 geometryType: 'esriGeometryEnvelope',
                 inSR:25833,
                 spatialRel: 'esriSpatialRelIntersects',
@@ -397,7 +397,7 @@ require([
               responseType: 'json'
             };
             esriRequest(url, options).then(function(response) {
-              var item = response.data.features["0"]
+              var item = response.data.features['0']
               if(item){
                 console.log(response);
                 response.data.features.forEach(function(obj){
@@ -429,7 +429,7 @@ require([
     })
 
     // view.on('click', function(evt) {
-    //   var hoydeDiv = document.querySelector("#hoydeinfo");
+    //   var hoydeDiv = document.querySelector('#hoydeinfo');
     //
     //   var pos = view.toMap({
     //     x:evt.x,
@@ -449,9 +449,9 @@ require([
     //     }),
     //     geodesic: false,
     //     radius: 50,
-    //     radiusUnit: "meters",
+    //     radiusUnit: 'meters',
     //     spatialReference: 25833,
-    //     type: "polygon"
+    //     type: 'polygon'
     //   })
     //
     //
@@ -463,7 +463,7 @@ require([
     //
     //   // view.graphics.add(polygonGraphic)
     //
-    //   console.log("Sirkel", sirkel)
+    //   console.log('Sirkel', sirkel)
     //
     //   var options = {
     //     query: {
@@ -491,13 +491,13 @@ require([
     //
     //   var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
     //   esriRequest(url, options).then(function(response) {
-    //     var item = response.data.features["0"]
+    //     var item = response.data.features['0']
     //     if(item){
-    //       console.log(item.geometry.coordinates["0"], item.geometry.coordinates["1"], item.properties);
+    //       console.log(item.geometry.coordinates['0'], item.geometry.coordinates['1'], item.properties);
     //       var grafikk = new Graphic({
     //         geometry: new Point({
-    //             x: item.geometry.coordinates["0"],
-    //             y: item.geometry.coordinates["1"],
+    //             x: item.geometry.coordinates['0'],
+    //             y: item.geometry.coordinates['1'],
     //             spatialReference: {
     //               wkid: 25833
     //             }
