@@ -44,19 +44,55 @@ body,
   color:white
 }
 
+#bakgrunnskart{
+  margin-top: 50px;
+}
+
 .topGroup{
   height: 40px;
   height: 35px;
-  background-color: skyblue;
+  position: absolute;
+  right: 5px;
 }
 
 .topGroup .closebtn {
   margin-right: 20px;
-  font-size: 36px;
+  font-size: 4em;
 }
 
 .openNav{
   width:350px!important;
+}
+
+.gruppe-el{
+  box-sizing: border-box;
+  padding: 0 10px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content:flex-start;
+  align-self: center;
+  width:  100%;
+}
+
+.gruppe-el ul{
+  list-style-type: none;
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  margin:0;
+  max-height: 0;
+  transition: all 0.3s;
+}
+
+.gruppe-el ul li{
+  width: 100%;
+  font-size: 1.3em;
+}
+.gruppe-el-tittel{
+  color:#f9f9f9;
+  font-size: 1.5em;
+  width: 100%;
+  font-weight: bold;
 }
 
 @media only screen and (max-width: 350px) {
@@ -237,4 +273,8 @@ background-color: #86c2b9;
 
 .skjult{
   display: none!important;
+}
+
+.aapen{
+  max-height: 0 !important;
 }
