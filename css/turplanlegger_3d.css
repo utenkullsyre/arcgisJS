@@ -66,12 +66,14 @@ body,
 
 .gruppe-el{
   box-sizing: border-box;
-  padding: 0 10px;
+  padding: 5px 10px;
   display: flex;
   flex-flow: row wrap;
   justify-content:flex-start;
   align-self: center;
   width:  100%;
+  transition: all 0.15s;
+  cursor: pointer;
 }
 
 .gruppe-el ul{
@@ -93,6 +95,10 @@ body,
   font-size: 1.5em;
   width: 100%;
   font-weight: bold;
+}
+
+.gruppe-el:hover{
+  background-color: #d1d6ce;
 }
 
 @media only screen and (max-width: 350px) {

@@ -37,6 +37,12 @@ require([
       visible: true
     });
 
+  var graatone = new TileLayer({
+      url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheGraatone/MapServer',
+      id: 'Gråtone',
+      visible: false
+    });
+
   var bratthet = new MapImageLayer({
     url: 'https://wms3.nve.no/map/rest/services/Bratthet/MapServer',
     sublayers: [
