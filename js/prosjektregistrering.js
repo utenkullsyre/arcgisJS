@@ -45,6 +45,7 @@ prosjekt.addEventListener('click', function () {
 })
 
 vegref.addEventListener('click', function () {
+  document.querySelector('#vegrefWrapper input').scrollIntoView()
   vegrefDiv.classList.add('aapen')
 })
 

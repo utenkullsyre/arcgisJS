@@ -50,12 +50,12 @@ require([
   })
 
   var linje = new FeatureLayer({
-    url: 'https://services1.arcgis.com/oc32TmBcUxTXagmW/ArcGIS/rest/services/Prosjekter___SVV/FeatureServer/0',
+    url: 'https://services8.arcgis.com/Ipjkin3AEMcInnGi/arcgis/rest/services/prosjektdatasvv_linje/FeatureServer',
     visible: false
   })
 
   var flate = new FeatureLayer({
-    url: 'https://services1.arcgis.com/oc32TmBcUxTXagmW/ArcGIS/rest/services/Prosjekter___SVV/FeatureServer/1',
+    url: 'https://services8.arcgis.com/Ipjkin3AEMcInnGi/arcgis/rest/services/prosjektdatasvv_polygon/FeatureServer',
     visible: false
   })
 
@@ -365,6 +365,7 @@ require([
   })
 
   lukkRefKnapp.addEventListener('click', function () {
+    document.querySelector('#vegrefWrapper input').scrollIntoView()
     vegrefDiv.classList.remove('aapen')
   })
 
