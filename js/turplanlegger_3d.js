@@ -33,15 +33,23 @@ require([
 
   var bilder = new TileLayer({
       url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheBilder/MapServer',
-      id: 'Bilder',
-      visible: true
+      id: 'Flyfoto',
+      visible: false
     });
 
   var graatone = new TileLayer({
       url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheGraatone/MapServer',
       id: 'Gråtone',
-      visible: false
+      visible: true
     });
+
+    var landskap = new TileLayer({
+        url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheLandskap/MapServer',
+        id: 'Landskap',
+        visible: false
+      });
+
+
 
   var bratthet = new MapImageLayer({
     url: 'https://wms3.nve.no/map/rest/services/Bratthet/MapServer',
@@ -66,12 +74,13 @@ require([
       ]
     });
 
-  console.log('Lag', bratthet, skredHendelser)
+    var baseLayers = [bilder, graatone, landskap]
+    console.log(baseLayers)
 
 
 
    var bilder = new Basemap({
-     baseLayers: [bilder],
+     baseLayers: baseLayers,
      title: 'Bilder',
      id: 'bilder'
    });
@@ -304,7 +313,7 @@ require([
     var sidenav = document.querySelector('.sidenav')
 
     function openNav(){
-      sidenav.classList.add('openNav')
+      vm.menyAapen = true
     }
 
     function closeNav(){
@@ -431,6 +440,39 @@ require([
           fjernMeny()
           handle.remove()
         })
+      }
+    });
+
+    var vm = new Vue({
+      el: '#mySidenav',
+      data: {
+        menyAapen: true,
+        aktivtLag: 'Gråtone',
+        lag: bratthet,
+        lukk: true,
+        erAapen: false,
+      },
+      methods: {
+        skiftBakgrunnskart: function () {
+          baseLayers[1].visible = !baseLayers[1].visible;
+          baseLayers[0].visible = !baseLayers[0].visible;
+          var result = ''
+          baseLayers.forEach(function(element) {
+            if (element.visible) {
+              result = element.id
+            }
+          })
+          this.aktivtLag = result
+        },
+        toggleLag: function() {
+          bratthet.visible = !bratthet.visible
+          console.log(bratthet.visible)
+        },
+        toggleMeny: function() {
+          this.menyAapen = false;
+          console.log(this.menyAapen);
+        }
+
       }
     })
 

@@ -6,26 +6,27 @@
   <title>Turplanlegger</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
   <link rel="stylesheet" href="css\turplanlegger_3d.css">
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script src="https://js.arcgis.com/4.6/"></script>
   <script type="text/javascript" src="js\turplanlegger_3d.js"></script>
 </head>
 <body>
-  <div id="mySidenav" class="sidenav openNav">
+  <div id="mySidenav" class="sidenav" :class="{openNav:menyAapen}">
     <nav class="topGroup center-content">
-      <a href="javascript:void(0)" class="closebtn">&times;</a>
+      <a href="javascript:void(0)" class="closebtn" @click="toggleMeny">&times;</a>
     </nav>
-    <nav id="bakgrunnskart" class="gruppe-el">
-      <div class="">
-        <span class="gruppe-el-tittel">Bakgrunnskart: </span><span id="bakgrInfoLabel"></span>
+    <nav id="bakgrunnskart" class="gruppe-el" @click="erAapen = !erAapen">
+      <div class="tittel" >
+        <span class="gruppe-el-tittel">Bakgrunnskart: </span><span id="bakgrInfoLabel">{{ aktivtLag }}</span>
       </div>
-      <ul>
-        <li>Landkart</li>
-        <li>Flyfoto</li>
-        <li>Gråtone</li>
+      <ul :class="{aapen: erAapen}" @click="skiftBakgrunnskart">
+        <li data-id="landskap">Landkart</li>
+        <li data-id="bilder">Flyfoto</li>
+        <li data-id="graatone">Gråtone</li>
       </ul>
     </nav>
-    <nav class="gruppe-el">
-      <div class="">
+    <nav class="gruppe-el" @click="toggleLag">
+      <div class="" >
         <span class="gruppe-el-tittel">Kartlag</span>
       </div>
       <ul>

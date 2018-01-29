@@ -26,11 +26,11 @@ body,
 
 .sidenav {
   height: 100%;
-  width: 0;
-  position: fixed;
+  width: 350px;
+  position: absolute;
   z-index: 4;
   top: 0;
-  left: 0;
+  left: -350px;
   background-color: #bfc8ba;
   overflow-x: hidden;
   transition: 0.5s;
@@ -48,6 +48,24 @@ body,
   margin-top: 50px;
 }
 
+#bakgrunnskart ul li:hover {
+  background-color: #d1d6ce;
+}
+
+.tittel{
+  width: 100%;
+  padding: 10px;
+}
+
+.tittel:hover{
+  background-color: #d1d6ce;
+}
+
+#bakgrInfoLabel{
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
 .topGroup{
   height: 40px;
   height: 35px;
@@ -61,12 +79,14 @@ body,
 }
 
 .openNav{
-  width:350px!important;
+  -ms-transform: translateX(350px); /* IE 9 */
+  -webkit-transform: translateX(350px); /* Safari */
+  transform: translateX(350px);
 }
 
 .gruppe-el{
   box-sizing: border-box;
-  padding: 5px 10px;
+  padding: 5px 0;
   display: flex;
   flex-flow: row wrap;
   justify-content:flex-start;
@@ -80,7 +100,7 @@ body,
   list-style-type: none;
   overflow: hidden;
   width: 100%;
-  padding: 0;
+  padding: 0 10px;
   margin:0;
   max-height: 0;
   transition: all 0.3s;
@@ -97,9 +117,9 @@ body,
   font-weight: bold;
 }
 
-.gruppe-el:hover{
+/* .gruppe-el:hover{
   background-color: #d1d6ce;
-}
+} */
 
 @media only screen and (max-width: 350px) {
     /* For mobile phones: */
@@ -282,5 +302,5 @@ background-color: #86c2b9;
 }
 
 .aapen{
-  max-height: 0 !important;
+  max-height: 500px !important;
 }
