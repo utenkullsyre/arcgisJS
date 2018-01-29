@@ -26,7 +26,7 @@
       </ul>
     </nav>
     <nav class="gruppe-el" @click="toggleLag">
-      <div class="" >
+      <div class="tittel" >
         <span class="gruppe-el-tittel">Kartlag</span>
       </div>
       <ul>
@@ -37,13 +37,15 @@
       </ul>
     </nav>
     <nav class="gruppe-el" id="verktoyMeny">
-      <span class="gruppe-el-tittel" @click="verktoyAapen = !verktoyAapen">Verktøy</span>
+      <span class="gruppe-el-tittel tittel" @click="verktoyAapen = !verktoyAapen">Verktøy</span>
       <ul :class="{aapen: verktoyAapen}">
         <li>Måle</li>
         <li @click="hentData">Hent skreddata</li>
       </ul>
     </nav>
-    <nav class="gruppe-el gruppe-el-tittel">Om</nav="">
+    <nav class="gruppe-el">
+      <span class="tittel gruppe-el-tittel">Om</span>
+    </nav>
   </div>
   <div id="viewDiv" data-toolactive="false">
     <div id="sokInfo">
@@ -53,18 +55,17 @@
         <span class="esri-icon-search"></span>
       </div>
       <div id="queryRes">
-        <h3 id="stedsnavnPkt">{{ stedsNavn }}</h3>
-        <p id="hoydePkt"> {{ hoyde }}</p>
+        <p id="hoydePkt"> Ekstrapolert høyde: <span>{{ hoyde }}  moh</span></p>
         <div id="verktoy">
           <h4>Verktøy</h4>
           <ul>
             <li id="koordinat" class="">Koordinat</li>
-            <li id="yr" class="">Været her</li>
+            <li id="yr" class=""><a :href="vaerUrl">Været her</a></li>
           </ul>
         </div>
-        </div>
+      </div>
+
     </div>
-    <div id="hoydeinfo" class="skjult">Hoyde</div>
 
     <div id="contextMenu" class="skjult">
       <span id="menyIkon" class="esri-icon-locate"></span>

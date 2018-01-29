@@ -26,6 +26,7 @@ require([
    Legend, esriRequest, Circle, GraphicsLayer, PictureMarkerSymbol, on,
     esriConfig
 ) {
+  esriConfig.request.corsEnabledServers.push("www.norgeskart.no");
   // Create elevation layers
   var bakke = new ElevationLayer({
     url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer'
@@ -173,7 +174,6 @@ require([
     view.goTo(viewpoint);
     view.ui.move(['zoom','navigation-toggle','compass'], 'top-right')
     view.ui.add('sokInfo', 'top-left')
-    view.ui.add('queryRes', 'top-left')
 
     // view.ui.add(measureWidget, 'top-right');
     // view.on('click',function(){
@@ -293,21 +293,30 @@ require([
 
 
     on(view, 'click', function (evt) {
-
       view.hitTest(evt)
       .then(function (response) {
+        var pkt = {
+          x: response.results["0"].mapPoint.x,
+          y: response.results["0"].mapPoint.y,
+        };
         if (response.results.length>0 && response.results[0].graphic) {
           console.log(response)
         }
-        // if (response.result[0]) {
-        //   var graphic = response.results[0].graphic
-        //   view.whenLayerView(graphic.layer).then(function (lyrView) {
-        //     lyrView.highlight(graphic)
-        //   })
-        //
-        // }
+      //Finner stedsnavn
+      var urlSted = 'https://www.norgeskart.no/ws/elev.py?lat=7636351.411620195&lon=551110.8469032602&epsg=25833'
+      var options = {
+        query: {
+          lat: pkt.y,
+          lon: pkt.x,
+          epsg: 25833
+        }
+      }
+      esriRequest(urlSted,options).then(function(response) {
+        vmInfoBoard.stedsNavn = response.data.placename;
+        vmInfoBoard.hoyde = response.data.elevation;
+        vmInfoBoard.vaerUrl = vmInfoBoard.yrUrl();
+        })
       })
-
     })
 
     var sidenav = document.querySelector('.sidenav')
@@ -320,11 +329,18 @@ require([
       el: '#sokInfo',
       data: {
         stedsNavn: '',
-        hoyde: '000 moh'
+        hoyde: '',
+        vaerUrl: "https://www.yr.no/soek/soek.aspx?sted="
       },
       methods: {
         openNav: function () {
           vmSidebar.menyAapen = true
+        },
+        yrUrl: function () {
+          if(stedsNavn.length>0){
+            var url = "https://www.yr.no/soek/soek.aspx?sted=" + stedsNavn
+          }
+          return url
         }
       }
     })
@@ -419,7 +435,13 @@ require([
               evt.stopPropagation()
               view.goTo(initCamera)
 
-
+              //Hvis enhet ikke har mus så må pkt registreres gjennom museklikk nr2.
+              if(!pos2){
+                pos2 = view.toMap({
+                  x: evt.x,
+                  y: evt.y
+                })
+              }
                 var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
                 var options = {
                   query: {

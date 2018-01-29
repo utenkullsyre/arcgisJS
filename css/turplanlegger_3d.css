@@ -143,7 +143,7 @@ body,
 
 #search input{
   font-size: 1.1em;
-  color: rgb(170, 170, 170);
+  color: rgb(0, 0, 0);
   position: absolute;
   width: 320px;
   height: 100%;
@@ -165,24 +165,6 @@ body,
   z-index: 2;
 }
 
-#hoydeinfo{
-  position: absolute;
-  color: white;
-  font-family: sans-serif;
-  size:1.3em;
-  font-weight:bold;
-  -webkit-text-stroke: .5px black;
-  padding: 10px;
-  overflow: hidden;
-  background-color: none;
-  top: 50px;
-  left: 50px;
-  margin: auto;
-  display: flex;
-  border-radius:10px;
-  user-select:none;
-}
-
 #queryRes{
   padding: 5px 10px;
   max-height: 150px;
@@ -200,6 +182,10 @@ body,
   font-size: 1em;
   font-style: italic;
   margin: 0;
+}
+
+#hoydePkt span{
+  font-weight: bold
 }
 
 #queryRes{
