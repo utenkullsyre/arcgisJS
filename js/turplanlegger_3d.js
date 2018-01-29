@@ -312,6 +312,7 @@ require([
         }
       }
       esriRequest(urlSted,options).then(function(response) {
+        vmInfoBoard.infoboksSynlig = true;
         vmInfoBoard.stedsNavn = response.data.placename;
         vmInfoBoard.hoyde = response.data.elevation;
         vmInfoBoard.vaerUrl = vmInfoBoard.yrUrl();
@@ -328,6 +329,7 @@ require([
     var vmInfoBoard = new Vue({
       el: '#sokInfo',
       data: {
+        infoboksSynlig: false,
         stedsNavn: '',
         hoyde: '',
         vaerUrl: "https://www.yr.no/soek/soek.aspx?sted="

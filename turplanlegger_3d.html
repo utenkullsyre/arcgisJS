@@ -48,19 +48,19 @@
     </nav>
   </div>
   <div id="viewDiv" data-toolactive="false">
-    <div id="sokInfo">
+    <div id="sokInfo" >
       <div id="search">
         <span class="esri-icon-drag-horizontal" @click="openNav"></span>
         <input type="text" placeholder="Søk på stedsnavn" :value="stedsNavn">
         <span class="esri-icon-search"></span>
       </div>
-      <div id="queryRes">
+      <div id="queryRes" v-show="infoboksSynlig">
         <p id="hoydePkt"> Ekstrapolert høyde: <span>{{ hoyde }}  moh</span></p>
         <div id="verktoy">
           <h4>Verktøy</h4>
           <ul>
             <li id="koordinat" class="">Koordinat</li>
-            <li id="yr" class=""><a :href="vaerUrl">Været her</a></li>
+            <li id="yr" class=""><a :href="vaerUrl" target="#">Været her</a></li>
           </ul>
         </div>
       </div>
