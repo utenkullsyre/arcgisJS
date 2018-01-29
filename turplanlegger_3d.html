@@ -36,11 +36,11 @@
         <li>Skredobservasjoner</li>
       </ul>
     </nav>
-    <nav class="gruppe-el">
-      <span class="gruppe-el-tittel">Verktøy</span>
-      <ul>
+    <nav class="gruppe-el" id="verktoyMeny">
+      <span class="gruppe-el-tittel" @click="verktoyAapen = !verktoyAapen">Verktøy</span>
+      <ul :class="{aapen: verktoyAapen}">
         <li>Måle</li>
-        <li>Hent skreddata</li>
+        <li @click="hentData">Hent skreddata</li>
       </ul>
     </nav>
     <nav class="gruppe-el gruppe-el-tittel">Om</nav="">

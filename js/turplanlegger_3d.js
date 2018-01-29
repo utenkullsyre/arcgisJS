@@ -290,7 +290,7 @@ require([
       }, 300)
     }
 
-    var test = document.querySelector('#queryRes')
+    var test = document.querySelector('#verktoyMeny')
     var testResponse = document.querySelector('#hitTest')
 
     on(testResponse, 'click', function (evt) {
@@ -332,102 +332,102 @@ require([
         }
       })
     })
-    on(test, 'click', function () {
-      fjernMeny()
-      view.toolactive = true
-      viewElement.style.cursor = 'crosshair'
-      var initCamera = view.camera
-      var heading = view.camera.heading;
-      var heading = view.camera.tilt;
-      view.goTo({
-        heading:0,
-        tilt: 35,
-        scale: view.scale * 3.4
-      })
-      view.map.zoom = 4
-      var tull = on.once(view, 'click', function(evt) {
-        var pos1 = view.toMap({
-          x: evt.x,
-          y: evt.y
-        })
-        var pos2
-        view.graphics.removeAll();
-        // on.once(view, 'key-down', function(evt){
-        //   if(test){
-        //     view.graphics.removeAll()
-        //   };
-        // })
-        var test = on(view, 'pointer-move', function(evt){
-          view.graphics.removeAll()
-          grafikkLag.graphics.removeAll()
-          pos2 = view.toMap({
-            x: evt.x,
-            y: evt.y
-          })
-          var polygon = new Graphic({
-            geometry: {
-              type: 'polygon',
-              rings: [
-                [pos1.x, pos1.y],
-                [pos1.x, pos2.y],
-                [pos2.x, pos2.y],
-                [pos2.x, pos1.y],
-                [pos1.x, pos1.y]
-              ],
-              spatialReference: {
-                wkid: 25833
-              }
-            },
-            symbol: fillSymbol
-          })
-          view.graphics.addMany([polygon])
-        })
-        var tov = on.once(view, 'click', function(evt){
-          evt.stopPropagation()
-          view.goTo(initCamera)
-
-
-            var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
-            var options = {
-              query: {
-                // where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
-                where: '1=1',
-                geometry: '{xmin: ' + pos1.x + ', ymin: ' + pos1.y + ', xmax: ' + pos2.x + ', ymax: ' + pos2.y + '}',
-                geometryType: 'esriGeometryEnvelope',
-                inSR:25833,
-                spatialRel: 'esriSpatialRelIntersects',
-                // outFields: 'skredType, skredNavn, stedsnavn,vaerObservasjonbeskrivelse, objektType, utlosningArsak, dokumentasjon',
-                outFields: '*',
-                returnGeometry:true,
-                returnTrueCurves:false,
-                outSR:25833,
-                returnIdsOnly:false,
-                returnCountOnly:false,
-                returnZ:false,
-                returnM:false,
-                returnDistinctValues:false,
-                returnExtentsOnly:false,
-                f: 'geojson',
-              },
-              responseType: 'json'
-            };
-            esriRequest(url, options).then(function(response) {
-              var item = response.data.features['0']
-              if(item){
-                console.log(response);
-                response.data.features.forEach(function(obj){
-                  addResponseData(obj)
-                })
-              }
-            })
-          view.graphics.removeAll()
-          test.remove()
-          tov.remove()
-          view.toolactive = false
-          viewElement.style.cursor = 'default'
-        })
-      })
-    })
+    // on(test, 'click', function () {
+    //   fjernMeny()
+    //   view.toolactive = true
+    //   viewElement.style.cursor = 'crosshair'
+    //   var initCamera = view.camera
+    //   var heading = view.camera.heading;
+    //   var heading = view.camera.tilt;
+    //   view.goTo({
+    //     heading:0,
+    //     tilt: 35,
+    //     scale: view.scale * 3.4
+    //   })
+    //   view.map.zoom = 4
+    //   var tull = on.once(view, 'click', function(evt) {
+    //     var pos1 = view.toMap({
+    //       x: evt.x,
+    //       y: evt.y
+    //     })
+    //     var pos2
+    //     view.graphics.removeAll();
+    //     // on.once(view, 'key-down', function(evt){
+    //     //   if(test){
+    //     //     view.graphics.removeAll()
+    //     //   };
+    //     // })
+    //     var test = on(view, 'pointer-move', function(evt){
+    //       view.graphics.removeAll()
+    //       grafikkLag.graphics.removeAll()
+    //       pos2 = view.toMap({
+    //         x: evt.x,
+    //         y: evt.y
+    //       })
+    //       var polygon = new Graphic({
+    //         geometry: {
+    //           type: 'polygon',
+    //           rings: [
+    //             [pos1.x, pos1.y],
+    //             [pos1.x, pos2.y],
+    //             [pos2.x, pos2.y],
+    //             [pos2.x, pos1.y],
+    //             [pos1.x, pos1.y]
+    //           ],
+    //           spatialReference: {
+    //             wkid: 25833
+    //           }
+    //         },
+    //         symbol: fillSymbol
+    //       })
+    //       view.graphics.addMany([polygon])
+    //     })
+    //     var tov = on.once(view, 'click', function(evt){
+    //       evt.stopPropagation()
+    //       view.goTo(initCamera)
+    //
+    //
+    //         var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
+    //         var options = {
+    //           query: {
+    //             // where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
+    //             where: '1=1',
+    //             geometry: '{xmin: ' + pos1.x + ', ymin: ' + pos1.y + ', xmax: ' + pos2.x + ', ymax: ' + pos2.y + '}',
+    //             geometryType: 'esriGeometryEnvelope',
+    //             inSR:25833,
+    //             spatialRel: 'esriSpatialRelIntersects',
+    //             // outFields: 'skredType, skredNavn, stedsnavn,vaerObservasjonbeskrivelse, objektType, utlosningArsak, dokumentasjon',
+    //             outFields: '*',
+    //             returnGeometry:true,
+    //             returnTrueCurves:false,
+    //             outSR:25833,
+    //             returnIdsOnly:false,
+    //             returnCountOnly:false,
+    //             returnZ:false,
+    //             returnM:false,
+    //             returnDistinctValues:false,
+    //             returnExtentsOnly:false,
+    //             f: 'geojson',
+    //           },
+    //           responseType: 'json'
+    //         };
+    //         esriRequest(url, options).then(function(response) {
+    //           var item = response.data.features['0']
+    //           if(item){
+    //             console.log(response);
+    //             response.data.features.forEach(function(obj){
+    //               addResponseData(obj)
+    //             })
+    //           }
+    //         })
+    //       view.graphics.removeAll()
+    //       test.remove()
+    //       tov.remove()
+    //       view.toolactive = false
+    //       viewElement.style.cursor = 'default'
+    //     })
+    //   })
+    // })
 
     var meny = document.querySelector('#contextMenu')
     on(view, 'click', function (evt) {
@@ -451,6 +451,7 @@ require([
         lag: bratthet,
         lukk: true,
         erAapen: false,
+        verktoyAapen: false,
       },
       methods: {
         skiftBakgrunnskart: function () {
@@ -466,12 +467,111 @@ require([
         },
         toggleLag: function() {
           bratthet.visible = !bratthet.visible
-          console.log(bratthet.visible)
         },
         toggleMeny: function() {
           this.menyAapen = false;
           console.log(this.menyAapen);
-        }
+        },
+        hentData: function () {
+          vm.menyAapen = false;
+          vm.erAapen = false;
+          vm.verktoyAapen = false;
+          fjernMeny()
+          view.toolactive = true
+          viewElement.style.cursor = 'crosshair'
+          var initCamera = view.camera
+          var heading = view.camera.heading;
+          var heading = view.camera.tilt;
+          view.goTo({
+            heading:0,
+            tilt: 35,
+            scale: view.scale * 3.4
+          })
+          view.map.zoom = 4
+          var tull = on.once(view, 'click', function(evt) {
+            var pos1 = view.toMap({
+              x: evt.x,
+              y: evt.y
+            })
+            var pos2
+            view.graphics.removeAll();
+            // on.once(view, 'key-down', function(evt){
+            //   if(test){
+            //     view.graphics.removeAll()
+            //   };
+            // })
+            var test = on(view, 'pointer-move', function(evt){
+              view.graphics.removeAll()
+              grafikkLag.graphics.removeAll()
+              pos2 = view.toMap({
+                x: evt.x,
+                y: evt.y
+              })
+              var polygon = new Graphic({
+                geometry: {
+                  type: 'polygon',
+                  rings: [
+                    [pos1.x, pos1.y],
+                    [pos1.x, pos2.y],
+                    [pos2.x, pos2.y],
+                    [pos2.x, pos1.y],
+                    [pos1.x, pos1.y]
+                  ],
+                  spatialReference: {
+                    wkid: 25833
+                  }
+                },
+                symbol: fillSymbol
+              })
+              view.graphics.addMany([polygon])
+            })
+            var tov = on.once(view, 'click', function(evt){
+              evt.stopPropagation()
+              view.goTo(initCamera)
+
+
+                var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
+                var options = {
+                  query: {
+                    // where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
+                    where: '1=1',
+                    geometry: '{xmin: ' + pos1.x + ', ymin: ' + pos1.y + ', xmax: ' + pos2.x + ', ymax: ' + pos2.y + '}',
+                    geometryType: 'esriGeometryEnvelope',
+                    inSR:25833,
+                    spatialRel: 'esriSpatialRelIntersects',
+                    // outFields: 'skredType, skredNavn, stedsnavn,vaerObservasjonbeskrivelse, objektType, utlosningArsak, dokumentasjon',
+                    outFields: '*',
+                    returnGeometry:true,
+                    returnTrueCurves:false,
+                    outSR:25833,
+                    returnIdsOnly:false,
+                    returnCountOnly:false,
+                    returnZ:false,
+                    returnM:false,
+                    returnDistinctValues:false,
+                    returnExtentsOnly:false,
+                    f: 'geojson',
+                  },
+                  responseType: 'json'
+                };
+                esriRequest(url, options).then(function(response) {
+                  var item = response.data.features['0']
+                  if(item){
+                    console.log(response);
+                    response.data.features.forEach(function(obj){
+                      addResponseData(obj)
+                    })
+                  }
+                })
+              view.graphics.removeAll()
+              test.remove()
+              tov.remove()
+              view.toolactive = false
+              viewElement.style.cursor = 'default'
+              console.log(vm);
+            })
+          })
+        },
 
       }
     })
