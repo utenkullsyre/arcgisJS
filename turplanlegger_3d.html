@@ -13,7 +13,7 @@
 <body>
   <div id="mySidenav" class="sidenav" :class="{openNav:menyAapen}">
     <nav class="topGroup center-content">
-      <a href="javascript:void(0)" class="closebtn" @click="toggleMeny">&times;</a>
+      <a href="javascript:void(0)" class="closebtn" @click="lukkMeny">&times;</a>
     </nav>
     <nav id="bakgrunnskart" class="gruppe-el" @click="erAapen = !erAapen">
       <div class="tittel" >
@@ -46,23 +46,26 @@
     <nav class="gruppe-el gruppe-el-tittel">Om</nav="">
   </div>
   <div id="viewDiv" data-toolactive="false">
-    <div id="search">
-      <span class="esri-icon-drag-horizontal"></span>
-      <input type="text" name="stedsnavn" placeholder="Søk på stedsnavn">
-      <span class="esri-icon-search"></span>
+    <div id="sokInfo">
+      <div id="search">
+        <span class="esri-icon-drag-horizontal" @click="openNav"></span>
+        <input type="text" placeholder="Søk på stedsnavn" :value="stedsNavn">
+        <span class="esri-icon-search"></span>
+      </div>
+      <div id="queryRes">
+        <h3 id="stedsnavnPkt">{{ stedsNavn }}</h3>
+        <p id="hoydePkt"> {{ hoyde }}</p>
+        <div id="verktoy">
+          <h4>Verktøy</h4>
+          <ul>
+            <li id="koordinat" class="">Koordinat</li>
+            <li id="yr" class="">Været her</li>
+          </ul>
+        </div>
+        </div>
     </div>
     <div id="hoydeinfo" class="skjult">Hoyde</div>
-    <div id="hitTest" >Hittest</div>
-    <div id="queryRes">
-      <h3 id="stedsnavnPkt"></p>
-      <p id="hoydePkt"></p>
-      <div id="verktoy">
-        <div id="koordinat" class=""></div>
-        <div id="yr" class=""></div>
-      </div>
-      <button type="button" name="zoompkt"></button>
 
-      </div>
     <div id="contextMenu" class="skjult">
       <span id="menyIkon" class="esri-icon-locate"></span>
       <button type="button" name="button">

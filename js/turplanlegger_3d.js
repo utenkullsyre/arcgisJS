@@ -172,9 +172,8 @@ require([
     // view.ui.add(legend, 'top-right');
     view.goTo(viewpoint);
     view.ui.move(['zoom','navigation-toggle','compass'], 'top-right')
-    view.ui.add('search', 'top-left')
+    view.ui.add('sokInfo', 'top-left')
     view.ui.add('queryRes', 'top-left')
-    view.ui.add('hitTest', 'bottom-left')
 
     // view.ui.add(measureWidget, 'top-right');
     // view.on('click',function(){
@@ -283,170 +282,57 @@ require([
             grafikkLag.graphics.add(grafikk)
     }
 
-    function fjernMeny(){
-      meny.classList.add('gjemt')
-      setTimeout(function(){
-        meny.classList.add('skjult')
-      }, 300)
-    }
+    // function fjernMeny(){
+    //   meny.classList.add('gjemt')
+    //   setTimeout(function(){
+    //     meny.classList.add('skjult')
+    //   }, 300)
+    // }
 
     var test = document.querySelector('#verktoyMeny')
-    var testResponse = document.querySelector('#hitTest')
 
-    on(testResponse, 'click', function (evt) {
-      var lyrView = view.allLayerViews.items[4]
-      var handler1 = on(view, 'click', function (evt) {
-        view.hitTest(evt)
-        .then(function (response) {
-          // if (response.result[0]) {
-          //   var graphic = response.results[0].graphic
-          //   view.whenLayerView(graphic.layer).then(function (lyrView) {
-          //     lyrView.highlight(graphic)
-          //   })
-          //
-          // }
+
+    on(view, 'click', function (evt) {
+
+      view.hitTest(evt)
+      .then(function (response) {
+        if (response.results.length>0 && response.results[0].graphic) {
           console.log(response)
-        })
+        }
+        // if (response.result[0]) {
+        //   var graphic = response.results[0].graphic
+        //   view.whenLayerView(graphic.layer).then(function (lyrView) {
+        //     lyrView.highlight(graphic)
+        //   })
+        //
+        // }
       })
+
     })
 
     var sidenav = document.querySelector('.sidenav')
 
-    function openNav(){
-      vm.menyAapen = true
-    }
-
-    function closeNav(){
-      sidenav.classList.remove('openNav')
-    }
-
     on(document.querySelector('#search span:first-child'),'click', function () {
       openNav()
     })
-    on(document.querySelector('.closebtn'),'click', function () {
-      closeNav()
-      var dragHandler = on(window, 'click', function(evt) {
-        if (evt.target !== sidenav) {
-          closeNav()
-          dragHandler.remove()
+
+    var vmInfoBoard = new Vue({
+      el: '#sokInfo',
+      data: {
+        stedsNavn: '',
+        hoyde: '000 moh'
+      },
+      methods: {
+        openNav: function () {
+          vmSidebar.menyAapen = true
         }
-      })
-    })
-    // on(test, 'click', function () {
-    //   fjernMeny()
-    //   view.toolactive = true
-    //   viewElement.style.cursor = 'crosshair'
-    //   var initCamera = view.camera
-    //   var heading = view.camera.heading;
-    //   var heading = view.camera.tilt;
-    //   view.goTo({
-    //     heading:0,
-    //     tilt: 35,
-    //     scale: view.scale * 3.4
-    //   })
-    //   view.map.zoom = 4
-    //   var tull = on.once(view, 'click', function(evt) {
-    //     var pos1 = view.toMap({
-    //       x: evt.x,
-    //       y: evt.y
-    //     })
-    //     var pos2
-    //     view.graphics.removeAll();
-    //     // on.once(view, 'key-down', function(evt){
-    //     //   if(test){
-    //     //     view.graphics.removeAll()
-    //     //   };
-    //     // })
-    //     var test = on(view, 'pointer-move', function(evt){
-    //       view.graphics.removeAll()
-    //       grafikkLag.graphics.removeAll()
-    //       pos2 = view.toMap({
-    //         x: evt.x,
-    //         y: evt.y
-    //       })
-    //       var polygon = new Graphic({
-    //         geometry: {
-    //           type: 'polygon',
-    //           rings: [
-    //             [pos1.x, pos1.y],
-    //             [pos1.x, pos2.y],
-    //             [pos2.x, pos2.y],
-    //             [pos2.x, pos1.y],
-    //             [pos1.x, pos1.y]
-    //           ],
-    //           spatialReference: {
-    //             wkid: 25833
-    //           }
-    //         },
-    //         symbol: fillSymbol
-    //       })
-    //       view.graphics.addMany([polygon])
-    //     })
-    //     var tov = on.once(view, 'click', function(evt){
-    //       evt.stopPropagation()
-    //       view.goTo(initCamera)
-    //
-    //
-    //         var url = 'https://wms3.nve.no/map/rest/services/SkredHendelser/MapServer/1/query?'
-    //         var options = {
-    //           query: {
-    //             // where: 'skredtype in (130,131,132,133,134,135,136,137,138,139)',
-    //             where: '1=1',
-    //             geometry: '{xmin: ' + pos1.x + ', ymin: ' + pos1.y + ', xmax: ' + pos2.x + ', ymax: ' + pos2.y + '}',
-    //             geometryType: 'esriGeometryEnvelope',
-    //             inSR:25833,
-    //             spatialRel: 'esriSpatialRelIntersects',
-    //             // outFields: 'skredType, skredNavn, stedsnavn,vaerObservasjonbeskrivelse, objektType, utlosningArsak, dokumentasjon',
-    //             outFields: '*',
-    //             returnGeometry:true,
-    //             returnTrueCurves:false,
-    //             outSR:25833,
-    //             returnIdsOnly:false,
-    //             returnCountOnly:false,
-    //             returnZ:false,
-    //             returnM:false,
-    //             returnDistinctValues:false,
-    //             returnExtentsOnly:false,
-    //             f: 'geojson',
-    //           },
-    //           responseType: 'json'
-    //         };
-    //         esriRequest(url, options).then(function(response) {
-    //           var item = response.data.features['0']
-    //           if(item){
-    //             console.log(response);
-    //             response.data.features.forEach(function(obj){
-    //               addResponseData(obj)
-    //             })
-    //           }
-    //         })
-    //       view.graphics.removeAll()
-    //       test.remove()
-    //       tov.remove()
-    //       view.toolactive = false
-    //       viewElement.style.cursor = 'default'
-    //     })
-    //   })
-    // })
-
-    var meny = document.querySelector('#contextMenu')
-    on(view, 'click', function (evt) {
-      if (!view.toolactive){
-        meny.classList.remove('skjult')
-        meny.classList.remove('gjemt')
-        meny.style.top = evt.y + 'px'
-        meny.style.left = evt.x + 'px'
-        var handle = on(view, 'drag', function(){
-          fjernMeny()
-          handle.remove()
-        })
       }
-    });
+    })
 
-    var vm = new Vue({
+    var vmSidebar = new Vue({
       el: '#mySidenav',
       data: {
-        menyAapen: true,
+        menyAapen: false,
         aktivtLag: 'Gråtone',
         lag: bratthet,
         lukk: true,
@@ -457,6 +343,7 @@ require([
         skiftBakgrunnskart: function () {
           baseLayers[1].visible = !baseLayers[1].visible;
           baseLayers[0].visible = !baseLayers[0].visible;
+          this.lukkMeny();
           var result = ''
           baseLayers.forEach(function(element) {
             if (element.visible) {
@@ -468,15 +355,18 @@ require([
         toggleLag: function() {
           bratthet.visible = !bratthet.visible
         },
-        toggleMeny: function() {
+        lukkMeny: function() {
+          vmSidebar.lukkGrupper();
           this.menyAapen = false;
-          console.log(this.menyAapen);
+        },
+        lukkGrupper: function () {
+          vmSidebar.erAapen = false;
+          vmSidebar.verktoyAapen = false;
         },
         hentData: function () {
-          vm.menyAapen = false;
-          vm.erAapen = false;
-          vm.verktoyAapen = false;
-          fjernMeny()
+          vmSidebar.menyAapen = false;
+          vmSidebar.lukkGrupper();
+          // fjernMeny()
           view.toolactive = true
           viewElement.style.cursor = 'crosshair'
           var initCamera = view.camera
@@ -568,13 +458,15 @@ require([
               tov.remove()
               view.toolactive = false
               viewElement.style.cursor = 'default'
-              console.log(vm);
+              console.log(vmSidebar);
             })
           })
         },
-
       }
     })
+
+
+
 
     // view.on('click', function(evt) {
     //   var hoydeDiv = document.querySelector('#hoydeinfo');

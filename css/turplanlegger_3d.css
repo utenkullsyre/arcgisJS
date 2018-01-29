@@ -183,11 +183,23 @@ body,
   user-select:none;
 }
 
-#queryRes, #hitTest{
-  font-size: 1.2em;
-  padding: 5px;
+#queryRes{
+  padding: 5px 10px;
   max-height: 150px;
   border: 1px #ababab solid;
+  display: flex;
+  flex-flow: column;
+}
+
+#stedsnavnPkt{
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#hoydePkt{
+  font-size: 1em;
+  font-style: italic;
+  margin: 0;
 }
 
 #queryRes{
@@ -197,7 +209,6 @@ body,
   box-sizing: border-box;
   max-height: 500px;
   border-radius: 2px;
-
 }
 
 #hitTest{
