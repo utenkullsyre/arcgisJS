@@ -315,6 +315,9 @@ require([
       }
     })
     on(view, 'click', function (evt) {
+      vmInfoBoard.lasteSymbol = true;
+      vmInfoBoard.stedsNavn = ' ';
+      vmInfoBoard.hoyde = '....';
       view.hitTest(evt)
       .then(function (response) {
         //Setter infoboks til synlig
@@ -336,9 +339,10 @@ require([
         }
       }
       esriRequest(urlSted,options).then(function(response) {
+        vmInfoBoard.lasteSymbol = false;
         vmInfoBoard.stedsNavn = response.data.placename;
         vmInfoBoard.hoyde = response.data.elevation;
-        vmInfoBoard.vaerUrl = vmInfoBoard.yrUrl();
+        vmInfoBoard.vaerUrl = vmInfoBoard.yrUrl(response.data.placename);
         })
       })
     })
@@ -353,24 +357,25 @@ require([
       el: '#sokInfo',
       data: {
         infoboksSynlig: false,
+        lasteSymbol: false,
         stedsNavn: '',
-        hoyde: '',
+        hoyde: '....',
         vaerUrl: "https://www.yr.no/soek/soek.aspx?sted="
       },
       methods: {
         openNav: function () {
           vmSidebar.menyAapen = true
         },
-        yrUrl: function () {
-          if(stedsNavn.length>0){
-            var url = "https://www.yr.no/soek/soek.aspx?sted=" + stedsNavn
+        yrUrl: function (navn) {
+          if(navn.length>0){
+            var url = "https://www.yr.no/soek/soek.aspx?sted=" + navn + "&land=NO"
           }
           return url
         },
         lukkInfo: function () {
           this.infoboksSynlig = false;
           this.stedsNavn = '';
-          this.hoyde = '';
+          this.hoyde = '....';
         }
       }
     })

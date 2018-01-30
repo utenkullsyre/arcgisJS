@@ -34,6 +34,12 @@ body{
   transition: all 1s;
 }
 
+#loader span{
+  position: absolute;
+  top: 10vh;
+  font-size: 3em;
+}
+
 #loader .image {
   width: 35vh;
   height: 35vh;
@@ -195,9 +201,16 @@ body{
   border-radius: 2px;
 }
 
+#search i{
+  position: absolute;
+  z-index: 2;
+  left: 30px;
+  font-size: 1.5em;
+}
+
 #search input{
   font-size: 1.1em;
-  color: #9bbd8e;
+  color: #5c8446;
   position: absolute;
   width: 320px;
   height: 100%;
@@ -220,11 +233,13 @@ body{
 }
 
 #queryRes{
+  margin-top: 3px;
   padding: 5px 10px;
   max-height: 150px;
-  border: 1px #ababab solid;
+  /* border: 1px #ababab solid; */
   display: flex;
   flex-flow: column;
+  transition: all .3s ease;
 }
 
 #queryRes .closebtn{
@@ -235,6 +250,15 @@ body{
   color: black;
   font-size: 2.6em;
 }
+
+.infoBoks-enter,
+.infoBoks-leave-to { opacity: 0; max-height: 0!important}
+
+.infoBoks-leave,
+.infoBoks-enter-to { opacity: 1 }
+
+.infoBoks-enter-active,
+.infoBoks-leave-active { transition: opacity 200ms }
 
 #stedsnavnPkt{
   font-weight: bold;

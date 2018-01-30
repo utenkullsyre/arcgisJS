@@ -5,6 +5,7 @@
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>Turplanlegger</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <link rel="stylesheet" href="css\turplanlegger_3d.css">
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script src="https://js.arcgis.com/4.6/"></script>
@@ -13,6 +14,7 @@
 <body>
   <!-- Loader -->
   <div id="loader">
+    <span>Laster inn kartet</span>
     <img class="image roter-bilde" src="https://norse-mythology.org/wp-content/uploads/2016/06/Vegvisir.svg_.png" alt="" width="120" height="120">
   </div>
 
@@ -67,20 +69,25 @@
     <div id="sokInfo" >
       <div id="search">
         <span class="esri-icon-drag-horizontal" @click="openNav"></span>
+        <i class="fa fa-spinner fa-pulse fa-fw" v-if="lasteSymbol"></i>
         <input type="text" placeholder="Søk på stedsnavn" :value="stedsNavn">
         <span class="esri-icon-search"></span>
       </div>
-      <div id="queryRes" v-show="infoboksSynlig">
-        <a href="javascript:void(0)" class="closebtn" @click="lukkInfo">&times;</a>
-        <p id="hoydePkt"> Ekstrapolert høyde: <span>{{ hoyde }}  moh</span></p>
-        <div id="verktoy">
-          <h4>Verktøy</h4>
-          <ul>
-            <li id="koordinat" class="ikke-implementert">Koordinat</li>
-            <li id="yr" class=""><a :href="vaerUrl" target="#">Været her</a></li>
-          </ul>
+      <!-- Infoboks -->
+      <transition name="infoBoks">
+        <div id="queryRes" v-if="infoboksSynlig" >
+          <a href="javascript:void(0)" class="closebtn" @click="lukkInfo">&times;</a>
+          <p id="hoydePkt"> Ekstrapolert høyde: <span>{{ hoyde }}  moh</span></p>
+          <div id="verktoy">
+            <h4>Verktøy</h4>
+            <ul>
+              <li id="koordinat" class="ikke-implementert">Koordinat</li>
+              <li id="yr" class=""><a :href="vaerUrl" target="#">Været her</a></li>
+            </ul>
+          </div>
         </div>
-      </div>
+      </transition>
+
 
     </div>
 
