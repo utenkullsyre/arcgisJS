@@ -45,6 +45,10 @@ body{
   height: 23vh;
 }
 
+#Tegnforklaring table tbody td img{
+  opacity: 0.5;
+}
+
 .roter-bilde{
   -webkit-animation:spin 12s linear infinite;
   -moz-animation:spin 12s linear infinite;
