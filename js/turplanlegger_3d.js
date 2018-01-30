@@ -151,6 +151,7 @@ require([
 
   var viewElement
   view.when(function () {
+    fjernLoader();
     viewElement = document.querySelector('#viewDiv')
     console.log('View',view);
 
@@ -241,6 +242,23 @@ require([
     // return options
     // }
 
+    function fjernLoader(){
+      //velg elementer
+      var loader = document.querySelector('#loader')
+      var body = document.querySelector('body')
+      var bilde = document.querySelector('#loader img')
+      //Fjern loader
+      setTimeout(function () {
+        loader.classList.toggle('gjemt');
+        bilde.classList.remove('roter-bilde')
+        bilde.classList.add('scale');
+        setTimeout(function () {
+          loader.classList.toggle('skjult');
+          body.removeChild(loader);
+        }, 1000)
+      }, 2000)
+    }
+
     function queryOptions(){
       var options = {
         query: {
@@ -291,7 +309,11 @@ require([
 
     var test = document.querySelector('#verktoyMeny')
 
-
+    on(view, 'key-down', function(evt) {
+      if(evt.key === 'Escape' && vmInfoBoard.infoboksSynlig){
+        vmInfoBoard.lukkInfo();
+      }
+    })
     on(view, 'click', function (evt) {
       view.hitTest(evt)
       .then(function (response) {
@@ -348,6 +370,7 @@ require([
         lukkInfo: function () {
           this.infoboksSynlig = false;
           this.stedsNavn = '';
+          this.hoyde = '';
         }
       }
     })
@@ -355,6 +378,7 @@ require([
     var vmSidebar = new Vue({
       el: '#mySidenav',
       data: {
+        visMeny: true,
         menyAapen: false,
         aktivtLag: 'Gråtone',
         lag: bratthet,
@@ -402,6 +426,7 @@ require([
           })
           view.map.zoom = 4
           var tull = on.once(view, 'click', function(evt) {
+            evt.stopPropagation();
             var pos1 = view.toMap({
               x: evt.x,
               y: evt.y

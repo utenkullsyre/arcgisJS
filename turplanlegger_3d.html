@@ -12,9 +12,12 @@
 </head>
 <body>
   <!-- Loader -->
+  <div id="loader">
+    <img class="image roter-bilde" src="https://norse-mythology.org/wp-content/uploads/2016/06/Vegvisir.svg_.png" alt="" width="120" height="120">
+  </div>
 
   <!-- Hovedmeny -->
-  <div id="mySidenav" class="sidenav" :class="{openNav:menyAapen}">
+  <div id="mySidenav" class="sidenav" :class="{openNav:menyAapen}" v-show="visMeny">
     <nav class="topGroup center-content">
       <a href="javascript:void(0)" class="closebtn" @click="lukkMeny">&times;</a>
     </nav>

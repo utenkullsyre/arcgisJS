@@ -27,7 +27,7 @@
       transition: all 1s;
     }
 
-    .image {
+    #loader .image {
       width: 35vh;
       height: 35vh;
       -webkit-animation:spin 12s linear infinite;
@@ -44,6 +44,27 @@
 
     .fjernet{
       display: none !important;
+    }
+
+    .scale{
+      animation: createBox 1s !important;
+      /* -webkit-transform: rotate(355deg) scale(2);
+      -moz-transform: rotate(355deg) scale(2);
+      -o-transform: rotate(355deg) scale(2);
+      transform: rotate(355deg) scale(2); */
+    }
+
+    @keyframes createBox {
+      from {
+        -webkit-transform: scale(1);
+        transform:  scale(1);
+       -webkit-transform:  rotate(360deg);
+       transform:  rotate(360deg);
+     }
+      to {
+        -webkit-transform: scale(2) rotate(360deg);
+        transform: scale(2) rotate(360deg);
+      opacity: 0;}
     }
   </style>
 </head>
@@ -66,11 +87,14 @@
   <script  type="text/javascript">
   var loader = document.querySelector('#loader')
   var body = document.querySelector('body')
+  var bilde = document.querySelector('#loader img')
+
   setTimeout(function () {
-    loader.classList.toggle('gjemt');
+    // loader.classList.toggle('gjemt');
+    bilde.classList.add('scale')
     setTimeout(function () {
-      loader.classList.toggle('skjult');
-      body.removeChild(loader);
+      // loader.classList.toggle('skjult');
+      // body.removeChild(loader);
     },1000)
   },2000)
 

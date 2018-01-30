@@ -11,6 +11,61 @@ body,
   transition: opacity 0.5s ease-in;
   opacity: 1;
   position: relative;
+  z-index: 1;
+}
+
+body{
+  overflow: hidden;
+}
+
+#loader  {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top:-17px ;
+  left: 0px;
+  z-index: 2;
+  background-color: rgb(149, 177, 154);
+  height: 102.5vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 1s;
+}
+
+#loader .image {
+  width: 35vh;
+  height: 35vh;
+}
+
+.roter-bilde{
+  -webkit-animation:spin 12s linear infinite;
+  -moz-animation:spin 12s linear infinite;
+  animation:spin 12s linear infinite;
+}
+
+.scale{
+  -webkit-animation: scaleLogo 1s !important;
+  -moz-animation: scaleLogo 1s !important;
+  animation: scaleLogo 1s !important;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+@keyframes scaleLogo {
+  from {
+    -webkit-transform: scale(1);
+    transform:  scale(1);
+   -webkit-transform:  rotate(360deg);
+   transform:  rotate(360deg);
+ }
+  to {
+    -webkit-transform: scale(2) rotate(360deg);
+    transform: scale(2) rotate(360deg);
+  opacity: 0;}
 }
 
 #paneDiv {
