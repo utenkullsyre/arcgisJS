@@ -390,6 +390,7 @@ require([
         visMeny: true,
         menyAapen: false,
         aktivtLag: 'Gråtone',
+        tegnAapen: false,
         lag: bratthet,
         lukk: true,
         erAapen: false,

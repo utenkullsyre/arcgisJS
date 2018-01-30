@@ -47,10 +47,10 @@
       </ul>
     </nav>
     <!-- Tegnforklaring -->
-    <nav class="gruppe-el" id="Tegnforklaring">
-      <span class="gruppe-el-tittel tittel ikke-implementert">Tegnforklaring</span>
-      <div class="tegnforklaring">
-        <h5>Helling i grader</h5>
+    <nav class="gruppe-el" id="Tegnforklaring" @click="tegnAapen = !tegnAapen">
+      <span class="gruppe-el-tittel tittel">Tegnforklaring</span>
+      <div class="underelement egnforklaring" v-if="tegnAapen">
+        <h3>Helling i grader</h3>
         <table>
           <tbody>
             <tr valign="middle">
@@ -82,9 +82,8 @@
               </td><td>50 - 90</td>
             </tr>
           </tbody>
-        </table>        
+        </table>
       </div>
-
     </nav>
     <!-- Verktøymeny -->
     <nav class="gruppe-el" id="verktoyMeny">
