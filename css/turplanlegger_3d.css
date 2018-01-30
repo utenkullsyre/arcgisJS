@@ -86,7 +86,6 @@ body,
 
 .gruppe-el{
   box-sizing: border-box;
-  padding: 5px 0;
   display: flex;
   flex-flow: row wrap;
   justify-content:flex-start;
@@ -171,6 +170,15 @@ body,
   border: 1px #ababab solid;
   display: flex;
   flex-flow: column;
+}
+
+#queryRes .closebtn{
+  position: absolute;
+  right: 10px;
+  top: 26px;
+  text-decoration: none;
+  color: black;
+  font-size: 2.6em;
 }
 
 #stedsnavnPkt{
@@ -300,4 +308,9 @@ background-color: #86c2b9;
 
 .aapen{
   max-height: 500px !important;
+}
+
+.ikke-implementert{
+  color: grey !important;
+  font-style: italic !important;
 }

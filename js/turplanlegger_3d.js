@@ -295,6 +295,8 @@ require([
     on(view, 'click', function (evt) {
       view.hitTest(evt)
       .then(function (response) {
+        //Setter infoboks til synlig
+        vmInfoBoard.infoboksSynlig = true;
         var pkt = {
           x: response.results["0"].mapPoint.x,
           y: response.results["0"].mapPoint.y,
@@ -303,7 +305,7 @@ require([
           console.log(response)
         }
       //Finner stedsnavn
-      var urlSted = 'https://www.norgeskart.no/ws/elev.py?lat=7636351.411620195&lon=551110.8469032602&epsg=25833'
+      var urlSted = 'https://www.norgeskart.no/ws/elev.py?'
       var options = {
         query: {
           lat: pkt.y,
@@ -312,7 +314,6 @@ require([
         }
       }
       esriRequest(urlSted,options).then(function(response) {
-        vmInfoBoard.infoboksSynlig = true;
         vmInfoBoard.stedsNavn = response.data.placename;
         vmInfoBoard.hoyde = response.data.elevation;
         vmInfoBoard.vaerUrl = vmInfoBoard.yrUrl();
@@ -343,6 +344,10 @@ require([
             var url = "https://www.yr.no/soek/soek.aspx?sted=" + stedsNavn
           }
           return url
+        },
+        lukkInfo: function () {
+          this.infoboksSynlig = false;
+          this.stedsNavn = '';
         }
       }
     })

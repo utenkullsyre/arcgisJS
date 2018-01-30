@@ -11,20 +11,25 @@
   <script type="text/javascript" src="js\turplanlegger_3d.js"></script>
 </head>
 <body>
+  <!-- Loader -->
+
+  <!-- Hovedmeny -->
   <div id="mySidenav" class="sidenav" :class="{openNav:menyAapen}">
     <nav class="topGroup center-content">
       <a href="javascript:void(0)" class="closebtn" @click="lukkMeny">&times;</a>
     </nav>
+    <!-- Bakgrunnskart -->
     <nav id="bakgrunnskart" class="gruppe-el" @click="erAapen = !erAapen">
       <div class="tittel" >
         <span class="gruppe-el-tittel">Bakgrunnskart: </span><span id="bakgrInfoLabel">{{ aktivtLag }}</span>
       </div>
       <ul :class="{aapen: erAapen}" @click="skiftBakgrunnskart">
-        <li data-id="landskap">Landkart</li>
+        <li data-id="landskap" class="ikke-implementert">Landkart</li>
         <li data-id="bilder">Flyfoto</li>
         <li data-id="graatone">Gråtone</li>
       </ul>
     </nav>
+    <!-- Kartlag -->
     <nav class="gruppe-el" @click="toggleLag">
       <div class="tittel" >
         <span class="gruppe-el-tittel">Kartlag</span>
@@ -36,18 +41,26 @@
         <li>Skredobservasjoner</li>
       </ul>
     </nav>
+    <!-- Tegnforklaring -->
+    <nav class="gruppe-el" id="Tegnforklaring">
+      <span class="gruppe-el-tittel tittel ikke-implementert">Tegnforklaring</span>
+    </nav>
+    <!-- Verktøymeny -->
     <nav class="gruppe-el" id="verktoyMeny">
       <span class="gruppe-el-tittel tittel" @click="verktoyAapen = !verktoyAapen">Verktøy</span>
       <ul :class="{aapen: verktoyAapen}">
-        <li>Måle</li>
+        <li class="ikke-implementert">Måle</li>
         <li @click="hentData">Hent skreddata</li>
       </ul>
     </nav>
+    <!-- Om -->
     <nav class="gruppe-el">
-      <span class="tittel gruppe-el-tittel">Om</span>
+      <span class="tittel gruppe-el-tittel ikke-implementert">Om</span>
     </nav>
   </div>
+  <!-- Kartvindu -->
   <div id="viewDiv" data-toolactive="false">
+    <!-- Infoboks og stedsøk -->
     <div id="sokInfo" >
       <div id="search">
         <span class="esri-icon-drag-horizontal" @click="openNav"></span>
@@ -55,11 +68,12 @@
         <span class="esri-icon-search"></span>
       </div>
       <div id="queryRes" v-show="infoboksSynlig">
+        <a href="javascript:void(0)" class="closebtn" @click="lukkInfo">&times;</a>
         <p id="hoydePkt"> Ekstrapolert høyde: <span>{{ hoyde }}  moh</span></p>
         <div id="verktoy">
           <h4>Verktøy</h4>
           <ul>
-            <li id="koordinat" class="">Koordinat</li>
+            <li id="koordinat" class="ikke-implementert">Koordinat</li>
             <li id="yr" class=""><a :href="vaerUrl" target="#">Været her</a></li>
           </ul>
         </div>
