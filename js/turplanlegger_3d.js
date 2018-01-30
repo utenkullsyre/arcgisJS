@@ -61,7 +61,8 @@ require([
           opacity: .5,
           legendEnabled: true,
         }
-      ]
+      ],
+      visible: false
     });
 
   var skredHendelser = new MapImageLayer({
@@ -416,6 +417,7 @@ require([
           vmSidebar.verktoyAapen = false;
         },
         hentData: function () {
+          vmInfoBoard.lukkInfo();
           vmSidebar.menyAapen = false;
           vmSidebar.lukkGrupper();
           // fjernMeny()
