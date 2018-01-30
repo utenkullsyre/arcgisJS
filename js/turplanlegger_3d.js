@@ -44,7 +44,7 @@ require([
       visible: true
     });
 
-    var landskap = new TileLayer({
+  var landskap = new TileLayer({
         url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheLandskap/MapServer',
         id: 'Landskap',
         visible: false
@@ -81,7 +81,7 @@ require([
 
 
 
-   var bilder = new Basemap({
+   var bakgrunnsKart = new Basemap({
      baseLayers: baseLayers,
      title: 'Bilder',
      id: 'bilder'
@@ -89,7 +89,7 @@ require([
 
   // Create Map and View
   var map = new Map({
-    basemap: bilder,
+    basemap: bakgrunnsKart,
     ground: {
       layers: [bakke]
     }
@@ -309,13 +309,16 @@ require([
     // }
 
     var test = document.querySelector('#verktoyMeny')
-
+    //  Om bruker trykker esc, fjernes infomeny
     on(view, 'key-down', function(evt) {
       if(evt.key === 'Escape' && vmInfoBoard.infoboksSynlig){
         vmInfoBoard.lukkInfo();
       }
     })
+
+    //  Åpne infovindu ved venstreklikk og hent informasjon
     on(view, 'click', function (evt) {
+      console.log('Klikk',evt);
       vmInfoBoard.lasteSymbol = true;
       vmInfoBoard.stedsNavn = ' ';
       vmInfoBoard.hoyde = '....';
@@ -391,19 +394,34 @@ require([
         lukk: true,
         erAapen: false,
         verktoyAapen: false,
+        bakgrunnskart: {
+          landskap: landskap,
+          bilder: bilder,
+          graatone: graatone
+        }
       },
       methods: {
-        skiftBakgrunnskart: function () {
-          baseLayers[1].visible = !baseLayers[1].visible;
-          baseLayers[0].visible = !baseLayers[0].visible;
-          this.lukkMeny();
-          var result = ''
-          baseLayers.forEach(function(element) {
-            if (element.visible) {
-              result = element.id
+        skiftBakgrunnskart: function (event) {
+          var lag = this.bakgrunnskart[event.target.attributes["0"].nodeValue];
+          baseLayers.forEach(function(obj){
+            if(obj == lag){
+              vmSidebar.aktivtLag = obj.id;
+              obj.visible = true;
+            } else {
+              obj.visible = false;
             }
+
           })
-          this.aktivtLag = result
+          // baseLayers[1].visible = !baseLayers[1].visible;
+          // baseLayers[0].visible = !baseLayers[0].visible;
+
+          // var result = ''
+          // baseLayers.forEach(function(element) {
+          //   if (element.visible) {
+          //     result = element.id
+          //   }
+          // })
+          // this.aktivtLag = result
         },
         toggleLag: function() {
           bratthet.visible = !bratthet.visible

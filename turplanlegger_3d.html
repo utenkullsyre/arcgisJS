@@ -28,10 +28,10 @@
       <div class="tittel" >
         <span class="gruppe-el-tittel">Bakgrunnskart: </span><span id="bakgrInfoLabel">{{ aktivtLag }}</span>
       </div>
-      <ul :class="{aapen: erAapen}" @click="skiftBakgrunnskart">
-        <li data-id="landskap" class="ikke-implementert">Landkart</li>
-        <li data-id="bilder">Flyfoto</li>
-        <li data-id="graatone">Gråtone</li>
+      <ul :class="{aapen: erAapen}">
+        <li data-id="landskap" @click="skiftBakgrunnskart">Landkart</li>
+        <li data-id="bilder" @click="skiftBakgrunnskart">Flyfoto</li>
+        <li data-id="graatone" @click="skiftBakgrunnskart">Gråtone</li>
       </ul>
     </nav>
     <!-- Kartlag -->
@@ -57,6 +57,10 @@
         <li class="ikke-implementert">Måle</li>
         <li @click="hentData">Hent skreddata</li>
       </ul>
+    </nav>
+    <!-- Info -->
+    <nav class="gruppe-el">
+      <span class="tittel gruppe-el-tittel ikke-implementert">Info</span>
     </nav>
     <!-- Om -->
     <nav class="gruppe-el">

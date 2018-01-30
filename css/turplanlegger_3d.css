@@ -36,13 +36,13 @@ body{
 
 #loader span{
   position: absolute;
-  top: 10vh;
-  font-size: 3em;
+  top: 15vh;
+  font-size: 2em;
 }
 
 #loader .image {
-  width: 35vh;
-  height: 35vh;
+  width: 23vh;
+  height: 23vh;
 }
 
 .roter-bilde{
