@@ -430,6 +430,7 @@ require([
         lukkMeny: function() {
           vmSidebar.lukkGrupper();
           this.menyAapen = false;
+          this.tegnAapen = false;
         },
         lukkGrupper: function () {
           vmSidebar.erAapen = false;
