@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -9,10 +10,16 @@
   <script type="text/javascript" src="js\turplanlegger_3d.js"></script>
 </head>
 <body>
-  <div id="viewDiv">
+  <div id="viewDiv" data-toolactive="false">
     <div id="hoydeinfo">Hoyde</div>
     <div id="hitTest">Hittest</div>
     <div id="queryRes">Resultat fra spørring</div>
+    <div id="contextMenu" class="skjult">
+      <span id="menyIkon" class="esri-icon-locate"></span>
+      <button type="button" name="button">
+        <span class="esri-icon-locate"></span> Moh.</button>
+      <button type="button" name="button"><span class="esri-icon-notice-round"></span> Info</button>
+    </div>
   </div>
 </body>
 </html>

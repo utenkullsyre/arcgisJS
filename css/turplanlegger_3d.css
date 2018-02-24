@@ -5,6 +5,9 @@ body,
   margin: 0;
   height: 100%;
   width: 100%;
+  transition: opacity 0.5s ease-in;
+  opacity: 1;
+  position: relative;
 }
 
 #paneDiv {
@@ -76,4 +79,95 @@ ul {
 
 #hitTest{
 background-color: #86c2b9;
+}
+
+#contextMenu{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  position: absolute;
+  padding: 10px 5px 2px 5px;
+  width: 100px;
+  background: #4CAF50;
+  border: 1px #349137 solid;
+  font-family: sans-serif;
+  font-size: 1.2em;
+  color: rgb(233, 118, 16);
+  top: 100px;
+  left: 200px;
+  transition: opacity .3s;
+}
+
+#contextMenu button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 6px;
+  text-align:left;
+  text-decoration: none;
+  font-size: .8em;
+  cursor: pointer;
+  width: 100%;
+}
+
+#menyIkon{
+  font-size: 1.2em;
+  position: absolute;
+  color: #ff0000;
+  top: -11px;
+  left: -11px;
+}
+
+.esri-ui{
+  z-index: 2;
+}
+
+.gjemt{
+  opacity: 0 !important;
+}
+
+.skjult{
+  display: none!important;
+}
+
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
 }

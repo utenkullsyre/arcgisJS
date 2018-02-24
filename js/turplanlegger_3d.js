@@ -157,6 +157,7 @@ var viewElement
     var legend = new Legend({
       view: view
     })
+    view.toolactive = false
 
     // Add widget to the bottom right corner of the view
     view.ui.add(legend, "top-right");
@@ -271,10 +272,15 @@ var viewElement
               symbol: markerSymbol,
               attributes: item.properties
             })
-            console.log("Legger til grafikk", grafikk)
             grafikkLag.graphics.add(grafikk)
     }
-    console.log('Grafikklag', grafikkLag)
+
+    function fjernMeny(){
+      meny.classList.add('gjemt')
+      setTimeout(function(){
+        meny.classList.add('skjult')
+      }, 300)
+    }
 
     var test = document.querySelector('#queryRes')
     var testResponse = document.querySelector('#hitTest')
@@ -296,7 +302,9 @@ var viewElement
       })
     })
 
-    var test1 = on(test, "click", function () {
+    on(test, "click", function () {
+      fjernMeny()
+      view.toolactive = true
       viewElement.style.cursor = 'crosshair'
       var initCamera = view.camera
       var heading = view.camera.heading;
@@ -307,7 +315,6 @@ var viewElement
         scale: view.scale * 3.4
       })
       view.map.zoom = 4
-      console.log(test1);
       var tull = on.once(view, "click", function(evt) {
         var pos1 = view.toMap({
           x: evt.x,
@@ -385,10 +392,24 @@ var viewElement
           view.graphics.removeAll()
           test.remove()
           tov.remove()
+          view.toolactive = false
           viewElement.style.cursor = 'default'
         })
-
       })
+    })
+
+    var meny = document.querySelector('#contextMenu')
+    on(view, 'click', function (evt) {
+      if (!view.toolactive){
+        meny.classList.remove('skjult')
+        meny.classList.remove('gjemt')
+        meny.style.top = evt.y + 'px'
+        meny.style.left = evt.x + 'px'
+        var handle = on(view, 'drag', function(){
+          fjernMeny()
+          handle.remove()
+        })
+      }
     })
 
     // view.on('click', function(evt) {
