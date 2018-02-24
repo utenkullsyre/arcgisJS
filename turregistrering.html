@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Prosjektregistrering</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css\turregistrering.css">
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://js.arcgis.com/4.6/"></script>
+  <script src="js\friluftsregistrering.js"></script>
+</head>
+<body>
+  <div id="helvete">
+    <div id="tullskap">
+      <h3>Registrer topp</h3>
+      <form action="/action_page.php">
+        <fieldset>
+          <legend>Turnavn</legend>
+          First name:<br>
+          <input type="text" name="firstname" value="Mickey">
+          <br>
+          Last name:<br>
+          <input type="text" name="lastname" value="Mouse">
+          <br><br>
+          <input type="submit" value="Submit">
+        </fieldset>
+      </form>
+
+    </div>
+    <div id="viewDiv"></div>
+  </div>
+
+  <script type="text/javascript"></script>
+</body>
+</html>

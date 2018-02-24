@@ -1,0 +1,259 @@
+var kartView
+var kart
+var diverseResultat
+var bakkeLag
+var hitResultat
+var sketchObjekt
+var valgtExtent = {}
+var itemVerdier = {}
+var lag = {}
+var view
+
+require([
+  'esri/Map',
+  'esri/views/MapView',
+  'esri/geometry/Point',
+  'esri/geometry/Polygon',
+  'esri/Basemap',
+  'esri/layers/TileLayer',
+  'esri/layers/FeatureLayer',
+  'esri/geometry/Extent',
+  'esri/geometry/SpatialReference',
+  'esri/widgets/LayerList',
+  'esri/widgets/Locate',
+  'esri/widgets/Search',
+  'esri/Graphic',
+  'esri/widgets/Sketch/SketchViewModel',
+  'esri/layers/ElevationLayer',
+  'esri/Ground',
+  "esri/geometry/geometryEngineAsync",
+  'dojo/on',
+  'dojo/dom',
+  'dojo/domReady!'
+], function (
+  Map, MapView, Point, Polygon, Basemap, TileLayer,
+  FeatureLayer, Extent, SpatialReference,
+  LayerList, Locate, Search, Graphic, SketchViewModel,
+  ElevationLayer, Ground, geometryEngineAsync, on, dom
+) {
+  /************************************************************
+   * Creates a new WebMap instance. A WebMap must reference
+   * a PortalItem ID that represents a WebMap saved to
+   * arcgis.com or an on-premise portal.
+   *
+   * To load a WebMap from an on-premise portal, set the portal
+   * url with esriConfig.portalUrl.
+   ************************************************************/
+  var bilder = new TileLayer({
+    url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheBilder/MapServer',
+    id: 'Bilder',
+    visible: true
+  })
+
+  var topp = new FeatureLayer({
+    portalItem: {
+      id: "03ecdbb776314ca0b99388156da4cd41"
+    },
+    visible: true
+  })
+
+  var parkering = new FeatureLayer({
+    portalItem: {
+      id: "5b00dc4c792140f99af2fdd9978384e4"
+    },
+    visible: true
+  })
+
+  var spor = new FeatureLayer({
+    portalItem: {
+      id: "b00c50e3181c48aa93b2087a6d4d586f"
+    },
+    visible: true
+  })
+
+  var bakke = ElevationLayer({
+    url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer'
+  })
+  bakkeLag = bakke
+  var baseMap = new Basemap({
+    baseLayers: [bilder],
+    title: 'Bilder',
+    id: 'bilder'
+  })
+
+   // Create a Map instance
+  var map = new Map({
+    basemap: baseMap,
+    ground: new Ground({
+      layers: [bakke]
+    }),
+    layers: [topp, parkering, spor]
+  })
+
+  kart = map
+
+  console.log(topp);
+
+  var startVindu = new Extent({
+    xmin: 359715.6240792491,
+    ymin: 7608796.799127923,
+    xmax: 635390.8420963518,
+    ymax: 7609135.466471925,
+    spatialReference: new SpatialReference({wkid: 25833})
+  })
+
+  var sokSymbol = {
+    type: "simple-marker",
+    outline: {
+        width: 2.75,
+        color: [255, 0, 0, 0.72]
+    }
+  };
+
+
+  /************************************************************
+   * Set the WebMap instance to the map property in a MapView.
+   ************************************************************/
+   var pt = new Point({
+      x: 557973.7536724593,
+      y: 7629743.993260376,
+      spatialReference: 25833
+    });
+  var view = new MapView({
+    map: map,
+    container: 'viewDiv',
+    center: pt,
+    zoom: 8
+  })
+
+  view.constraints.rotationEnabled = false;
+  console.log(geometryEngineAsync);
+
+  view.when(function () {
+    on(view, 'click', function(event) {
+      view.graphics.removeAll();
+      topp.queryFeatures()
+      .then(function(test){
+        var geom = getGeoms(test.features)
+        var geomUnion
+        geometryEngineAsync.union(geom)
+        .then(function(response){
+          console.log("uniongeom",response);
+          geomUnion = response
+          geometryEngineAsync.buffer(event.mapPoint, 100000, "meters")
+          .then(function(response){
+            console.log("Buffer", response);
+            geometryEngineAsync.intersect(response, geomUnion)
+            .then(function(response){
+              console.log(response);
+            })
+          })
+        })
+      })
+
+
+      //  Hente ut geometri, slå de sammen og finne nærmeste pkt
+      // topp.queryFeatures()
+      // .then(function(test){
+      //   var geom = getGeoms(test.features)
+        // geometryEngineAsync.union(geom)
+        // .then(function(response){
+        //   console.log("Union", response);
+        //   geometryEngineAsync.nearestVertex(response, event.mapPoint)
+        //   .then(function(response){
+        //     console.log("Faen", response);
+        //     view.graphics.add(lagEnkeltPkt(response.coordinate.x, response.coordinate.y, sokSymbol))
+        //     view.hitTest(view.toScreen(response.coordinate))
+        //     .then(function(response) {
+        //       console.log();
+        //     })
+        //   })
+        // })
+      // })
+      console.log(event);
+      view.hitTest(event)
+      .then(function(response){
+        if (response.results.length>0) {
+          console.log(response.results[0].graphic);
+        }
+      })
+    })
+    console.log(view);
+    // topp.queryFeatures().
+    // then(function(test){
+    //   var geom = getGeoms(test.features)
+    //   geometryEngineAsync.union(geom)
+    //   .then(function(response){
+    //     console.log("Union", response);
+    //     geometryEngineAsync.nearestVertex(response, event.mapPoint)
+    //   })
+    // })
+    // view.whenLayerView(topp)
+    // .then(function(response){
+    //   console.log("Lyrview", response);
+    //   console.log("Helvete!!!");
+    //   response.when(function(helvete){
+    //     console.log(helvete.layer);
+    //   }).otherwise(function(error){console.log(error);})
+    //   // var faen = grafikk.featuresView.graphics
+    //   // console.log(faen);
+    //   console.log("FAEAENANNNN", grafikk);
+    //   // var geoms = getGeoms(graphics)
+    //   // console.log(geoms);
+    // })
+
+    // on(view, "pointer-move", function(event){
+    //     var pos = view.toMap({
+    //       x:event.x,
+    //       y:event.y
+    //     });
+    //     // console.log(pos);
+    //     // geometryEngineAsync.buffer(pos, 5000, "feet")
+    //     // .then(function(response){
+    //     //   // console.log("Bufffer", response);
+    //     //   view.graphics.removeAll();
+    //     //   var d = lagPolygon(response.rings);
+    //     //   view.graphics.add(d)
+    //     // })
+    // })
+    function getGeoms(graphics){
+       return graphics.map(function(item, i){
+         console.log(item);
+          return item.geometry;
+       });
+    }
+
+    function lagPolygon(rings){
+      var grafikk = new Graphic({
+        geometry: new Polygon({
+          rings: rings,
+          spatialReference: { wkid: 25833 }
+        }),
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: [227, 139, 79, 0.8],
+          outline: { // autocasts as new SimpleLineSymbol()
+            color: [255, 255, 255],
+            width: 1
+          }
+        }
+      })
+
+      return grafikk
+    }
+
+    function lagEnkeltPkt(x,y,symbol){
+      var pt = new Graphic({
+        geometry: new Point({
+            x: x,
+            y: y,
+            spatialReference: {
+              wkid: 25833
+            }
+          }),
+        symbol: symbol
+      })
+      return pt
+    }
+  })
+})
