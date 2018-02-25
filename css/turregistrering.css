@@ -22,9 +22,14 @@ body{
   position: absolute;
   bottom: 10px;
   left: 10px;
-  width: 250px;
+  width: 350px;
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   z-index: 2
+}
+
+.form-item{
+  width: 60%;
 }

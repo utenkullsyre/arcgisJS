@@ -132,27 +132,26 @@ require([
   view.when(function () {
     on(view, 'click', function(event) {
       view.graphics.removeAll();
-      topp.queryFeatures()
-      .then(function(test){
-        var geom = getGeoms(test.features)
-        var geomUnion
-        geometryEngineAsync.union(geom)
-        .then(function(response){
-          console.log("uniongeom",response);
-          geomUnion = response
-          geometryEngineAsync.buffer(event.mapPoint, 100000, "meters")
-          .then(function(response){
-            console.log("Buffer", response);
-            geometryEngineAsync.intersect(response, geomUnion)
-            .then(function(response){
-              console.log(response);
-            })
-          })
-        })
-      })
-
-
-      //  Hente ut geometri, slå de sammen og finne nærmeste pkt
+      //  ---- Hente ut pkt som er innenfor en viss radius av klikk pkt ----
+      // topp.queryFeatures()
+      // .then(function(test){
+      //   var geom = getGeoms(test.features)
+      //   var geomUnion
+      //   geometryEngineAsync.union(geom)
+      //   .then(function(response){
+      //     console.log("uniongeom",response);
+      //     geomUnion = response
+      //     geometryEngineAsync.buffer(event.mapPoint, 1000, "meters")
+      //     .then(function(response){
+      //       console.log("Buffer", response);
+      //       geometryEngineAsync.intersect(response, geomUnion)
+      //       .then(function(response){
+      //         console.log(response);
+      //       })
+      //     })
+      //   })
+      // })
+      //  ------Hente ut geometri, slå de sammen og finne nærmeste pkt--------
       // topp.queryFeatures()
       // .then(function(test){
       //   var geom = getGeoms(test.features)
