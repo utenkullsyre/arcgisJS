@@ -29,12 +29,15 @@ require([
   "esri/geometry/geometryEngineAsync",
   'dojo/on',
   'dojo/dom',
+  'esri/config',
+  'esri/request',
   'dojo/domReady!'
 ], function (
   Map, MapView, Point, Polygon, Basemap, TileLayer,
   FeatureLayer, Extent, SpatialReference,
   LayerList, Locate, Search, Graphic, SketchViewModel,
-  ElevationLayer, Ground, geometryEngineAsync, on, dom
+  ElevationLayer, Ground, geometryEngineAsync, on, dom,
+  esriConfig, esriRequest
 ) {
   /************************************************************
    * Creates a new WebMap instance. A WebMap must reference
@@ -44,11 +47,26 @@ require([
    * To load a WebMap from an on-premise portal, set the portal
    * url with esriConfig.portalUrl.
    ************************************************************/
+  esriConfig.request.corsEnabledServers.push("www.norgeskart.no");
+  esriConfig.request.corsEnabledServers.push("ws.geonorge.no");
+
   var bilder = new TileLayer({
     url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheBilder/MapServer',
     id: 'Bilder',
-    visible: true
+    visible: false
   })
+
+  var graatone = new TileLayer({
+      url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheGraatone/MapServer',
+      id: 'Gråtone',
+      visible: true
+    });
+
+  var landskap = new TileLayer({
+        url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheLandskap/MapServer',
+        id: 'Landskap',
+        visible: false
+      });
 
   var topp = new FeatureLayer({
     portalItem: {
@@ -76,7 +94,7 @@ require([
   })
   bakkeLag = bakke
   var baseMap = new Basemap({
-    baseLayers: [bilder],
+    baseLayers: [bilder, graatone, landskap],
     title: 'Bilder',
     id: 'bilder'
   })
@@ -130,8 +148,70 @@ require([
   console.log(geometryEngineAsync);
 
   view.when(function () {
+    var vm = new Vue({
+      el: '#info-wrapper',
+      data: {
+        infoSynlig: true,
+        registreringSynlig: false,
+        registrertTopp: null
+      },
+      methods: {
+        nyTopp: function () {
+          this.infoSynlig = false;
+          this.registreringSynlig = true;
+        },
+        sendinnTopp: function() {
+          var formItems  = document.querySelectorAll('.form-group input')
+          console.log(formItems);
+          var inputResult = {}
+          Array.prototype.map.call(formItems, function(obj){
+            inputResult[obj.name] = obj.value
+          });
+          console.log(inputResult);
+          this.registrertTopp.attributes = {
+            navn: inputResult.toppnavn,
+            beskrivelse: inputResult.beskrivelse,
+            merknad: inputResult.merknad,
+            hoyde: inputResult.hoyde
+          }
+          var edits = {
+            addFeatures: [this.registrertTopp]
+          }
+          topp.applyEdits(edits)
+          .then(function(response){
+            console.log("Objekt lagt inn",response);
+            vm.infoSynlig = true;
+            vm.registreringSynlig = false;
+            view.graphics.removeAll()
+          })
+          .otherwise(function (error) {
+            console.log("Det skjedde en feil ved innlegging", error)
+          })
+        }
+      }
+    })
+    console.log("Vue instance", vm);
     on(view, 'click', function(event) {
       view.graphics.removeAll();
+      if (vm.registreringSynlig) {
+        var pkt = lagEnkeltPkt(event.mapPoint.x,event.mapPoint.y, sokSymbol)
+        view.graphics.add(pkt)
+        vm.registrertTopp = pkt
+        hentHoyde(event.mapPoint.x, event.mapPoint.y)
+        .then(function(response) {
+          var navn = document.querySelector('[name = toppnavn]');
+          var hoyde = document.querySelector('[name = hoyde]');
+
+          navn.value = response.data.placename
+          hoyde.value = parseInt(response.data.elevation)
+        })
+        .otherwise(function(error){
+          console.log(error);
+        })
+      }
+
+
+
       //  ---- Hente ut pkt som er innenfor en viss radius av klikk pkt ----
       // topp.queryFeatures()
       // .then(function(test){
@@ -253,6 +333,19 @@ require([
         symbol: symbol
       })
       return pt
+    }
+
+    function hentHoyde(x,y){
+      //Finner stedsnavn
+      var urlSted = 'https://www.norgeskart.no/ws/elev.py?'
+      var options = {
+        query: {
+          lat: y,
+          lon: x,
+          epsg: 25833
+        }
+      }
+      return esriRequest(urlSted,options)
     }
   })
 })

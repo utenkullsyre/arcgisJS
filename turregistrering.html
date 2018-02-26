@@ -13,20 +13,38 @@
 </head>
 <body>
   <div id="helvete">
-    <div id="tullskap">
-      <h3 class="form-item">Registrer topp</h3>
-      <form class="form-item" action="/action_page.php">
-          <label for="toppnavn">Navn på fjelltopp</label>
-          <input type="text" name="toppnavn" placeholder="Skriv inn fjelltoppnavn">
-          <label for="beskrivelse">Beskrivelse</label>
-          <input type="text" name="beskrivelse" placeholder="Gi en kort beskrivelse av fjellet">
-          <label for="hoyde">Høyde</label>
-          <input type="text" name="hoyde" placeholder="Høyde på fjellet">
-          <label for="merknad">Merknader</label>
-          <input type="text" name="merknad" placeholder="Skriv inn merknad hvis det er noen">
-          <button type="button" name="sendInn">Registrer fjelltopp</button>
-      </form>
-
+    <div id="info-wrapper">
+      <div id="info" class="" v-if="infoSynlig">
+        <h3>Hva vil du gjøre</h3>
+        <p>Her kan du registrere en ny tur</p>
+        <button type="button" name="nytopp" @click="nyTopp">Ny topp</button>
+      </div>
+      <div id="topp-registrering" v-if="registreringSynlig">
+        <h3 class="form-item">Registrer topp</h3>
+        <form class="form-item" action="/action_page.php">
+          <div class="form-group">
+            <label for="toppnavn">Navn på fjelltopp</label>
+            <input type="text" name="toppnavn" placeholder="Skriv inn fjelltoppnavn">
+          </div>
+          <div class="form-group">
+            <label for="beskrivelse">Beskrivelse</label>
+            <input type="text" name="beskrivelse" placeholder="Gi en kort beskrivelse av fjellet">
+          </div>
+          <div id="hoyde" class="form-group">
+            <label for="hoyde">Høyde</label>
+            <input type="text" name="hoyde" placeholder="Høyde på fjellet">
+          </div>
+          <div class="form-group">
+            <label for="merknad">Merknader</label>
+            <input type="text" name="merknad" placeholder="Skriv inn merknad hvis det er noen">
+          </div>
+          <div class="form-group">
+            <label for="registrertav">Registret av</label>
+            <input type="text" name="registrertav" placeholder="Hvis du ønsker kan du registrere navn her">
+          </div>
+          <button type="button" name="sendInn" @click="sendinnTopp">Registrer fjelltopp</button>
+        </form>
+      </div>
     </div>
     <div id="viewDiv"></div>
   </div>

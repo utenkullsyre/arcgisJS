@@ -17,7 +17,7 @@ body{
   position: relative;
 }
 
-#tullskap{
+#info-wrapper{
   background-color: white;
   position: absolute;
   bottom: 10px;
@@ -30,6 +30,35 @@ body{
   z-index: 2
 }
 
+form{
+  margin: 15px;
+  padding: 15px
+}
+
+.form-group{
+  display: flex;
+  flex-flow: column;
+  position: relative;
+}
+
 .form-item{
-  width: 60%;
+  width: 80%;
+  display: flex;
+  flex-flow: column;
+}
+
+.generic-wrapper{
+  position: relative;
+}
+
+.form-item input{
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+#hoyde i{
+  position: absolute;
+  right: 5px;
+  margin: 3px 2px;
+
 }
