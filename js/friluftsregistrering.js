@@ -172,14 +172,15 @@ require([
             navn: inputResult.toppnavn,
             beskrivelse: inputResult.beskrivelse,
             merknad: inputResult.merknad,
-            hoyde: inputResult.hoyde
+            hoyde: inputResult.hoyde,
+            editor: 'klientbruker'
           }
           var edits = {
             addFeatures: [this.registrertTopp]
           }
           topp.applyEdits(edits)
           .then(function(response){
-            console.log("Objekt lagt inn",response);
+            console.log("Objekt lagt inn", response);
             vm.infoSynlig = true;
             vm.registreringSynlig = false;
             view.graphics.removeAll()
@@ -192,9 +193,18 @@ require([
     })
     console.log("Vue instance", vm);
     on(view, 'click', function(event) {
+      console.log(event);
+      var hittest = {}
+      view.hitTest(event)
+      .then(function(response){
+        hittest = response
+        if (response.results.length>0) {          
+          console.log(response.results[0].graphic);
+        }
+      })
       view.graphics.removeAll();
-      if (vm.registreringSynlig) {
-        var pkt = lagEnkeltPkt(event.mapPoint.x,event.mapPoint.y, sokSymbol)
+      if (vm.registreringSynlig && hittest.results.length === 0) {
+        var pkt = lagEnkeltPkt(event.mapPoint.x, event.mapPoint.y, sokSymbol)
         view.graphics.add(pkt)
         vm.registrertTopp = pkt
         hentHoyde(event.mapPoint.x, event.mapPoint.y)
@@ -249,13 +259,6 @@ require([
         //   })
         // })
       // })
-      console.log(event);
-      view.hitTest(event)
-      .then(function(response){
-        if (response.results.length>0) {
-          console.log(response.results[0].graphic);
-        }
-      })
     })
     console.log(view);
     // topp.queryFeatures().
