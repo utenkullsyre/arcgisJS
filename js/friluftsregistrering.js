@@ -148,17 +148,41 @@ require([
   console.log(geometryEngineAsync);
 
   view.when(function () {
+    topp.watch('loaded', function(newval, oldval) {
+      if(newval) {
+        view.cursor = 'pointer'
+      };
+    })
     var vm = new Vue({
       el: '#info-wrapper',
       data: {
         infoSynlig: true,
         registreringSynlig: false,
-        registrertTopp: null
+        velgtoppSynlig: false,
+        registrertTopp: null,
+        valgttopp: {
+          navn: '',
+          hoyde: 0,
+          beskrivelse: ''
+        }
       },
       methods: {
+        lukkMeny: function() {
+          this.infoSynlig = true;
+          this.registreringSynlig = false;
+          this.velgtoppSynlig = false;
+          view.cursor = 'pointer'
+        },
         nyTopp: function () {
           this.infoSynlig = false;
+          this.velgtoppSynlig = false;
           this.registreringSynlig = true;
+          view.cursor = 'crosshair'
+        },
+        velgTopp: function () {
+          this.infoSynlig = false;
+          this.velgtoppSynlig = true;
+          this.registreringSynlig = false;
         },
         sendinnTopp: function() {
           var formItems  = document.querySelectorAll('.form-group input')
@@ -184,6 +208,7 @@ require([
             vm.infoSynlig = true;
             vm.registreringSynlig = false;
             view.graphics.removeAll()
+            view.cursor = 'pointer'
           })
           .otherwise(function (error) {
             console.log("Det skjedde en feil ved innlegging", error)
@@ -198,8 +223,8 @@ require([
       view.hitTest(event)
       .then(function(response){
         hittest = response
-        if (response.results.length>0) {          
-          console.log(response.results[0].graphic);
+        if (response.results.length>0) {
+          // console.log(response.results[0].graphic);
         }
       })
       view.graphics.removeAll();
@@ -218,6 +243,14 @@ require([
         .otherwise(function(error){
           console.log(error);
         })
+      }  else if (vm.infoSynlig && hittest.results.length > 0 || vm.velgtoppSynlig && hittest.results.length > 0) {
+        event.stopPropagation();
+        vm.velgTopp();
+        var data = hittest.results[0].graphic.attributes
+        vm.valgttopp.navn = data.navn;
+        vm.valgttopp.hoyde = data.hoyde;
+        vm.valgttopp.beskrivelse = data.beskrivelse
+        console.log(hittest.results[0]);
       }
 
 

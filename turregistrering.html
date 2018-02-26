@@ -15,12 +15,27 @@
   <div id="helvete">
     <div id="info-wrapper">
       <div id="info" class="" v-if="infoSynlig">
-        <h3>Hva vil du gjøre</h3>
-        <p>Her kan du registrere en ny tur</p>
+        <span class="tittel">Hva vil du gjøre</span>
+        <p>Velg en registrert topp eller registrer en ny topp for å starte</p>
         <button type="button" name="nytopp" @click="nyTopp">Ny topp</button>
       </div>
+      <div id="velgtopp" v-if="velgtoppSynlig">
+        <div class="toppheading form-item">
+          <span class="tittel">{{ valgttopp.navn }}</span>
+          <i class="esri-icon-close closebtn" @click="lukkMeny" aria-hidden="true"></i>
+        </div>
+        <p>Høyde: {{ valgttopp.hoyde }} moh</p>
+        <p>{{ valgttopp.beskrivelse }}</p>
+        <p>Er dette riktig topp?</p>
+        <button type="button" name="button">Ja</button>
+        <button type="button" name="button" @click="nyTopp">Registrer ny topp</button>
+
+      </div>
       <div id="topp-registrering" v-if="registreringSynlig">
-        <h3 class="form-item">Registrer topp</h3>
+        <div class="toppheading form-item">
+          <span class="tittel">Registrer topp</span>
+          <i class="esri-icon-close closebtn" @click="lukkMeny" aria-hidden="true"></i>
+        </div>
         <form class="form-item" action="/action_page.php">
           <div class="form-group">
             <label for="toppnavn">Navn på fjelltopp</label>
@@ -28,7 +43,7 @@
           </div>
           <div class="form-group">
             <label for="beskrivelse">Beskrivelse</label>
-            <input type="text" name="beskrivelse" placeholder="Gi en kort beskrivelse av fjellet">
+            <textarea name="beskrivelse" rows="8" cols="80" placeholder="Gi en kort beskrivelse av fjellet"></textarea>
           </div>
           <div id="hoyde" class="form-group">
             <label for="hoyde">Høyde</label>

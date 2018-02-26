@@ -18,6 +18,7 @@ body{
 }
 
 #info-wrapper{
+  border: 3px rgb(115, 115, 115) solid;
   background-color: white;
   position: absolute;
   bottom: 10px;
@@ -27,12 +28,18 @@ body{
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  z-index: 2
+  z-index: 2;
+  padding: 20px;
+  /* overflow-y: scroll;
+  max-height: 300px */
 }
 
-form{
-  margin: 15px;
-  padding: 15px
+#topp-registrering{
+  width: 100%;
+}
+
+#info{
+  width: 100%;
 }
 
 .form-group{
@@ -42,7 +49,7 @@ form{
 }
 
 .form-item{
-  width: 80%;
+  margin: 15px;
   display: flex;
   flex-flow: column;
 }
@@ -51,8 +58,32 @@ form{
   position: relative;
 }
 
-.form-item input{
+.form-item input, .form-item textarea {
   margin-bottom: 15px;
+  width: 100%;
+}
+
+.toppheading {
+  position: relative;
+}
+
+.toppheading i{
+  position: absolute;
+  right: 5px;
+  margin: 2px 0;
+  transition: 0.2s all;
+}
+
+.toppheading i:hover{
+  font-weight: 600;
+}
+
+.tittel{
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+#velgtopp {
   width: 100%;
 }
 
