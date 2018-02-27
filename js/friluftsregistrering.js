@@ -29,6 +29,7 @@ require([
   "esri/geometry/geometryEngineAsync",
   'dojo/on',
   'dojo/dom',
+  'esri/layers/GraphicsLayer',
   'esri/config',
   'esri/request',
   'dojo/domReady!'
@@ -36,7 +37,7 @@ require([
   Map, MapView, Point, Polygon, Basemap, TileLayer,
   FeatureLayer, Extent, SpatialReference,
   LayerList, Locate, Search, Graphic, SketchViewModel,
-  ElevationLayer, Ground, geometryEngineAsync, on, dom,
+  ElevationLayer, Ground, geometryEngineAsync, on, dom, GraphicsLayer,
   esriConfig, esriRequest
 ) {
   /************************************************************
@@ -89,6 +90,11 @@ require([
     visible: true
   })
 
+  var grafikkLag = new GraphicsLayer({
+    visible: true,
+    title: 'Markeringslag'
+  })
+
   var bakke = ElevationLayer({
     url: 'https://services.geodataonline.no/arcgis/rest/services/Geocache_UTM33_EUREF89/GeocacheTerreng/ImageServer'
   })
@@ -105,13 +111,13 @@ require([
     ground: new Ground({
       layers: [bakke]
     }),
-    layers: [topp, parkering, spor]
+    layers: [topp, parkering, spor, grafikkLag]
   })
 
   kart = map
 
   console.log(topp);
-
+  //  Instansierer et extentvindu for hovr kartet skal åpnes
   var startVindu = new Extent({
     xmin: 359715.6240792491,
     ymin: 7608796.799127923,
@@ -119,7 +125,7 @@ require([
     ymax: 7609135.466471925,
     spatialReference: new SpatialReference({wkid: 25833})
   })
-
+  //  Instansierer symbolene som skal brukes
   var sokSymbol = {
     type: "simple-marker",
     outline: {
@@ -129,30 +135,30 @@ require([
   };
 
 
-  /************************************************************
-   * Set the WebMap instance to the map property in a MapView.
-   ************************************************************/
-   var pt = new Point({
-      x: 557973.7536724593,
-      y: 7629743.993260376,
-      spatialReference: 25833
-    });
+  //  Vet ikke hva som skjer her
+  var pt = new Point({
+    x: 557973.7536724593,
+    y: 7629743.993260376,
+    spatialReference: 25833
+  });
+  //  Instansierer view-objektet
   var view = new MapView({
     map: map,
     container: 'viewDiv',
     center: pt,
     zoom: 8
   })
-
+  //  Forhindrer at kartet kan roteres
   view.constraints.rotationEnabled = false;
   console.log(geometryEngineAsync);
-
+  //  Venter til kartet har lastet før flere funksjoner settes igang
   view.when(function () {
     topp.watch('loaded', function(newval, oldval) {
       if(newval) {
         view.cursor = 'pointer'
       };
     })
+    //  Instansierer et Vue objekt for å håndtere infoboksen
     var vm = new Vue({
       el: '#info-wrapper',
       data: {
@@ -163,35 +169,43 @@ require([
         valgttopp: {
           navn: '',
           hoyde: 0,
-          beskrivelse: ''
+          beskrivelse: '',
+          objektid: 0
         }
       },
       methods: {
+        //  Funksjon for å lukke infomenyer til start
         lukkMeny: function() {
           this.infoSynlig = true;
           this.registreringSynlig = false;
           this.velgtoppSynlig = false;
           view.cursor = 'pointer'
         },
+        //  Funksjon for å åpne registreringsvindu
         nyTopp: function () {
           this.infoSynlig = false;
           this.velgtoppSynlig = false;
           this.registreringSynlig = true;
           view.cursor = 'crosshair'
         },
+        //  Funksjon for å åpne infovindu etter man har valgt en topp
         velgTopp: function () {
           this.infoSynlig = false;
           this.velgtoppSynlig = true;
           this.registreringSynlig = false;
         },
+        //  Funksjon for å registrere en topp med informasjon og geografisk plassering
         sendinnTopp: function() {
           var formItems  = document.querySelectorAll('.form-group input, .form-group textarea')
           console.log(formItems);
           var inputResult = {}
+          // Henter ut verdiene fra nodelista av input og fyller det i objektet
           Array.prototype.map.call(formItems, function(obj){
             inputResult[obj.name] = obj.value
           });
           console.log(inputResult);
+          //  Fyller attributt-posten til grafikkobjektet med informasjon. Navnene i attributtobjektet
+          //  må matche datafeltnavnene i featurelaget
           this.registrertTopp.attributes = {
             navn: inputResult.toppnavn,
             beskrivelse: inputResult.beskrivelse,
@@ -199,9 +213,12 @@ require([
             hoyde: inputResult.hoyde,
             editor: 'klientbruker'
           }
+          //  Lager et edit-objekt som skal legges til. Dette kan inneholde en collection med features som skal enten legges til,
+          //  oppdateres, eller slettes (addFeatures, updateFeatures, deleteFeatures)
           var edits = {
             addFeatures: [this.registrertTopp]
           }
+          //  Sender inn endringer og går tilbake til startmeny
           topp.applyEdits(edits)
           .then(function(response){
             console.log("Objekt lagt inn", response);
@@ -217,6 +234,8 @@ require([
       }
     })
     console.log("Vue instance", vm);
+    //  Legger til en eventlistener for klikk.
+    // TODO: Skal man heller legge til flere eventlistenere  for å ha bedre oversikt?
     on(view, 'click', function(event) {
       console.log(event);
       var hittest = {}
@@ -225,6 +244,7 @@ require([
         hittest = response
         if (response.results.length>0) {
           view.graphics.removeAll();
+          grafikkLag.graphics.removeAll();
           setTimeout(function(){
             view.goTo({
               target: hittest.results[0].graphic
@@ -234,6 +254,7 @@ require([
       })
 
       if (vm.registreringSynlig && hittest.results.length === 0) {
+        view.graphics.removeAll()
         var pkt = lagEnkeltPkt(event.mapPoint.x, event.mapPoint.y, sokSymbol)
         view.graphics.add(pkt)
         vm.registrertTopp = pkt
@@ -245,22 +266,22 @@ require([
           navn.value = response.data.placename
           hoyde.value = parseInt(response.data.elevation)
         })
-        .otherwise(function(error){
+        .otherwise(function (error) {
           console.log(error);
         })
-      }  else if (hittest.results.length > 0 && hittest.results[0].graphic.layer.title === 'Fjelltopp') {
-        if(vm.infoSynlig || vm.velgtoppSynlig){
-          var selection = hittest.results[0].graphic
-          selection.symbol = {
-                type: "simple-marker",
-                outline: {
-                    width: 3,
-                    color: [255, 255, 0, 1]
-                },
-                size: 23,
-                color: [255, 255, 0, 0]
-            };
-          view.graphics.add(selection)
+      } else if (hittest.results.length > 0 && hittest.results[0].graphic.layer.title === 'Fjelltopp') {
+        if (vm.infoSynlig || vm.velgtoppSynlig) {
+          // var selection = hittest.results[0].graphic
+          // selection.symbol = {
+          //       type: "simple-marker",
+          //       outline: {
+          //           width: 3,
+          //           color: [255, 255, 0, 1]
+          //       },
+          //       size: 23,
+          //       color: [255, 255, 0, 0]
+          //   };
+          // grafikkLag.graphics.add(selection)
           event.stopPropagation();
           vm.velgTopp();
           // view.goTo({
@@ -270,13 +291,15 @@ require([
           vm.valgttopp.navn = data.navn;
           vm.valgttopp.hoyde = data.hoyde;
           vm.valgttopp.beskrivelse = data.beskrivelse;
-          console.log(hittest.results[0]);
+          vm.valgttopp.objektid = data.OBJECTID;
         }
       }
 
 
 
       //  ---- Hente ut pkt som er innenfor en viss radius av klikk pkt ----
+      //
+      //
       // topp.queryFeatures()
       // .then(function(test){
       //   var geom = getGeoms(test.features)
@@ -314,7 +337,7 @@ require([
         // })
       // })
     })
-    console.log(view);
+    //  ---------Tester ut funksjonene i geometryengine-------------
     // topp.queryFeatures().
     // then(function(test){
     //   var geom = getGeoms(test.features)
@@ -352,13 +375,15 @@ require([
     //     //   view.graphics.add(d)
     //     // })
     // })
+
+    //  -----------Lager en liste over alle geometrier. Dette er en hjelpefunksjon---------
     function getGeoms(graphics){
        return graphics.map(function(item, i){
          console.log(item);
           return item.geometry;
        });
     }
-
+    //  En funksjon som lager et polygonobjekt ut fra et sett med polygon-ringer
     function lagPolygon(rings){
       var grafikk = new Graphic({
         geometry: new Polygon({
@@ -377,7 +402,7 @@ require([
 
       return grafikk
     }
-
+    //  Hjelpefunksjon for å lage et pkt
     function lagEnkeltPkt(x,y,symbol){
       var pt = new Graphic({
         geometry: new Point({
@@ -391,7 +416,7 @@ require([
       })
       return pt
     }
-
+    //  Funksjon som henter stedsnavn
     function hentHoyde(x,y){
       //Finner stedsnavn
       var urlSted = 'https://www.norgeskart.no/ws/elev.py?'
