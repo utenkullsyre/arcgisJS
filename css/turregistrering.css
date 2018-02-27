@@ -49,7 +49,6 @@ body{
 }
 
 .form-item{
-  margin: 15px;
   display: flex;
   flex-flow: column;
 }

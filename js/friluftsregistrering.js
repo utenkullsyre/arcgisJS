@@ -185,7 +185,7 @@ require([
           this.registreringSynlig = false;
         },
         sendinnTopp: function() {
-          var formItems  = document.querySelectorAll('.form-group input')
+          var formItems  = document.querySelectorAll('.form-group input, .form-group textarea')
           console.log(formItems);
           var inputResult = {}
           Array.prototype.map.call(formItems, function(obj){
@@ -224,10 +224,15 @@ require([
       .then(function(response){
         hittest = response
         if (response.results.length>0) {
-          // console.log(response.results[0].graphic);
+          view.graphics.removeAll();
+          setTimeout(function(){
+            view.goTo({
+              target: hittest.results[0].graphic
+            })
+          }, 100)
         }
       })
-      view.graphics.removeAll();
+
       if (vm.registreringSynlig && hittest.results.length === 0) {
         var pkt = lagEnkeltPkt(event.mapPoint.x, event.mapPoint.y, sokSymbol)
         view.graphics.add(pkt)
@@ -243,14 +248,30 @@ require([
         .otherwise(function(error){
           console.log(error);
         })
-      }  else if (vm.infoSynlig && hittest.results.length > 0 || vm.velgtoppSynlig && hittest.results.length > 0) {
-        event.stopPropagation();
-        vm.velgTopp();
-        var data = hittest.results[0].graphic.attributes
-        vm.valgttopp.navn = data.navn;
-        vm.valgttopp.hoyde = data.hoyde;
-        vm.valgttopp.beskrivelse = data.beskrivelse
-        console.log(hittest.results[0]);
+      }  else if (hittest.results.length > 0 && hittest.results[0].graphic.layer.title === 'Fjelltopp') {
+        if(vm.infoSynlig || vm.velgtoppSynlig){
+          var selection = hittest.results[0].graphic
+          selection.symbol = {
+                type: "simple-marker",
+                outline: {
+                    width: 3,
+                    color: [255, 255, 0, 1]
+                },
+                size: 23,
+                color: [255, 255, 0, 0]
+            };
+          view.graphics.add(selection)
+          event.stopPropagation();
+          vm.velgTopp();
+          // view.goTo({
+          //   target: selection
+          // })
+          var data = hittest.results[0].graphic.attributes
+          vm.valgttopp.navn = data.navn;
+          vm.valgttopp.hoyde = data.hoyde;
+          vm.valgttopp.beskrivelse = data.beskrivelse;
+          console.log(hittest.results[0]);
+        }
       }
 
 
