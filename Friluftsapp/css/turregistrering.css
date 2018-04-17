@@ -1,0 +1,137 @@
+body{
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:8vh;
+  padding: 5 0 5 0;
+  background-color: #50b0e7;
+}
+
+header button{
+  height: 100%;
+  margin-left: auto;
+  margin-top: auto;
+}
+
+#tittel{
+  margin-bottom: auto;
+  margin-right: auto;
+  padding: 1%;
+}
+
+#container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:90vh;
+  margin-top: 1vh;
+}
+
+.registrering{
+  display: flex;
+  height: 95%;
+  width: 95%;
+  flex-flow: column;
+  border: 1px #c9c9c9 solid;
+}
+
+
+#undertekst{
+  height: 5%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top:-2.5%;
+}
+#undertekst div{
+  background-color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+
+}
+
+#kart{
+  display: flex;
+  position: relative;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  width:100%;
+  height: 85%;
+  border-top: 1px #c9c9c9 solid;
+  border-bottom: 1px #c9c9c9 solid;
+  background-color: #e4f4bf;
+}
+
+#sok{
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: 1.5em;
+}
+
+#nyTopp{
+  font-size: 1.5em;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  }
+
+#kartvindu{
+  flex: 0 0 auto;
+}
+
+.none{
+  display:none;
+}
+
+#form{
+  background-color: white;
+  border: 1px #c9c9c9 solid;
+  flex: 1;
+  height: 80%;
+  width: 80%;
+  text-align: center;
+  z-index: 10;
+  position:absolute;
+  left: 10%; top: 10%; right: 0; bottom: 0;
+}
+
+#form i{
+  margin-bottom: auto;
+  margin-left: auto;
+  padding: 3px;
+  font-size: 2em;
+}
+
+#prosessBar{
+  height: 10%;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+#myProgress {
+  display: flex;
+  height:50%;
+  width: 60%;
+  background-color: #e0dfd9;
+  align-self: center;
+}
+#myBar {
+    width: 25%;
+    background-color: green;
+}
+
+.showFlex {
+  display:flex;
+}

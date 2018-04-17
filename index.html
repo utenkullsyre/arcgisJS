@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Turplanlegger</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <link rel="stylesheet" href="css\turplanlegger_3d.css">
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://js.arcgis.com/4.6/"></script>
+  <script type="text/javascript" src="js\turplanlegger_3d.js"></script>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <span>Laster inn kartet</span>
+    <img class="image roter-bilde" src="https://norse-mythology.org/wp-content/uploads/2016/06/Vegvisir.svg_.png" alt="" width="120" height="120">
+  </div>
+
+  <!-- Hovedmeny -->
+  <div id="mySidenav" class="sidenav" :class="{openNav:menyAapen}" v-show="visMeny">
+    <nav class="topGroup center-content">
+      <a href="javascript:void(0)" class="closebtn" @click="lukkMeny">&times;</a>
+    </nav>
+    <!-- Bakgrunnskart -->
+    <nav id="bakgrunnskart" class="gruppe-el" @click="bakgrAapen = !bakgrAapen">
+      <div class="tittel" >
+        <span class="gruppe-el-tittel">Bakgrunnskart: </span><span id="bakgrInfoLabel">{{ aktivtLag }}</span>
+      </div>
+      <transition name="aapne">
+        <ul v-if="bakgrAapen">
+          <li data-id="landskap" @click="skiftBakgrunnskart">Landkart</li>
+          <li data-id="bilder" @click="skiftBakgrunnskart">Flyfoto</li>
+          <li data-id="graatone" @click="skiftBakgrunnskart">Gråtone</li>
+        </ul>
+      </transition>
+    </nav>
+    <!-- Kartlag -->
+    <nav class="gruppe-el" @click="lagAapen = !lagAapen">
+      <div class="tittel" >
+        <span class="gruppe-el-tittel">Kartlag</span>
+      </div>
+      <transition name="aapne">
+        <ul v-if="lagAapen">
+          <li @click="toggleLag">Helling</li>
+          <li class="ikke-implementert">Eiendommer</li>
+          <li class="ikke-implementert">SkredHendelser</li>
+          <li class="ikke-implementert">Skredobservasjoner</li>
+        </ul>
+      </transition>
+
+    </nav>
+    <!-- Tegnforklaring -->
+    <nav class="gruppe-el" id="Tegnforklaring" @click="tegnAapen = !tegnAapen">
+      <span class="gruppe-el-tittel tittel">Tegnforklaring</span>
+      <transition name="aapne">
+        <div class="underelement tegnforklaring" v-if="tegnAapen">
+          <h3>Helling i grader</h3>
+          <table>
+            <tbody>
+              <tr valign="middle">
+                <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADZJREFUOI1jYaAyYKGlgf+pYB4jugsZKTDsPwMDjb08auCogaMGjhqI00BKykRGdAMpKQvhAABd0QNSDPGCHwAAAABJRU5ErkJggg==" alt="0 - 27">
+                </td><td>0 - 27</td>
+                </tr>
+                <tr valign="middle">
+                <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADpJREFUOI1jYaAyYKGlgf+pYB4jigtVSsg36U4PhKapl0cNHDVw1MBRA7EbCCuCyASM6AYyUmQcFAAA2w4Eu02XbecAAAAASUVORK5CYII=" alt="27 - 30">
+                </td><td>27 - 30</td>
+                </tr>
+                <tr valign="middle">
+                <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADhJREFUOI1jYaAyYKGlgf+pYB4jigv/U2AkIyOEpqmXRw0cNXDUwFEDsRsIK4LIBIzoBlJmHBQAAF8jA1XJU6ZXAAAAAElFTkSuQmCC" alt="30 - 35">
+                </td><td>30 - 35</td>
+                </tr>
+                <tr valign="middle">
+                <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADlJREFUOI1jYaAyYKGlgf+pYB4jigv/r6TApHAITVMvjxo4auCogaMGYjcQVgSRCRjRDWSkyDgoAAB8swOrTPh0KQAAAABJRU5ErkJggg==" alt="35 - 40">
+                </td><td>35 - 40</td>
+                </tr>
+                <tr valign="middle">
+                <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADlJREFUOI1jYaAyYKGlgf+pYB4jigv/h1Jg0moITVMvjxo4auCogaMGYjcQVgSRCRjRDWSkyDgoAACZkwP/r1UNTQAAAABJRU5ErkJggg==" alt="40 - 45">
+                </td><td>40 - 45</td>
+                </tr>
+                <tr valign="middle">
+                <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADhJREFUOI1jYaAyYKGlgf+pYB4jigufUWCSFJSmqZdHDRw1cNTAUQOxGyiFSxVxgBHdQEbKzIMAABQxAm3yqYmFAAAAAElFTkSuQmCC" alt="45 - 50">
+                </td><td>45 - 50</td>
+                </tr>
+                <tr valign="middle">
+                <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADhJREFUOI1jYaAyYKGlgf+pYB4jigtLKDCpB0rT1MujBo4aOGrgqIHYDezBpYo4wIhuICNl5kEAADvTAt94zGSEAAAAAElFTkSuQmCC" alt="50 - 90">
+                </td><td>50 - 90</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </transition>
+    </nav>
+    <!-- Verktøymeny -->
+    <nav class="gruppe-el" id="verktoyMeny">
+      <span class="gruppe-el-tittel tittel" @click="verktoyAapen = !verktoyAapen">Verktøy</span>
+      <transition name="aapne">
+        <ul v-if="verktoyAapen">
+          <li class="ikke-implementert">Måle</li>
+          <li @click="hentData">Hent skreddata</li>
+        </ul>
+      </transition>
+    </nav>
+    <!-- Om -->
+    <nav class="gruppe-el">
+      <span class="tittel gruppe-el-tittel" @click="infoAapen= !infoAapen">Om</span>
+      <transition name="aapne">
+        <div class="underelement" v-if="infoAapen">
+          <h3>--|| Denne siden er under arbeid ||--</h3>
+          <ul>
+            <li class="ikke-implementert">Sidelosen</li>
+            <li class="ikke-implementert">Hjelpedokumentasjon</li>
+            <li class="ikke-implementert">Kreds</li>
+          </ul>
+          <p>Mye av funksjonaliteten er ikke ferdig enda, blant annet stedssøk. Men mye av det fungerer også, så slapp av.</p>
+        </div>
+      </transition>
+    </nav>
+  </div>
+  <!-- Kartvindu -->
+  <div id="viewDiv" data-toolactive="false">
+    <!-- Infoboks og stedsøk -->
+    <div id="sokInfo" >
+      <div id="search">
+        <span class="esri-icon-drag-horizontal" @click="openNav"></span>
+        <i class="fa fa-spinner fa-pulse fa-fw" v-if="lasteSymbol"></i>
+        <input type="text" placeholder="Søk på stedsnavn" :value="stedsNavn" @keydown.enter="toggleSnackbar('Ikke implmentert enda', 'Denne funksjonen kommer senere', 4000)">
+        <span class="esri-icon-search" @click="toggleSnackbar('Ikke implmentert enda', 'Denne funksjonen kommer senere', 4000)"></span>
+      </div>
+      <!-- Infoboks -->
+      <transition name="aapne">
+        <div id="queryRes" v-if="infoboksSynlig" >
+          <a href="javascript:void(0)" class="closebtn" @click="lukkInfo">&times;</a>
+          <p id="hoydePkt"> Ekstrapolert høyde: <span>{{ hoyde }}  moh</span></p>
+          <div id="verktoy">
+            <ul>
+              <li v-if="antObjekter>0"><div>Objekter ({{ antObjekter }})</div></li>
+              <li><div>Oppslag</div>
+                <ul>
+                  <li id="koordinat" class="ikke-implementert">Koordinat</li>
+                  <li id="yr" class=""><a :href="vaerUrl" target="#">Været her</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
+      <!-- Snackbar -->
+      <transition name="vissnack">
+        <div id="snackbar" v-if="snackbarSynlig">
+          <a id="lukkSnack" href="javascript:void(0)" @click="snackbarSynlig = false">&times;</a>
+          <h4> {{ snackTitle }} </h4>
+          <p> {{ snackMessage }} </p>
+        </div>
+      </transition>
+    </div>
+    <div id="contextMenu" class="skjult">
+      <span id="menyIkon" class="esri-icon-locate"></span>
+      <button type="button" name="button">
+        <span class="esri-icon-locate"></span> Moh.</button>
+      <button type="button" name="button"><span class="esri-icon-notice-round"></span> Info</button>
+    </div>
+  </div>
+</body>
+</html>

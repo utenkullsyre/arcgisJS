@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrer ny tur</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+  <link rel="stylesheet" type="text/css" title="Cool stylesheet" href="css\turregistrering.css">
+</head>
+<body>
+  <header>
+      <span id="tittel">Turregistrering</span>
+      <button type="button" name="nytur">Ny tur</button>
+  </header>
+  <div id="container">
+      <div class="registrering">
+          <div id="undertekst"><div>Velg eller registrer ny topp</div></div>
+          <div id="kart">
+              <input id="sok" type="text" name="stedsok" placeholder="Søk på topp eller sted">
+              <a id="nyTopp" href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
+              <div id="kartvindu">Kart</div>
+              <div id="form" class="none">Registreringsskjema
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </div>
+          </div>
+          <div id="prosessBar">
+            <div id="myProgress">
+                  <div id="myBar"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+<script type="text/javascript" src="js\turregistrering.js">
+
+</script>
+</body>
+</html>
